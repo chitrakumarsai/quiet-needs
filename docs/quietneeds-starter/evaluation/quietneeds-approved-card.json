@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "requirements": [
+    {
+      "category": "seating",
+      "request": "Please provide a seated alternative to the walking activity."
+    }
+  ]
+}

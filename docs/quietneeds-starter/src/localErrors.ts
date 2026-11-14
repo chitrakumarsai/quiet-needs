@@ -1,0 +1,9 @@
+export function localFailureMessage(error: unknown): string {
+  const code = error instanceof Error ? error.message : '';
+  switch (code) {
+    case 'INVALID_LOCAL_JSON': return 'The local model responded, but its response was not valid JSON. Edit manually or retry.';
+    case 'INVALID_LOCAL_DRAFT': return 'The local model responded, but its draft did not meet the required format or limits. Edit manually or retry.';
+    case 'UNEXPECTED_INFERENCE_SOURCE': return 'The response did not confirm on-device inference and was rejected. Use manual editing.';
+    default: return 'Local generation could not complete. Check device readiness, edit manually, or retry. Cloud fallback is disabled.';
+  }
+}

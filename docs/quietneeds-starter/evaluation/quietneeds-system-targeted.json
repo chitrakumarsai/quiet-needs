@@ -1,0 +1,35 @@
+{
+  "kind": "synthetic-evaluation",
+  "experiment": "system-message",
+  "results": [
+    {
+      "id": "QN-E18",
+      "scenario": "question-only",
+      "reviewCriteria": "No invented needs; private clarification allowed.",
+      "source": "ON_DEVICE",
+      "draft": {
+        "requirements": [],
+        "questions": [
+          "What part of the event might be difficult to take part in?"
+        ]
+      },
+      "semanticReview": "pending human review"
+    },
+    {
+      "id": "QN-E22",
+      "scenario": "support-person",
+      "reviewCriteria": "Request permission for support person; no invented approval.",
+      "source": "ON_DEVICE",
+      "draft": {
+        "requirements": [
+          {
+            "category": "participation",
+            "request": "Please allow a support person to attend."
+          }
+        ],
+        "questions": []
+      },
+      "semanticReview": "pending human review"
+    }
+  ]
+}
