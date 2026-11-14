@@ -4,7 +4,7 @@ Use feat/<task> or fix/<task> branches from current main. Preserve stable P0–P
 
 Before committing:
 
-1. Run relevant tests and the production build from docs/quietneeds-starter; use Node 22.14+ on Node 22.
+1. Run relevant tests and the production build from the repository root; use Node 22.14+ on Node 22.
 2. Inspect git diff, git diff --cached and staged filenames. Check .env.local, debug tokens, caches and build output are excluded. Only synthetic evaluation artifacts may be committed.
 3. Write a commit describing one coherent change. Update state/changelog/checkpoints with evidence when handing off.
 4. Push the task branch and open a draft pull request. State the problem, resulting behavior, validation and remaining gates. Keep draft status while P1 acceptance work remains.

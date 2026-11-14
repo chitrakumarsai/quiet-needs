@@ -4,7 +4,7 @@ Updated: November 15, 2026 IST
 
 - Active phase: **P1 — Private vertical slice**.
 - Active task: **P1-T06 privacy audit and P1-T07 extraction-quality correction**.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-016.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-017.
 - P1-T01/T02: dependencies locked; Node 22.14.0 build/typecheck, production token/evaluation exclusion, seven tests pass. Latest npm audit zero (prior run; dependencies unchanged).
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. Offline reload remains unimplemented.
@@ -41,3 +41,6 @@ GitHub workflow recovery: active branch feat/p1-private-participant-slice from i
 
 
 GitHub evidence: baseline commit e869e926b8df58aa8f77f77310733669c1fd0482 pushed on feat/p1-private-participant-slice; draft PR https://github.com/chitrakumarsai/quiet-needs/pull/1. Push CI passed (run 43653989129); PR CI passed (run 43654047972); GitGuardian check passed. Main remains unprotected and unmerged. Connector PR creation was denied by integration permissions; authenticated gh CLI succeeded.
+
+
+Repository layout: application, package.json, execution records and evaluation artifacts now live at /Users/chitrakumarsai/projects/quiet-needs. CI uses root package-lock.json. Local .env.local moved intact and remains ignored. Root-layout clean npm ci, seven tests, TypeScript/Vite build and production privacy guards passed.

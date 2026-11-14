@@ -159,3 +159,11 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - Files/configuration scanned before commit: no private local key/token values or credential patterns; caches/build output excluded.
 - Remote main protection false at audit. Contributor policy is guidance; protection not implemented.
 - Return to P1-T06/P1-T07 after remote CI verification; all outstanding acceptance gates retained in PR checklist/STATE.md.
+
+
+## CP-017 — Repository root migration
+
+- User requested moving all project contents out of docs/quietneeds-starter into repository root.
+- Merged root/starter AGENTS.md, README.md and .gitignore; moved all remaining files including ignored local environment/dependencies/cache. Configuration preserved without printing values.
+- Updated CI working directory/cache path and contributor guide. Historical checkpoint paths describe their original layout.
+- Parent P1; owner implementation; return to P1-T06/P1-T07 after clean-install/build and root dev-server checks. Draft PR #1 receives this layout change.

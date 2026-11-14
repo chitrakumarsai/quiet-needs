@@ -18,9 +18,6 @@ jobs:
   participant:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    defaults:
-      run:
-        working-directory: docs/quietneeds-starter
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -29,7 +26,7 @@ jobs:
         with:
           node-version: '22.14.0'
           cache: npm
-          cache-dependency-path: docs/quietneeds-starter/package-lock.json
+          cache-dependency-path: package-lock.json
       - run: npm ci
       - run: npm test
       - name: Typecheck, build, and production privacy checks

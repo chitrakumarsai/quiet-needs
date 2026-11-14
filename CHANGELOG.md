@@ -103,3 +103,10 @@
 - Staged secret/config/build-cache inspection passed; clean installation, seven tests and production build passed. Main protection absent; not changed or claimed.
 
 - GitHub follow-up: committed P1 baseline e869e92, pushed task branch and opened draft PR #1 through authenticated gh after connector permission denial. Push and PR CI passed, along with GitGuardian. No merge, branch protection or deployment performed.
+
+
+## Repository root layout
+
+- Moved application source, package/lockfile, scripts, execution records and synthetic evaluation artifacts from docs/quietneeds-starter to repository root.
+- Merged root README/agent/ignore instructions; updated CI and contribution paths. Moved ignored local environment intact. No feature or phase change.
+- Root-layout verification: clean npm ci, seven tests and production build/privacy guards passed.
