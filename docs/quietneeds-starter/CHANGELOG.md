@@ -101,3 +101,5 @@
 - Audited local/remote Git state: only initial .gitignore was committed; corrected by preparing P1 baseline on feat/p1-private-participant-slice.
 - Added root readme/instructions/contributor guide, PR template and SHA-pinned read-only GitHub Actions CI (Node 22.14.0, npm ci, tests/build/production guard/audit).
 - Staged secret/config/build-cache inspection passed; clean installation, seven tests and production build passed. Main protection absent; not changed or claimed.
+
+- GitHub follow-up: committed P1 baseline e869e92, pushed task branch and opened draft PR #1 through authenticated gh after connector permission denial. Push and PR CI passed, along with GitGuardian. No merge, branch protection or deployment performed.

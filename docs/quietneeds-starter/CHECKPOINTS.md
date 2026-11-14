@@ -149,3 +149,13 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - User requested proper GitHub task handling. Found origin/main contains only initial .gitignore; application was untracked. Created feat/p1-private-participant-slice from 9f8d53e.
 - Added root entrypoint/instructions, contributor and PR guidance, SHA-pinned read-only P1 CI workflow. No deployment or auto-merge.
 - Next: inspect exact staged paths and secret-value exclusion, verify clean-install checks, commit, then draft PR. Public repository confirmed; only synthetic artifacts may be published. Do not claim branch protection or CI pass before observing it.
+
+
+## CP-016 — Baseline committed and draft PR opened
+
+- Branch feat/p1-private-participant-slice; validated baseline e869e926b8df58aa8f77f77310733669c1fd0482.
+- Draft PR: https://github.com/chitrakumarsai/quiet-needs/pull/1. No merge or main update performed.
+- Push CI run 43653989129 passed. PR CI run 43654047972 passed; GitGuardian check passed. Both apply to baseline e869e92.
+- Files/configuration scanned before commit: no private local key/token values or credential patterns; caches/build output excluded.
+- Remote main protection false at audit. Contributor policy is guidance; protection not implemented.
+- Return to P1-T06/P1-T07 after remote CI verification; all outstanding acceptance gates retained in PR checklist/STATE.md.
