@@ -40,3 +40,11 @@ Chrome desktop, locked Firebase 12.19.0. The evaluator ran one matched five-case
 | E30 | **Fail**, timing: “Please start the event before 12 pm.” Drops the start of the personal window and changes the event schedule. | **Pass**, timing: “Please allow me to attend between 10 am and noon.” |
 
 The baseline differed from its earlier 30-case outputs. One matched batch cannot establish repeatability or attribute the improvement solely to the changed instruction. The candidate still misses the participation constraint. Keep it development-only and defer the full suite. Next experiment: compare a single explicit seated-alternative example across repeated runs of E02 and the existing negation and conditional cases before rerunning all 30.
+
+## Seated and attendance examples — November 18, 2026
+
+- **First targeted variant:** two runs each of E02, E05, E18, E22, E26, E28 and E30. All 14 passed source/schema. The seated example and single-expense instruction preserved seated participation and avoided a second materials-budget request in both replications. E30 broadened personal attendance in both runs. E26 produced one placeholder clarification.
+- **Revised targeted variant:** a personal attendance example and a direct instruction for clarification questions corrected those failures in both replications. All 14 passed source/schema and the case criteria in this manual review.
+- **Full revised variant:** 30/30 source/schema and 26 pass / 2 revisions / 2 failures in manual review. E02, E05 and E30 passed. E13 added a start placeholder to a departure-only note. E25 omitted the 10-minute duration and repeated the break request. E12 and E29 contain unneeded clarification or scope. No private canary literals or private reasons appeared in the recorded outputs. All 30 drafts and the review are in [quietneeds-seated-full.json](quietneeds-seated-full.json).
+
+Keep the candidate development-only. The next comparison should cover departure without arrival, exact break duration and interval, and the passing attendance-window and uncertainty cases.

@@ -90,3 +90,9 @@ CSS transitions are enough for the MVP. Do not add a large motion package for de
 ## Scope control
 
 This brief is part of execution-plan v1.1. Use P1-T08/P1-T09 for the participant design work, P2/P3 for later screens, and P4 for broader refinement. No new project phase is created for visual work. Do not alter the underlying privacy architecture to satisfy a design-tool suggestion.
+
+## November 18 implementation review
+
+- Keep the responsive panel layout and native controls for the current correction. UI UX Pro Max 2.15.0 ran from an isolated Python environment against the keyboard and responsive brief. The pinned installer lacks the earlier plan's `--dry-run` flag. It generated several skills in a temporary directory. Workspace discovery and a shadcn integration remain open.
+- Unified keyboard focus on dark teal, strengthened editable control borders, associated the private-note hint with its field, and exposed the first-download and manual-entry choices before setup. Private fields request that the browser disable autocomplete, autocorrect, and spellcheck. Questions wrap at narrow widths.
+- Separate source review against Vercel's Web Interface Guidelines covered labels, focus, keyboard controls, status, and long content. The Chrome keyboard check confirmed that editing revokes approval and hides the old preview. Full P1 acceptance still needs the design tooling decision and a responsive accessibility pass on the final screen. [Vercel Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines)

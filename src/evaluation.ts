@@ -13,14 +13,17 @@ if (!import.meta.env.DEV) {
   root.textContent = 'Synthetic evaluation is available only in development.';
 } else {
   const params = new URLSearchParams(location.search);
-  const scopeExperiment = params.get('experiment') === 'scope';
+  const seatedExperiment = params.get('experiment') === 'seated';
+  const scopeExperiment = seatedExperiment || params.get('experiment') === 'scope';
   const systemExperiment = scopeExperiment || params.get('experiment') === 'system';
   const targetIds = ['QN-E18', 'QN-E22'];
   if (params.get('scope') === 'target' || scopeExperiment) targetIds.push('QN-E02', 'QN-E05', 'QN-E30');
+  if (seatedExperiment) targetIds.push('QN-E26', 'QN-E28');
   const title = document.createElement('h1'); title.textContent = 'Synthetic extraction evaluation';
   const warning = document.createElement('p'); warning.textContent = 'Development tool: runs the 30 repository-owned fictional cases on this device. No participant data. Results stay in memory until explicitly downloaded. Schema success is not a semantic quality score.';
-  const fullSystemRun = systemExperiment && !scopeExperiment && params.get('scope') === 'all';
-  const run = document.createElement('button'); run.textContent = systemExperiment && !fullSystemRun ? `Run ${targetIds.length} targeted cases on device` : 'Run 30 synthetic cases on device';
+  const fullSystemRun = systemExperiment && (!scopeExperiment || seatedExperiment) && params.get('scope') === 'all';
+  const runCount = targetIds.length * (seatedExperiment ? 2 : 1);
+  const run = document.createElement('button'); run.textContent = systemExperiment && !fullSystemRun ? `Run ${runCount} targeted cases on device` : 'Run 30 synthetic cases on device';
   const status = document.createElement('p'); status.setAttribute('role', 'status');
   const output = document.createElement('ol');
   const download = document.createElement('button'); download.textContent = 'Download synthetic results'; download.disabled = true;
@@ -33,6 +36,7 @@ if (!import.meta.env.DEV) {
       await initializeLocalAi(p => { status.textContent = `Preparing device model: ${p}%`; });
       let instructions = buildPrivatePrompt('SYNTHETIC').split('PRIVATE_NOTE_JSON:')[0];
       if (scopeExperiment) instructions += 'When a stated barrier prevents joining a named activity, request the least specific adjustment that preserves participation. Do not turn the barrier into a request to skip the activity. Keep every limit attached to its original subject: a materials budget applies to materials, and a personal attendance window applies to that participant.\n';
+      if (seatedExperiment) instructions += 'Example: “I cannot stand at the printmaking station” becomes one seating request: “Please offer a seated way to take part in printmaking.” When a budget limits one expense, return one cost request for that expense. Do not restate an adjustment in a second category.\nExample: “I can only attend from 2 to 4 pm” becomes one timing request: “Please allow me to attend from 2 to 4 pm.” Leave the event schedule alone. A clarification must be an actual question ending with ?. If none is needed, return [].\n';
       const experimentModel = systemExperiment ? getGenerativeModel(getAI(getApps()[0], { backend: new GoogleAIBackend() }), {
         mode: InferenceMode.ONLY_ON_DEVICE,
         onDeviceParams: {
@@ -44,8 +48,9 @@ if (!import.meta.env.DEV) {
       const response = await fetch('/evaluation/synthetic-cases.json');
       if (!response.ok) throw new Error('CASES_UNAVAILABLE');
       const allCases: Case[] = await response.json();
-      const cases = systemExperiment && !fullSystemRun ? allCases.filter(item => targetIds.includes(item.id)) : allCases;
-      if (systemExperiment && !fullSystemRun && cases.length !== targetIds.length) throw new Error('CASES_UNAVAILABLE');
+      const selectedCases = systemExperiment && !fullSystemRun ? allCases.filter(item => targetIds.includes(item.id)) : allCases;
+      if (systemExperiment && !fullSystemRun && selectedCases.length !== targetIds.length) throw new Error('CASES_UNAVAILABLE');
+      const cases = seatedExperiment && !fullSystemRun ? [...selectedCases, ...selectedCases] : selectedCases;
       for (const [index, item] of cases.entries()) {
         status.textContent = `Running ${index + 1}/${cases.length}: ${item.id}`;
         const row = document.createElement('li'); output.append(row);
@@ -70,7 +75,8 @@ if (!import.meta.env.DEV) {
     finally { run.disabled = false; }
   };
   download.onclick = () => {
-    const url = URL.createObjectURL(new Blob([JSON.stringify({ kind: 'synthetic-evaluation', experiment: scopeExperiment ? 'system-message-participation-scope' : systemExperiment ? 'system-message' : 'single-user-prompt', results }, null, 2)], { type: 'application/json' }));
+    const experiment = seatedExperiment ? 'system-message-seated' : scopeExperiment ? 'system-message-participation-scope' : systemExperiment ? 'system-message' : 'single-user-prompt';
+    const url = URL.createObjectURL(new Blob([JSON.stringify({ kind: 'synthetic-evaluation', experiment, results }, null, 2)], { type: 'application/json' }));
     const link = document.createElement('a'); link.href = url; link.download = 'quietneeds-synthetic-results.json'; link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };

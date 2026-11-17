@@ -179,3 +179,10 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 
 - QN-016, parent P1-T02, owner implementation. Push and PR checks for `3b98bbd` failed at npm audit on GHSA-fc5q-39xc-vjpf. GitGuardian passed. The registry still lists affected picomatch 4.0.7 as latest.
 - Keep the audit gate. Recheck a compatible upstream release when available. Return to CP-018's P1-T06 forced failure/retry and storage check, then P1-T07.
+
+## CP-020 — Local error recovery and prompt retest
+
+- QN-015/P1-T06 and QN-014/P1-T07, owner implementation. Exercise the participant entry point with two simulated SDK failures, then real device retry and redacted storage checks. Compare a seated-alternative example and duplicate-request instruction on a targeted batch.
+- Exact return: review the participant flow for P1-T08/P1-T09 and rerun all 30 cases only after the targeted gate passes. QN-016 stays open while the registry's latest release is affected.
+- Both injected failures recovered and the real retry passed. Redacted storage scan passed. Latest prompt cleared both targeted replications, then failed semantic acceptance on E13/E25 in the full run. QN-016 reproduced locally, with registry latest still affected.
+- Browser socket inspection completed in a separate synthetic run. Exact return: retest duration/interval and departure-only before repeating the full evaluation. Continue design acceptance and verify a compatible dependency fix when published.

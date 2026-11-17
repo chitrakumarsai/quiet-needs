@@ -62,8 +62,9 @@ function App() {
     <div className="grid"><section className="panel">
       <p className="step">01 / PRIVATE PREPARATION</p><h2>What would help you take part?</h2>
       <label htmlFor="note">Your private explanation</label>
-      <textarea ref={noteInput} id="note" value={note} disabled={busy} maxLength={4000} placeholder="For example: I find standing for long periods difficult. A seated option would help." onChange={e => { setNote(e.target.value); changeDraft({ requirements: [], questions: [] }); }}/>
-      <p className="hint">Avoid real sensitive information until the device and privacy checks in the execution plan pass.</p>
+      <textarea ref={noteInput} id="note" aria-describedby="note-hint" autoComplete="off" autoCorrect="off" spellCheck={false} value={note} disabled={busy} maxLength={4000} placeholder="For example: I find standing for long periods difficult. A seated option would help." onChange={e => { setNote(e.target.value); changeDraft({ requirements: [], questions: [] }); }}/>
+      <p className="hint" id="note-hint">Use fictional information during testing.</p>
+      <p className="hint">The initial local AI download needs internet. You can add a request manually at any time.</p>
       <div className="actions"><button onClick={setup} disabled={busy || ready || !isConfigured()}>Prepare local AI</button><button className="primary" onClick={generate} disabled={busy || !ready || !note.trim()}>Draft on this device</button></div>
       <p role="status" aria-live="polite" className="status">{status}</p>
       <button className="text-button" disabled={busy} onClick={() => { changeDraft(structuredClone(sampleDraft)); setStatus('Loaded a fixed example, not AI output. Your private note was not processed.'); }}>Try a fictional example</button>
@@ -73,7 +74,7 @@ function App() {
       {!draft.requirements.length && <div className="empty">Your card starts here. Draft with local AI or add a request yourself.</div>}
       {draft.requirements.map((r, i) => <div className="request" key={i}>
         <label htmlFor={`request-${i}`}>Request {i + 1} · {r.category}</label>
-        <textarea id={`request-${i}`} maxLength={500} disabled={busy} value={r.request} onChange={e => changeDraft({ ...draft, requirements: draft.requirements.map((x, n) => n === i ? { ...x, request: e.target.value } : x) })}/>
+        <textarea id={`request-${i}`} autoComplete="off" autoCorrect="off" spellCheck={false} maxLength={500} disabled={busy} value={r.request} onChange={e => changeDraft({ ...draft, requirements: draft.requirements.map((x, n) => n === i ? { ...x, request: e.target.value } : x) })}/>
         <button className="text-button" disabled={busy} onClick={() => changeDraft({ ...draft, requirements: draft.requirements.filter((_, n) => n !== i) })}>Remove request {i + 1}</button>
       </div>)}
       <button disabled={busy || draft.requirements.length >= 8} onClick={() => changeDraft({ ...draft, requirements: [...draft.requirements, { category: 'other', request: '' }] })}>+ Add a request manually</button>

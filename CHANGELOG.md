@@ -1,5 +1,12 @@
 # Change log
 
+## 2026-11-18 — P1 recovery audit and responsive controls
+
+- Verified safe recovery from synthetic SDK rejection and malformed JSON, a real on-device retry, and redacted browser storage checks.
+- Improved keyboard focus, form-control boundaries, and private-entry guidance. Browser keyboard review confirmed that an edit revokes consent and hides the prior preview.
+- Evaluated the seated and attendance example candidate. It passed both targeted replications and still failed the full semantic gate on departure and break constraints. No production prompt promotion.
+- Local tests and build passed. The dependency audit still flags QN-016.
+
 ## 2026-11-18 — Targeted P1 model and browser checks
 
 - Added a development-only, five-case prompt comparison. Both batches passed source/schema checks. Semantic review found the candidate still misses seated participation and duplicates the scoped materials budget.
