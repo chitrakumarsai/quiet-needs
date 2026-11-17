@@ -13,12 +13,17 @@ if (!import.meta.env.DEV) {
   root.textContent = 'Synthetic evaluation is available only in development.';
 } else {
   const params = new URLSearchParams(location.search);
-  const seatedExperiment = params.get('experiment') === 'seated';
+  const mode = params.get('experiment');
+  const costExperiment = mode === 'constraints' || mode === 'limits';
+  const timingExperiment = costExperiment || mode === 'timing';
+  const seatedExperiment = timingExperiment || params.get('experiment') === 'seated';
   const scopeExperiment = seatedExperiment || params.get('experiment') === 'scope';
   const systemExperiment = scopeExperiment || params.get('experiment') === 'system';
   const targetIds = ['QN-E18', 'QN-E22'];
   if (params.get('scope') === 'target' || scopeExperiment) targetIds.push('QN-E02', 'QN-E05', 'QN-E30');
   if (seatedExperiment) targetIds.push('QN-E26', 'QN-E28');
+  if (timingExperiment) targetIds.push('QN-E03', 'QN-E10', 'QN-E13', 'QN-E25');
+  if (costExperiment) targetIds.push('QN-E27');
   const title = document.createElement('h1'); title.textContent = 'Synthetic extraction evaluation';
   const warning = document.createElement('p'); warning.textContent = 'Development tool: runs the 30 repository-owned fictional cases on this device. No participant data. Results stay in memory until explicitly downloaded. Schema success is not a semantic quality score.';
   const fullSystemRun = systemExperiment && (!scopeExperiment || seatedExperiment) && params.get('scope') === 'all';
@@ -37,6 +42,9 @@ if (!import.meta.env.DEV) {
       let instructions = buildPrivatePrompt('SYNTHETIC').split('PRIVATE_NOTE_JSON:')[0];
       if (scopeExperiment) instructions += 'When a stated barrier prevents joining a named activity, request the least specific adjustment that preserves participation. Do not turn the barrier into a request to skip the activity. Keep every limit attached to its original subject: a materials budget applies to materials, and a personal attendance window applies to that participant.\n';
       if (seatedExperiment) instructions += 'Example: “I cannot stand at the printmaking station” becomes one seating request: “Please offer a seated way to take part in printmaking.” When a budget limits one expense, return one cost request for that expense. Do not restate an adjustment in a second category.\nExample: “I can only attend from 2 to 4 pm” becomes one timing request: “Please allow me to attend from 2 to 4 pm.” Leave the event schedule alone. A clarification must be an actual question ending with ?. If none is needed, return [].\n';
+      if (timingExperiment) instructions += 'Use arrival and departure as separate facts. A known departure with no arrival means “Please allow me to leave at [stated departure]” with the actual stated time and no placeholders. For a recurring break, include the stated duration and interval together in one timing request for the participant. Example: “I need a 5-minute break every half hour” becomes “Please allow me to take a 5-minute break every half hour.”\n';
+      if (mode === 'constraints') instructions += 'Preserve a maximum cost or a condition for joining as a limit, including zero. Example: “I can only join if the printed handouts cost nothing” becomes one cost request: “Please offer the printed handouts at no charge so I can join.” Use the participant’s perspective in requests.\n';
+      if (mode === 'limits') instructions += 'Use the participant’s perspective. For money, retain the original item, scope, amount and currency. A maximum is the participant’s limit. If attending depends on the item being free, explicitly request that item at no charge. Ask for free items only when the note says they must be free. Never reuse an example amount, item or time.\n';
       const experimentModel = systemExperiment ? getGenerativeModel(getAI(getApps()[0], { backend: new GoogleAIBackend() }), {
         mode: InferenceMode.ONLY_ON_DEVICE,
         onDeviceParams: {
@@ -75,7 +83,7 @@ if (!import.meta.env.DEV) {
     finally { run.disabled = false; }
   };
   download.onclick = () => {
-    const experiment = seatedExperiment ? 'system-message-seated' : scopeExperiment ? 'system-message-participation-scope' : systemExperiment ? 'system-message' : 'single-user-prompt';
+    const experiment = timingExperiment ? `system-message-${mode}` : seatedExperiment ? 'system-message-seated' : scopeExperiment ? 'system-message-participation-scope' : systemExperiment ? 'system-message' : 'single-user-prompt';
     const url = URL.createObjectURL(new Blob([JSON.stringify({ kind: 'synthetic-evaluation', experiment, results }, null, 2)], { type: 'application/json' }));
     const link = document.createElement('a'); link.href = url; link.download = 'quietneeds-synthetic-results.json'; link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);

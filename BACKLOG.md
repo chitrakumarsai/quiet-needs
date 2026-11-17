@@ -16,11 +16,11 @@
 | QN-012 | UX correction | P1-T09 | Resolved | Readable snapshot/JSON preview and clear confirmation implemented; keyboard cancellation/confirmation and downloaded-byte comparison passed | P1 browser/design gate |
 | QN-013 | Local extraction | P1-T04 | Resolved | Added device responseConstraint after invalid JSON; real online/offline synthetic extractions passed | P1-T06/P1-T07 |
 
-| QN-014 | Model quality | P1-T07 | Open | Latest candidate passes E02/E05/E30. Full run: 26 pass, 2 revision, 2 fail. Retest E13 departure-only and E25 interval plus duration against passing controls. Candidate stays development-only | P1 gate |
+| QN-014 | Model quality | P1-T07 | Open | E13 and E25 corrected across targeted and full runs. Later regressions broaden cost scope or drop an independent request. Compare shorter instructions on E05/E19/E27 with E02/E13/E25 as controls. Candidates remain development-only | P1 gate |
 
 | QN-015 | SDK memory | P1-T06 | Correction verified | Clear after AI preparation reloads page to end SDK context; manual-only clear stays in page. Browser restart verified; no secure memory-erasure promise | Full privacy audit |
 
-| QN-016 | Dependency audit | P1-T02 | Open | CI flags GHSA-fc5q-39xc-vjpf in Vite's picomatch 4.0.7 dependency. npm latest is 4.0.7. Recheck for a published fix and validate a compatible lockfile update without suppressing the audit | P1-T06/P1-T07 |
+| QN-016 | Dependency audit | P1-T02 | Open | Local audit still flags GHSA-fc5q-39xc-vjpf. Latest picomatch is 4.0.7 and Vite 8.3.8 still depends on it. Recheck for a compatible published fix and rerun the audit | P1-T07/P1-T08 |
 
 ## Issue template
 

@@ -105,3 +105,9 @@ Cloud payload contains only approved cards and supplied event facts. Determinist
 - After recovery, the harness scanned local and session storage plus three IndexedDB records across two origin databases. No matches were found. It emitted counts and booleans only. This covers origin storage, with Chrome's internal model and OS storage outside the inspection. Removed the temporary harness after the test.
 - In a separate run on the regular participant entry point, the model prepared and drafted with a new fictional marker. DevTools recorded one local Vite development socket with no displayed message frames and zero secure sockets. This completes the observed P1 browser audit across the two runs. Persistent browser regression automation remains follow-up.
 - With the focus change applied, Tab reached the request editor, Space approved the card and Enter opened the preview. A keyboard edit cleared approval and hid the preview. The 3 px focus color is 8.10:1 against white and 7.53:1 against the canvas. The editable control border is 3.63:1 against white and 3.37:1 against the canvas. The build and all seven tests passed.
+
+## Final participant browser review
+
+- Chrome retained the same fictional approved card and available download control at 390, 768 and 1440 CSS pixels. The 390 visual check showed stacked panels and readable disclosure and download controls. Prior visual checks covered the wider layouts.
+- A keyboard pass approved the fictional draft and opened the preview and exact JSON. At Chrome 200% zoom, Tab reached Download approved card after the expanded JSON. Reset page zoom after the check.
+- Under reduced-motion emulation, Clear session opened the confirmation and Keep editing preserved the approved card and consent. The earlier keyboard Escape check restored focus. Restored the motion preference and device emulation settings.

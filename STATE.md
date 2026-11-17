@@ -3,15 +3,15 @@
 Updated: November 18, 2026 IST
 
 - Active phase: **P1 — Private vertical slice**.
-- Active task: **P1-T06 privacy audit and P1-T07 extraction-quality correction**.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-020.
+- Active task: **P1-T07 extraction-quality correction**. P1-T08 tooling verification and QN-016 dependency audit remain open.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-021.
 - P1-T01/T02: dependencies locked; Node 22.14.0 build/typecheck, production token/evaluation exclusion, seven tests pass. QN-016 tracks the current npm audit failure.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. Offline reload remains unimplemented.
 - Participant flow: readable approved snapshot and exact JSON disclosure, local export, native clear confirmation, focus restoration. QN-012 resolved. Keyboard approval/preview/disclosure/download and cancel/confirm clear checks passed. Download matches approved snapshot byte for byte and excludes private canary/questions.
 - Privacy evidence: synthetic setup, generation, failure, retry, socket, browser storage and export checks recorded in TEST_PLAN.md. No outgoing canary or origin storage match observed in those runs.
 - Model evaluation before November 18: 122 actual runs across three 30-case prompt iterations and targeted 2-case/full 30-case system-message comparisons. Full batches passed source/schema 30/30. Agent semantic review R1: 20 pass/6 revision/4 fail; R2: 28/1/1; R3: 27/1/2. Actual outputs and review notes retained in evaluation/. System target 2/2 passed; full system run 27 semantic pass/2 revision/1 fail. **QN-014 quality gate open**.
-- UX: brief partially implemented; native-dialog correction complete. 390/768/1440 empty/preparation layouts visually inspected after resetting page zoom; full populated-state/200%/reduced-motion review incomplete. Contrast for checked primary/muted/button pairs meets AA. Selected external design skills/shadcn migration still pending (QN-008).
+- UX: browser review passed for the current participant screen at 390/768/1440, with zoom, keyboard, reduced motion and exact approved preview evidence. Workspace skill discovery remains pending (QN-008).
 - Architecture design review P1-T10 complete; runtime sharing/rules not implemented.
 - QN-015 SDK-memory correction: after local AI preparation, clear now reloads the document to end its SDK context. Browser verified blank note/draft/consent and disabled inference after restart; no secure-erasure guarantee. Manual-only clear retains focus recovery.
 - CLI 0.169.0 available. Ponytail 5.3.3 installed/enabled. Ponytail review applied; report in evaluation/SOURCE_REVIEW.md. Hook trust/restart not verified and not changed.
@@ -19,7 +19,7 @@ Updated: November 18, 2026 IST
 
 ## Exact next action
 
-Stay in P1. For QN-014, isolate E13's departure-only constraint and E25's interval plus duration, with E02/E05/E30 as regression controls. Continue P1-T08/P1-T09 design tooling and final responsive accessibility review. QN-016 remains open pending a compatible published fix. Keep P2 gated.
+Stay in P1. For QN-014, compare a shorter instruction set on E05/E19/E27 while preserving E02/E13/E25. Verify the selected workspace skills for P1-T08. QN-016 remains open pending a compatible published fix. Keep P2 gated.
 
 November 18 verification:
 
@@ -31,6 +31,8 @@ November 18 verification:
 - Follow-up: 58 more completed actual evaluations, for 190 total. Both focused candidate revisions passed source/schema. The revised candidate passed both targeted replications, then scored 26 pass, 2 revision and 2 fail in the full run. Production extraction stays on the current adapter.
 - Follow-up: stronger focus and control borders, browser input-assistance opt-outs, and download/manual guidance verified in build and keyboard review. UI UX Pro Max ran in temporary isolation. Workspace discovery and final design acceptance are open.
 - Follow-up: local audit reproduced QN-016. The npm-suggested Vite 6.2.7 downgrade falls in the affected range of other Vite advisories. Registry latest picomatch remains 4.0.7. [Vite advisory](https://github.com/vitejs/vite/security/advisories/GHSA-rq7h-c2jc-7f22)
+- Final browser pass: 390/768/1440 populated flow, keyboard approval and exact preview, 200% zoom download focus and reduced-motion clear confirmation. See TEST_PLAN.md.
+- Timing and budget follow-up: 112 additional source/schema passes, for 302 completed model runs total. Full semantic reviews reproduced critical budget or intent failures across three variants. None was promoted. Build and seven tests passed. Current Vite 8.3.8 also depends on affected picomatch, so a Vite upgrade does not clear QN-016.
 
 ## Gate checklist
 
@@ -44,7 +46,8 @@ November 18 verification:
 - [ ] Extraction-quality acceptance (QN-014)
 - [x] P1 synthetic browser network/privacy audit
 - [ ] Selected design tooling verified and full DESIGN.md implementation
-- [ ] Full responsive/200%/keyboard/reduced-motion review
+- [x] Participant responsive/200%/keyboard/reduced-motion browser review
+- [ ] High-severity dependency audit (QN-016)
 - [x] Architecture P1-T10 design review (runtime checks remain P2/P3)
 
 

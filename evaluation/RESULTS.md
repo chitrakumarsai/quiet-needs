@@ -48,3 +48,16 @@ The baseline differed from its earlier 30-case outputs. One matched batch cannot
 - **Full revised variant:** 30/30 source/schema and 26 pass / 2 revisions / 2 failures in manual review. E02, E05 and E30 passed. E13 added a start placeholder to a departure-only note. E25 omitted the 10-minute duration and repeated the break request. E12 and E29 contain unneeded clarification or scope. No private canary literals or private reasons appeared in the recorded outputs. All 30 drafts and the review are in [quietneeds-seated-full.json](quietneeds-seated-full.json).
 
 Keep the candidate development-only. The next comparison should cover departure without arrival, exact break duration and interval, and the passing attendance-window and uncertainty cases.
+
+## Timing and budget scope follow-up — November 18, 2026
+
+Chrome returned ON_DEVICE drafts that passed schema validation in all 112 completed runs. Manual review used the original case criteria.
+
+| Candidate | Review result | Gate finding |
+| --- | --- | --- |
+| Timing instructions, 22 targeted runs | 21 pass, 1 revision | E13 and E25 retained the departure and break numbers in both batches. One E25 draft added “as needed” and changed category. |
+| [Timing, full suite](quietneeds-timing-full.json) | 24 pass, 5 revisions, 1 fail | E13 and E25 passed. E27 lost the zero-cost condition. |
+| [Timing plus free-materials example, full suite](quietneeds-constraints-full.json) | 28 pass, 1 revision, 1 fail | E27 passed. E05 copied the example and replaced the 500 INR materials budget with free handouts. |
+| [Timing plus cost rules, full suite](quietneeds-limits-full.json) | 26 pass, 3 revisions, 1 fail | E05 and E27 retained amounts but broadened their scope. E19 dropped the written-instructions request. |
+
+No explicit private markers appeared in the saved drafts. None of the candidates meets promotion criteria. Next compare a shorter instruction set on E05, E19 and E27 with E02, E13 and E25 as controls. Keep mandatory review and manual entry.

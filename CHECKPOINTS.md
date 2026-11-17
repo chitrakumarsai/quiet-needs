@@ -186,3 +186,10 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - Exact return: review the participant flow for P1-T08/P1-T09 and rerun all 30 cases only after the targeted gate passes. QN-016 stays open while the registry's latest release is affected.
 - Both injected failures recovered and the real retry passed. Redacted storage scan passed. Latest prompt cleared both targeted replications, then failed semantic acceptance on E13/E25 in the full run. QN-016 reproduced locally, with registry latest still affected.
 - Browser socket inspection completed in a separate synthetic run. Exact return: retest duration/interval and departure-only before repeating the full evaluation. Continue design acceptance and verify a compatible dependency fix when published.
+
+## CP-021 — P1 gate verification
+
+- QN-014/P1-T07, QN-008/P1-T08/T09 and QN-016/P1-T02, owner implementation. Retest departure-only and recurring breaks with numeric constraints and prior passing cases. Check the final participant layout and evaluate compatible build dependencies against the audit.
+- Exact return: rerun the full synthetic suite if the targeted candidate passes and keep P2 gated until P1 evidence is complete.
+- Completed 22 targeted runs and three full 30-case runs. Timing fixes held, with critical cost or multiple-request regressions in all three full runs. Participant browser recheck passed. npm audit still fails and the latest Vite retains the affected dependency.
+- Return to QN-014 on E05/E19/E27 with E02/E13/E25 controls, QN-008 workspace discovery and QN-016 patched release verification. P1 is still active.

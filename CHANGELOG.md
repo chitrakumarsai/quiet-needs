@@ -1,5 +1,11 @@
 # Change log
 
+## 2026-11-18 — P1 gate follow-up
+
+- Completed the participant browser recheck at 390/768/1440, 200% zoom, keyboard approval and reduced-motion confirmation.
+- Recorded three full on-device prompt comparisons and a repeated targeted batch. Departure and break timing improved. Budget scope and omission of a second request still block promotion.
+- Passed seven tests and the production build. Current Vite still resolves the affected picomatch release, so the high-severity audit remains red.
+
 ## 2026-11-18 — P1 recovery audit and responsive controls
 
 - Verified safe recovery from synthetic SDK rejection and malformed JSON, a real on-device retry, and redacted browser storage checks.

@@ -10,3 +10,5 @@ Run the development evaluator at /evaluation.html. System-message comparison: /e
 For the participation and scope comparison, use `/evaluation.html?experiment=system&scope=target` for the baseline and `/evaluation.html?experiment=scope` for the candidate. Both default to E02, E05, E18, E22 and E30 in this comparison.
 
 The seated and attendance example candidate runs E02, E05, E18, E22, E26, E28 and E30 twice at `/evaluation.html?experiment=seated`. Add `&scope=all` to run all 30 once.
+
+Use `experiment=timing` for the departure and break-duration instructions. `experiment=constraints` adds a free-materials example and `experiment=limits` uses cost rules without that example. Each accepts `&scope=all` for the full suite.
