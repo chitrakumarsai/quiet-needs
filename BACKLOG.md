@@ -20,6 +20,8 @@
 
 | QN-015 | SDK memory | P1-T06 | Correction verified | Clear after AI preparation reloads page to end SDK context; manual-only clear stays in page. Browser restart verified; no secure memory-erasure promise | Full privacy audit |
 
+| QN-016 | Dependency audit | P1-T02 | Open | CI flags GHSA-fc5q-39xc-vjpf in Vite's picomatch 4.0.7 dependency. npm latest is 4.0.7. Recheck for a published fix and validate a compatible lockfile update without suppressing the audit | P1-T06/P1-T07 |
+
 ## Issue template
 
 ID: QN-###

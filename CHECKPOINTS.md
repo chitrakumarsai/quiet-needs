@@ -174,3 +174,8 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - Return to P1-T06 synthetic failure/retry and SDK storage audit, then the populated P1-T09 browser review.
 - Observed 10/10 source/schema passes in Chrome. Candidate still misses a seated adjustment and repeats the materials budget. See evaluation/RESULTS.md for the per-case comparison and next bounded experiment. Build and seven tests pass.
 - Browser spot checks recorded in TEST_PLAN.md. Exact return is an app-level failure and explicit retry with a synthetic marker, followed by redacted browser storage verification. Network loss alone did not fail the cached model.
+
+## CP-019 — Remote dependency-audit failure
+
+- QN-016, parent P1-T02, owner implementation. Push and PR checks for `3b98bbd` failed at npm audit on GHSA-fc5q-39xc-vjpf. GitGuardian passed. The registry still lists affected picomatch 4.0.7 as latest.
+- Keep the audit gate. Recheck a compatible upstream release when available. Return to CP-018's P1-T06 forced failure/retry and storage check, then P1-T07.
