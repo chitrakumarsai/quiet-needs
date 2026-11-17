@@ -1,5 +1,11 @@
 # Change log
 
+## 2026-11-18 — Targeted P1 model and browser checks
+
+- Added a development-only, five-case prompt comparison. Both batches passed source/schema checks. Semantic review found the candidate still misses seated participation and duplicates the scoped materials budget.
+- Recorded synthetic Offline and online repeat evidence, populated responsive spot checks, approved JSON at 200% and reduced-motion dialog focus.
+- Passed seven tests, production build and privacy guards. App-level failure/retry and browser storage record-content checks remain open.
+
 ## 2026-11-15 — Real local and offline inference
 
 - Verified required local configuration fields and Git exclusion without recording values.

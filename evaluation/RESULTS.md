@@ -26,3 +26,17 @@ Three prompt iterations are enough to show the current limit: semantic correctne
 ## System-message experiment (development only)
 
 Targeted E18/E22: 2/2 source/schema and semantic passes, saved quietneeds-system-targeted.json. Full 30-case system run: 30/30 source/schema, agent review 27 pass / 2 revisions / 1 fail (quietneeds-system-full.json). E18/E22 improve, but E02 loses seated-participation intent and E05/E30 broaden scope. Not promoted into the participant adapter. Keep current adapter and mandatory review while QN-014 remains open. Total saved actual extractions: 122; these are small iterative synthetic tests, not independent statistical evaluation.
+
+## Targeted participation and scope comparison — November 18, 2026
+
+Chrome desktop, locked Firebase 12.19.0. The evaluator ran one matched five-case batch per variant. Both had 5/5 source/schema passes and all returned empty question arrays except E18. Draft text below is transcribed from the evaluator.
+
+| Case | Existing system prompt | Participation and scope instruction |
+| --- | --- | --- |
+| E02 | **Fail**, participation: “Please consider minimizing standing during the walking session.” | **Fail**, participation: “Please provide assistance with standing during the walking session, if needed.” Both miss a seated way to participate. |
+| E05 | **Fail**, cost: “Please confirm the cost associated with this event.” Drops the materials limit and currency. | **Revision**, cost: “Please respect my materials budget of 500 INR.” Other: “Please ensure that any costs associated with materials do not exceed 500 INR.” Preserves the limit and scope, with a duplicate request. |
+| E18 | **Pass**, no requests. “What part of the event might be difficult to take part in?” | **Pass**, same result. |
+| E22 | **Pass**, participation: “Please allow for a support person to attend.” | **Pass**, participation: “Please allow me to bring a support person to the event.” |
+| E30 | **Fail**, timing: “Please start the event before 12 pm.” Drops the start of the personal window and changes the event schedule. | **Pass**, timing: “Please allow me to attend between 10 am and noon.” |
+
+The baseline differed from its earlier 30-case outputs. One matched batch cannot establish repeatability or attribute the improvement solely to the changed instruction. The candidate still misses the participation constraint. Keep it development-only and defer the full suite. Next experiment: compare a single explicit seated-alternative example across repeated runs of E02 and the existing negation and conditional cases before rerunning all 30.

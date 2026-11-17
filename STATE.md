@@ -1,10 +1,10 @@
 # Current state
 
-Updated: November 15, 2026 IST
+Updated: November 18, 2026 IST
 
 - Active phase: **P1 — Private vertical slice**.
 - Active task: **P1-T06 privacy audit and P1-T07 extraction-quality correction**.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-017.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-018.
 - P1-T01/T02: dependencies locked; Node 22.14.0 build/typecheck, production token/evaluation exclusion, seven tests pass. Latest npm audit zero (prior run; dependencies unchanged).
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. Offline reload remains unimplemented.
@@ -19,7 +19,13 @@ Updated: November 15, 2026 IST
 
 ## Exact next action
 
-Stay in P1. System-message comparison is complete and remains development-only due to regressions. For QN-014, isolate the E02 participation-intent regression and scope broadening before further full runs. Complete remaining network failure/retry and SDK storage audit using synthetic data, then populated responsive/200% UX checks. Do not advance to P2 until required P1 gates pass.
+Stay in P1. For P1-T06, force a local generation/validation failure with synthetic content, observe the Network log through explicit retry, and check SDK storage for the marker without collecting token values. For QN-014, compare an explicit seated-alternative example across repeated E02 and negation/conditional runs before a full rerun. Continue P1-T08/P1-T09 design tooling and the remaining accessibility review after the audit. Keep P2 gated.
+
+November 18 verification:
+
+- Passed: seven tests, TypeScript/Vite build and production privacy checks. Chrome source/schema 10/10 in two matched targeted batches, for 132 actual evaluation extractions total. Browser spot checks covered populated 390/768/1440, approved export preview at 200% and reduced-motion dialog cancellation.
+- Failed semantic acceptance: the candidate still misses seated participation in E02 and duplicates the E05 materials limit. E30 scope was preserved. Candidate remains development-only.
+- Open: cached model prepared and generated during Offline and drafted again once online. The recorded traffic had no synthetic marker matches. Forced app-level failure/retry, browser storage record-content audit, and the full design/accessibility gate still need evidence.
 
 ## Gate checklist
 

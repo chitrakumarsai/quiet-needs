@@ -89,3 +89,11 @@ Cloud payload contains only approved cards and supplied event facts. Determinist
 - Installed SDK source review: ChromeAdapterImpl.createSession creates a new session and destroys oldSession only on a subsequent generation; initializeDeviceModel does not clear the last prompt session. No public disposal API found.
 - Added clear-and-restart after AI preparation. Chrome test: note populated, prepare succeeded, confirmation explained restart, confirm reloaded page. Note/draft/preview empty, consent unchecked, inference disabled until prepared again. This ends document context, not a secure OS memory-wipe guarantee.
 - System-message targeted E18/E22 passed; full 30-case comparison retained in evaluation/quietneeds-system-full.json with semantic findings. Not promoted into production adapter.
+
+## Synthetic canary and populated Chrome follow-up — November 18, 2026
+
+- With Network recording and tab-local Offline enabled, entered a fictional note containing `PRIVATE_CANARY_QN_N18`. The cached model prepared and returned an ON_DEVICE seating draft. reCAPTCHA frame requests failed with `ERR_INTERNET_DISCONNECTED`. Network showed 0 B transferred and no matches for the marker.
+- Restored No throttling and explicitly repeated the draft. The result passed the app's ON_DEVICE and schema checks. The recorded request count stayed at eight through the repeat. It was a repeat after successful offline generation, so app-level error recovery remains unverified.
+- Reviewed installed Firebase storage code. The App Check store writes the token exchange result and the Firebase app store writes heartbeats. This explains the earlier store inventory. Browser record-content canary inspection, forced malformed output and controlled app-level failure/retry remain open.
+- Visually inspected populated editor states at 390, 768 and 1440 CSS pixels. The 390 layout stacked panels and the two wider layouts showed both panels side by side. At actual Chrome 200% zoom the sample's expanded JSON wrapped and the download button was visible. These are visual spot checks of those states.
+- With reduced motion emulated at 1440, Clear session focused Keep editing and Escape restored focus to Clear session while preserving the request. Restored normal network, default tab zoom and default motion emulation. Full design tooling and accessibility review are still open.

@@ -167,3 +167,10 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - Merged root/starter AGENTS.md, README.md and .gitignore; moved all remaining files including ignored local environment/dependencies/cache. Configuration preserved without printing values.
 - Updated CI working directory/cache path and contributor guide. Historical checkpoint paths describe their original layout.
 - Parent P1; owner implementation; return to P1-T06/P1-T07 after clean-install/build and root dev-server checks. Draft PR #1 receives this layout change.
+
+## CP-018 — Targeted participation and scope comparison
+
+- QN-014, parent P1-T07, owner implementation. Compare the existing system prompt with one targeted instruction change on E02/E05/E18/E22/E30 before any full rerun.
+- Return to P1-T06 synthetic failure/retry and SDK storage audit, then the populated P1-T09 browser review.
+- Observed 10/10 source/schema passes in Chrome. Candidate still misses a seated adjustment and repeats the materials budget. See evaluation/RESULTS.md for the per-case comparison and next bounded experiment. Build and seven tests pass.
+- Browser spot checks recorded in TEST_PLAN.md. Exact return is an app-level failure and explicit retry with a synthetic marker, followed by redacted browser storage verification. Network loss alone did not fail the cached model.

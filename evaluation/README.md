@@ -6,3 +6,5 @@ Existing observed runs are in TEST_PLAN.md. No aggregate score is claimed until 
 
 
 Run the development evaluator at /evaluation.html. System-message comparison: /evaluation.html?experiment=system (E18/E22) or add &scope=all for all 30. This tool is excluded from the production build. Saved results contain only repository-owned fictional cases. See RESULTS.md for actual outcomes; never treat source/schema passes as semantic acceptance.
+
+For the participation and scope comparison, use `/evaluation.html?experiment=system&scope=target` for the baseline and `/evaluation.html?experiment=scope` for the candidate. Both default to E02, E05, E18, E22 and E30 in this comparison.
