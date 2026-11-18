@@ -67,3 +67,18 @@ No explicit private markers appeared in the saved drafts. None of the candidates
 Two runs each of E02, E05, E13, E19, E25 and E27 passed source/schema (12/12). Semantic review rejected the candidate. It invented additional requirements and surfaced the fictional private family detail in both E13 drafts. One E19 draft omitted written instructions. No full rerun or production promotion followed. The compact candidate can be reproduced with `experiment=compact` in the development evaluator.
 
 After the build migration, the existing two-case system evaluator separately returned expected ON_DEVICE outputs for E18 (clarification only) and E22 (support-person request). This confirmed the evaluator entry point on Rsbuild. It did not test compact prompt acceptance.
+
+## Source-grounded local correction
+
+An experimental second pass received the original synthetic note and a saved incorrect draft. It was instructed to recover each independent accommodation from the note, preserving scope and exact values while removing unsupported and private content. All six responses passed ON_DEVICE source and schema validation. Manual review found one pass, one revision and four failures.
+
+| Case | Observed correction |
+| --- | --- |
+| E02 | Asked to leave the walking session and still omitted seated participation. |
+| E05 | Kept the incorrect free handouts and omitted the 500 INR limit. |
+| E13 | Kept the arrival placeholder and added unsupported seating. |
+| E19 | Kept the chair and still omitted written instructions. |
+| E25 | Corrected the draft to one 10-minute break every hour. |
+| E27 | Restored free materials and added a redundant availability request. |
+
+The six incorrect starting drafts came from the saved system (E02), constraints (E05), seated (E13/E25), limits (E19), and timing (E27) batches. The correction pass was rejected and its temporary harness was removed. Before another model promotion attempt, evaluate whether explicit participant confirmation of constraints can prevent unsupported or omitted requirements from being accepted. Manual editing and approval remain in effect.

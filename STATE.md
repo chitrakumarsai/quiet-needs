@@ -5,7 +5,7 @@ Updated: November 18, 2026 IST
 - Active phase: **P1 — Private vertical slice**.
 - Active task: **P1-T07 extraction-quality correction**.
 - Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-022.
-- P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, seven tests and local npm audit pass. QN-016 is locally resolved.
+- P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, seven tests and npm audit pass locally and in GitHub CI. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. Offline reload remains unimplemented.
 - Participant flow: readable approved snapshot and exact JSON disclosure, local export, native clear confirmation, focus restoration. QN-012 resolved. Keyboard approval/preview/disclosure/download and cancel/confirm clear checks passed. Download matches approved snapshot byte for byte and excludes private canary/questions.
@@ -19,7 +19,7 @@ Updated: November 18, 2026 IST
 
 ## Exact next action
 
-Stay in P1. QN-014 is the remaining product gate. The compact prompt reproduced privacy and completeness regressions in the targeted synthetic suite. Compare local source-grounded verification on known bad drafts before promoting another prompt. Keep P2 gated while extraction acceptance is open.
+Stay in P1. QN-014 is the remaining product gate. The compact prompt and local correction both failed. Evaluate participant confirmation of source constraints before promoting new extraction behavior. Keep P2 gated while extraction acceptance is open.
 
 November 18 verification:
 
@@ -34,6 +34,7 @@ November 18 verification:
 - Final browser pass: 390/768/1440 populated flow, keyboard approval and exact preview, 200% zoom download focus and reduced-motion clear confirmation. See TEST_PLAN.md.
 - Timing and budget follow-up: 112 additional source/schema passes, for 302 completed model runs total. Full semantic reviews reproduced critical budget or intent failures across three variants. None was promoted. Build and seven tests passed. Current Vite 8.3.8 also depends on affected picomatch, so a Vite upgrade does not clear QN-016.
 - CP-022: Rsbuild now passes the local production build and high-severity audit. Actual device generation, DevTools Offline, consent invalidation, evaluation entry point and production exclusions were checked again. Codex app-server detected all installed workspace skills. The compact model candidate added 12 actual runs and the migration smoke test added two. Total recorded evaluation runs: 316.
+- CP-022 follow-up: GitHub participant checks passed on `9f68d2b`, push run 44243150994 and PR run 44243155984. GitGuardian passed. The six local correction tests passed source and schema but failed semantic acceptance. Total recorded evaluation runs: 322.
 
 ## Gate checklist
 
@@ -48,7 +49,7 @@ November 18 verification:
 - [x] P1 synthetic browser network/privacy audit
 - [x] Selected design tooling verified and participant controls reconciled with DESIGN.md
 - [x] Participant responsive/200%/keyboard/reduced-motion browser review
-- [x] Local high-severity dependency audit (QN-016)
+- [x] Local and CI high-severity dependency audit (QN-016)
 - [x] Architecture P1-T10 design review (runtime checks remain P2/P3)
 
 

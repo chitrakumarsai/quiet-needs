@@ -5,6 +5,7 @@
 - Replaced Vite with Rsbuild 1.7.6 to remove the affected dependency chain. Existing Firebase configuration names and participant behavior were verified. Seven local tests, production exclusions and the dependency audit passed.
 - Installed and verified three selected project skills and recorded their versions. Kept the browser-tested native controls.
 - Rejected the compact prompt after on-device evaluation reproduced private-detail and coverage failures. QN-014 remains open.
+- Both GitHub participant checks and GitGuardian passed. A separate local draft correction experiment also failed model acceptance and was discarded.
 
 ## 2026-11-18 — P1 gate follow-up
 

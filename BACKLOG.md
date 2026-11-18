@@ -16,11 +16,11 @@
 | QN-012 | UX correction | P1-T09 | Resolved | Readable snapshot/JSON preview and clear confirmation implemented; keyboard cancellation/confirmation and downloaded-byte comparison passed | P1 browser/design gate |
 | QN-013 | Local extraction | P1-T04 | Resolved | Added device responseConstraint after invalid JSON; real online/offline synthetic extractions passed | P1-T06/P1-T07 |
 
-| QN-014 | Model quality | P1-T07 | Open | Full variants have cost scope or completeness regressions. The compact candidate also surfaced a synthetic private reason. Compare source-grounded verification against known bad drafts before considering another production candidate | P1 gate |
+| QN-014 | Model quality | P1-T07 | Open | Compact prompt and local correction both failed acceptance. Validate a way for participants to confirm source constraints before promoting any new candidate | P1 gate |
 
 | QN-015 | SDK memory | P1-T06 | Correction verified | Clear after AI preparation reloads page to end SDK context; manual-only clear stays in page. Browser restart verified; no secure memory-erasure promise | Full privacy audit |
 
-| QN-016 | Dependency audit | P1-T02 | Resolved locally | Replaced the Vite build dependency with Rsbuild 1.7.6, which removes the affected dependency chain. npm audit reports zero findings. Review remote CI on the new commit | P1-T07 |
+| QN-016 | Dependency audit | P1-T02 | Resolved | Rsbuild 1.7.6 removes the affected dependency chain. npm audit reports zero findings and both GitHub participant checks passed on 9f68d2b | P1-T07 |
 
 ## Issue template
 
