@@ -14,3 +14,5 @@ The seated and attendance example candidate runs E02, E05, E18, E22, E26, E28 an
 Use `experiment=timing` for the departure and break-duration instructions. `experiment=constraints` adds a free-materials example and `experiment=limits` uses cost rules without that example. Each accepts `&scope=all` for the full suite.
 
 Use `experiment=compact` to reproduce the rejected short prompt. It defaults to two passes over E02, E05, E13, E19, E25 and E27.
+
+Use `experiment=explicit` for all 30 cases with direct local rules on fully recognized notes and the production model adapter for the remaining notes. Use `experiment=explicit-constraints` for the same rules with the constraints system prompt and production draft checks on the model path. Saved rows distinguish `LOCAL_RULES` from verified `ON_DEVICE` inference. The first two saved runs predate the direct sensory rules.

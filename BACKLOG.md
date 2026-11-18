@@ -16,7 +16,7 @@
 | QN-012 | UX correction | P1-T09 | Resolved | Readable snapshot/JSON preview and clear confirmation implemented; keyboard cancellation/confirmation and downloaded-byte comparison passed | P1 browser/design gate |
 | QN-013 | Local extraction | P1-T04 | Resolved | Added device responseConstraint after invalid JSON; real online/offline synthetic extractions passed | P1-T06/P1-T07 |
 
-| QN-014 | Model quality | P1-T07 | Open | Local guards block some bad drafts. Selected-text recovery worked for a missing request and preserved personal timing and material-cost scope in two other selections. Whole-note semantic failures remain open | P1 gate |
+| QN-014 | Model quality | P1-T07 | Open | Latest candidate passed 29 of 30 in Chrome. The fallback still added an unsupported scheduling preference. Production checks now reject the observed event-wide timing substitution | P1 gate |
 
 | QN-015 | SDK memory | P1-T06 | Correction verified | Clear after AI preparation reloads page to end SDK context; manual-only clear stays in page. Browser restart verified; no secure memory-erasure promise | Full privacy audit |
 

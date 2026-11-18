@@ -98,3 +98,15 @@ The participant flow recovered the written-instructions request that whole-note 
 A second synthetic note supplied a personal departure and a materials budget. Separately selecting the two sentences added “Please allow me to depart by 4 pm.” and “Please be aware that my materials budget is 500 INR.” The time and budget scope were retained. The departure phrasing changed from “at” to “by,” so participant review still matters.
 
 These checks cover three selected-text extractions. The initial chair request was entered manually. Whole-note extraction quality remains open under QN-014.
+
+## Explicit requests with the current model fallback
+
+[Thirty-case Chrome run](quietneeds-explicit-full.json) with a development-only whole-note recognizer ahead of the production model adapter. The recognizer handled eight cases, all semantic passes. The other 22 went to the verified on-device model. The adapter produced 21 validated drafts and withheld one for failing a local check. Across both paths, manual review found 26 passes, one revision and three failures. All five failures in the previous full run passed in this run. No private canary or private reason appeared in the outputs.
+
+The model changed a personal departure into an event-wide end time (E13), invented a broad request on a clarification-only note (E18), and produced no usable draft for an attendance window (E30). The stepping-out request (E29) had an extra scheduling preference and a placeholder question. Additional automated examples cover unfamiliar, private and conditional notes that should go to the existing model path.
+
+[Second thirty-case Chrome run](quietneeds-explicit-constraints-full.json) kept the same local rules and switched the remaining 22 cases to the earlier constraints system prompt with production draft checks. All 30 drafts passed schema validation. Manual review found 27 passes, two revisions and one failure. E13, E18 and E30 passed. The model weakened “avoid flashing lights” to “minimize flashing lights” (E07), missed the break in E16, and added a scheduling preference in E29. No private canary or private reason appeared in the outputs. Both candidates remain development-only.
+
+The production schedule-scope check now blocks the observed “end this event” phrasing when the source asks only for personal departure. A test verifies that the same wording remains valid when the participant explicitly asks to change the event schedule.
+
+[Third thirty-case Chrome run](quietneeds-explicit-sensory-full.json) used the constraints fallback after the addition of direct sensory rules. Manual review found 29 passes and one revision. All nine direct rule drafts preserved the case criteria, including “avoid flashing lights,” and all 21 verified ON_DEVICE drafts passed schema. The model kept the quiet-break request in this run and again added an unsupported scheduling preference to E29. Held-out unit examples verified avoiding strobe lights, a quiet break paired with a seat, and abstention on conditional and mixed notes. The full candidate remains in development pending evidence that the fallback preserves participant scope consistently.

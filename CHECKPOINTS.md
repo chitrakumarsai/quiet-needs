@@ -214,3 +214,11 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - Exact return: verify the synthetic written-instructions omission through the participant interface. Keep full-note extraction acceptance separate.
 - Verified real on-device recovery with an existing edited aisle-chair request. Both requests appeared in the JSON only after reapproval. Marked the selected-text workflow checked at 390 CSS pixels. Thirteen automated tests and the production build passed.
 - Follow-up: two selections retained the personal 4 p.m. departure and 500 INR materials scope. Exact return is QN-014 whole-note semantic acceptance.
+
+## CP-025 — Preserve explicit requests before model inference
+
+- QN-014/P1-T07, owner implementation. Evaluate a local whole-note recognizer for fully matched, explicit requests. Keep all other notes on the existing model path and record the source for each result.
+- Exact return: compare both paths across the original 30 cases and check unfamiliar phrasing, negation, conditions, and mixed notes before any promotion.
+- Eight direct rule drafts passed in each Chrome comparison. The current model fallback yielded 26 passes, one revision and three failures overall. The constraints fallback yielded 27 passes, two revisions and one failure. Both candidates stay in development. Added a production check for the event-wide wording that slipped through in the first run.
+- Direct sensory rules preserved the avoidance request in the next full run. All nine direct rule cases passed, and the full run found 29 passes and one revision. Held-out positive and abstention tests passed.
+- Exact return: prevent optional stepping-out requests from gaining scheduling constraints. Verify explicit no-schedule requests still retain that condition, then repeat with mixed notes before promotion.

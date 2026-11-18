@@ -65,7 +65,7 @@ const costFree = /\b(?:free(?=\s|[.!?,]|$)|complimentary|(?:0|zero|no)\s+(?:cost
 const placeholder = /\[\s*(?:(?:start|end|departure|arrival|leave|insert|your|preferred)\s+)?(?:time|date|amount|location|currency|duration)\s*\]/i;
 const breakDuration = /\b(\d+)\s*-?\s*(minute|hour)s?\s+breaks?\b/i;
 const personalTiming = /\b(?:I|me)\b[^.!?\n]{0,55}\b(?:leave|depart|arrive|attend)\b/i;
-const eventTiming = /\b(?:start|end|reschedule|extend|move)\s+the\s+(?:event|workshop|session)\b/i;
+const eventTiming = /\b(?:start|end|reschedule|extend|move)\s+(?:the|this|our)\s+(?:event|workshop|session)\b/i;
 
 function requestKey(request: string): string {
   return request.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[.!?]+$/, '');

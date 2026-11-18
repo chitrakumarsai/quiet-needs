@@ -1,5 +1,10 @@
 # Change log
 
+## 2026-11-18 — Preserving explicit requests
+
+- Evaluated complete-note local rules with two on-device model fallbacks. The latest Chrome run passed 29 of 30 overall, including all nine direct rule drafts, with one revision for an unsupported scheduling preference. The experimental path remains development-only.
+- Expanded the production schedule-scope check to catch the observed “end this event” substitution for a personal departure and verified that explicit requests to change the event schedule still pass.
+
 ## 2026-11-18 — Recovering a missing request
 
 - Added an on-device action that drafts from a selected passage of the private note and keeps existing requests.
