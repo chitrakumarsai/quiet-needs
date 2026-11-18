@@ -1,17 +1,17 @@
-name: P1 checks
+name: Participant and sharing checks
 
 on:
   push:
     branches: [main, 'feat/**', 'fix/**']
   pull_request:
-    branches: [main]
+    branches: [main, 'feat/**']
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: p1-checks-${{ github.ref }}
+  group: participant-checks-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -29,6 +29,11 @@ jobs:
           cache-dependency-path: package-lock.json
       - run: npm ci
       - run: npm test
+      - name: Firestore emulator rules
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          export PATH="$JAVA_HOME/bin:$PATH"
+          npm exec --yes --package=firebase-tools@15.36.0 -- firebase emulators:exec --only firestore --project demo-quietneeds 'npm run test:rules'
       - name: Typecheck, build, and production privacy checks
         run: npm run build
         env:

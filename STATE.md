@@ -3,8 +3,9 @@
 Updated: November 18, 2026 IST
 
 - Completed phase: **P1 — Private vertical slice**, in the approved manual-entry scope.
-- Next implementation phase: **P2 — Approved sharing**. Start with authentication and event-scoped authorization.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-047.
+- Completed phase: **P2 — Approved sharing**, verified in the local Firebase demo.
+- Next implementation phase: **P3 — Organizer adaptation**. Start with the approved-card snapshot and revision checks.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-048.
 - P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, automated tests and npm audit pass. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. Offline reload remains unimplemented.
@@ -12,14 +13,14 @@ Updated: November 18, 2026 IST
 - Privacy evidence: synthetic setup, generation, failure, retry, socket, browser storage and export checks recorded in TEST_PLAN.md. No outgoing canary or origin storage match observed in those runs.
 - Model evaluation before November 18: 122 actual runs across three 30-case prompt iterations and targeted 2-case/full 30-case system-message comparisons. Full batches passed source/schema 30/30. Agent semantic review R1: 20 pass/6 revision/4 fail; R2: 28/1/1; R3: 27/1/2. Actual outputs and review notes retained in evaluation/. System target 2/2 passed; full system run 27 semantic pass/2 revision/1 fail. **QN-014 quality gate open**.
 - UX: browser review passed for the current participant screen at 390/768/1440, with zoom, keyboard, reduced motion and exact approved preview evidence. All three selected workspace skills were discovered and enabled (QN-008 resolved).
-- Architecture design review P1-T10 complete; runtime sharing/rules not implemented.
+- Architecture design review P1-T10 complete. P2 emulator rules and two-session sharing checks passed.
 - QN-015 SDK-memory correction: after local AI preparation, clear now reloads the document to end its SDK context. Browser verified blank note/draft/consent and disabled inference after restart; no secure-erasure guarantee. Manual-only clear retains focus recovery.
 - CLI 0.169.0 available. Ponytail 5.3.3 installed/enabled. Ponytail review applied; report in evaluation/SOURCE_REVIEW.md. Hook trust/restart not verified and not changed.
-- No deployment, authentication, database sharing or cloud organizer adaptation implemented. Participant/organizer interviews pending.
+- Authentication and database sharing verified in local emulators. Live provider and production rules rollout remain unverified. Cloud organizer adaptation and deployment are pending.
 
 ## Exact next action
 
-P1 manual entry is ready for handoff. Start P2 with the reviewed event and membership authorization design. QN-014 remains open as a development-only extraction quality issue.
+P2 is ready for review. Start P3 with approved shared cards and explicit event revision checks. QN-014 remains open as a development-only extraction quality issue.
 
 November 18 verification:
 
@@ -79,7 +80,14 @@ November 18 verification:
 
 - CP-046: Both participant-authored variants passed all 12 cards. The small sample and identical wording within each variant limit conclusions. QN-014 remains open.
 
-## Gate checklist
+## P2 gate
+
+- [x] Two isolated Chrome sessions verified organizer admission and approved sharing.
+- [x] Emulator rules verified event isolation, revision contention, withdrawal, and revocation.
+- [x] Nineteen automated tests, production build, and dependency audit passed.
+- Live provider and hosted rollout verification remain pending.
+
+## P1 gate checklist
 
 - [x] Dependencies installed and lockfile generated
 - [x] Domain, extraction and privacy tests pass

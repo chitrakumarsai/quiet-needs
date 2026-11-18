@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-11-18 — P2 approved event sharing
+
+- Added sign-in, event creation, organizer-approved enrollment, revisioned card sharing, withdrawal, and membership revocation. Validated the access rules and ran the workflow with two synthetic accounts in Chrome.
+
 ## 2026-11-18 — P1 manual-entry release
 
 - Completed the approved participant slice with manual request entry, an exact preview, explicit approval, and local JSON export. Automatic extraction remains available in the development evaluator.

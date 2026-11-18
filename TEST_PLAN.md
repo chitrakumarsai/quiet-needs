@@ -128,3 +128,11 @@ Cloud payload contains only approved cards and supplied event facts. Determinist
 ## Manual-entry P1 release verification
 
 Chrome opened the production build and verified entering two requests, blocking preview for a blank request, displaying the exact requested text before approval, disabling download until approval, and clearing preview and consent after editing. The downloaded JSON matched the expected schema and both revised requests. Escape cancelled clearing and restored focus to Clear session. Confirming cleared the form and returned focus to the first request. Production inspection found no Firebase App Check host, model endpoint, private prompt, or evaluation runner. Historical device-only inference checks apply to the development evaluator.
+
+## P2 local approved-sharing gate
+
+- The Auth and Firestore emulators ran with the isolated `demo-quietneeds` project. Two separate Chrome tabs used distinct in-memory demo identities. The participant could submit a join request and could not see event content while pending. Organizer admission enabled event access. A preview alone exposed no sharing action. Approval enabled sharing, and the organizer saw the approved text after refresh.
+- Verified replacement from revision 1 to 2, then participant withdrawal. Local edits cleared approval and kept the previous revision visibly shared until replacement. The organizer revoked access after a new share, which removed the card from their active list and ended participant access. A second browser run verified that server acknowledgement clears approval and requires a new preview and approval for any further share.
+- Rules tests verified isolated events, anonymous and cross-user denial, pending members, unauthorized membership writes, card owner spoofing, extra card and requirement fields, blank and oversized requests, isolated revision changes, operation replay, concurrent revision contention, valid eight-request replacement, withdrawal, and atomic revocation. The test suite executed real transactions against the Firestore emulator.
+- Passed: 19 automated domain/evaluation tests, the emulator rules suite, production TypeScript/build and privacy checks, and npm audit with zero findings.
+- Pending: live Google sign-in and rules deployment to an isolated hosted project. The emulator browser run used synthetic local sign-in.

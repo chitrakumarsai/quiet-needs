@@ -346,3 +346,9 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - QN-014/P1-T07, owner implementation. User approved manual-entry release. The participant build supports editable requests, preview, explicit approval, and local JSON download. Inference remains available in the development evaluator.
 - Verified the production build in Chrome. Incomplete drafts cannot preview, approval gates download, edits clear the preview, and the exported JSON matches the revised card. Clearing and focus return passed.
 - Exact return: begin P2 approved sharing using the P1-T10 architecture review. Evaluate QN-014 separately before promoting automatic extraction.
+
+## CP-048 — Implement P2 approved sharing
+
+- QN-017/P2, owner implementation. Implement account identity, organizer-approved enrollment, and revisioned approval and withdrawal. Verify access rules and two isolated sessions before closing P2.
+- Passed rules tests and two-tab Chrome checks for organizer approval, exact card share, replacement, withdrawal, revocation, and approval reset after acknowledgement. The local P2 implementation gate passed. Hosted configuration and Google sign-in remain unverified.
+- Exact return: review P2 against P1 and use the auth/event/card contract for P3 organizer planning. Hosted sign-in still needs isolated project enablement and verification.

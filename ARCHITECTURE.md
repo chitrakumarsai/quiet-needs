@@ -16,8 +16,8 @@ Codex CLI develops the code. It is not the runtime model and must use synthetic 
 | --- | --- | --- |
 | Participant editor, manual card, preview, JSON export | Source implemented; domain tests passed previously; browser build unverified | P1 |
 | Device-only Firebase adapter | Source implemented; actual SDK/device run unverified | P1 |
-| Authentication and event membership | Not implemented | P2 |
-| Approved sharing and withdrawal | Not implemented | P2 |
+| Authentication and event membership | Implemented and verified in two isolated local demo sessions | P2 |
+| Approved sharing and withdrawal | Browser and Firestore emulator checks passed | P2 |
 | Organizer cloud generation | Not implemented | P3 |
 | Revised plan and participant confirmation | Not implemented | P3 |
 | Offline reload, full accessibility and security regression | Not implemented | P4 |
@@ -70,7 +70,7 @@ Target: one organizer and up to 25 participants per demo event; at most 8 requir
 | events/{eventId} | organizerUid, title, timeZone, agenda, venueFacts, agendaRevision, inputRevision, currentPlanId, planRevision, status, createdAt; organizer owns content |
 | events/{eventId}/joinRequests/{uid} | requestedAt, status; participant requests admission, organizer decides |
 | events/{eventId}/members/{uid} | active, joinedAt; only event organizer creates/changes membership |
-| events/{eventId}/cards/{uid} | ownerUid, revision, status, requirements, consentVersion, approvedAt, updatedAt, operationId; participant owns content |
+| events/{eventId}/cards/{uid} | schemaVersion, ownerUid, revision, status, requirements, consentVersion, approvedAt, updatedAt, operationId; participant owns content |
 | events/{eventId}/proposals/{proposalId} | inputRevision, agendaRevision, referenceMap, proposedAgenda, changes, unknowns, modelMetadata, status; organizer-only |
 | events/{eventId}/publishedPlans/{planId} | inputRevision, planRevision, agenda, publishedAt; participants see agenda only |
 | events/{eventId}/confirmations/{uid} | cardRevision, planId, planRevision, inputRevision, status, comment, updatedAt; participant owns confirmation |
@@ -231,7 +231,7 @@ Review date: November 15, 2026. Method: source-to-design comparison and scenario
 | AI output includes private reasons in an approved request | Human review and exact sharing preview; schema is not anonymization | Model evaluation and consent UX tests |
 | Direct-client AI bypasses app-level cost controls | Document limitation; provider quotas and synthetic bounded demo; backend remains future decision | Quota error behavior; production review before real use |
 
-P1-T10 documentation/review is complete at the design level. P1's build, real local inference, browser privacy, and UX gates remain open. P2/P3 rules and concurrency tests remain required implementation gates. Do not interpret this review as evidence the proposed rules have executed successfully.
+P1-T10 design review is complete. P2 tests executed the implemented sharing, enrollment, and revision rules in the emulator. P3 proposals, publishing, and confirmations still require their own rules and concurrency checks. Live Google sign-in and hosted rules deployment remain unverified.
 
 ## 15. Reference sources
 

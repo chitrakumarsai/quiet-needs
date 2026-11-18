@@ -10,7 +10,7 @@ Before committing:
 4. Push the task branch and open a draft pull request. State the problem, resulting behavior, validation and remaining gates. Keep draft status while P1 acceptance work remains.
 5. Review the source and CI results before requesting merge. Do not merge an incomplete phase merely because CI passes. Main should be updated through reviewed pull requests.
 
-The P1 checks workflow verifies the domain, extraction, and privacy tests, TypeScript, the Rsbuild production bundle, exclusion of a synthetic App Check debug-token canary and evaluation assets, and npm audit. It runs without real Firebase configuration. Device inference, network privacy and model quality require separate evidence in TEST_PLAN.md and evaluation/RESULTS.md.
+CI runs domain, extraction, and privacy tests, Firestore emulator rules, the production bundle and privacy checks, and npm audit. It uses a local demo Firebase project. Device inference, browser privacy, and model quality have separate evidence in TEST_PLAN.md and evaluation/RESULTS.md.
 
 Branch protection is a GitHub setting, not enforced by this document. Verify required checks/rules independently; do not claim protection exists just because a workflow file exists. No auto-deployment or auto-merge is configured.
 

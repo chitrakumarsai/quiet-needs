@@ -1,8 +1,12 @@
-import React, { useRef, useState } from 'react';
+import React, { lazy, Suspense, useCallback, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { makeApprovedCard, makeCardPreview } from './domain.ts';
 import type { ApprovedCard, Draft } from './domain.ts';
 import './style.css';
+
+const sharingAvailable = import.meta.env.VITE_SHARING_ENABLED === 'true' ||
+  (import.meta.env.DEV && import.meta.env.VITE_SHARING_EMULATORS === 'true');
+const SharingPanel = sharingAvailable ? lazy(() => import('./SharingPanel.tsx')) : null;
 
 const emptyDraft = (): Draft => ({ requirements: [{ category: 'other', request: '' }], questions: [] });
 
@@ -15,8 +19,19 @@ function App() {
   const clearDialog = useRef<HTMLDialogElement>(null);
   const clearButton = useRef<HTMLButtonElement>(null);
   const keepEditing = useRef<HTMLButtonElement>(null);
+  const copiedSharedCard = useRef(false);
   const hasContent = draft.requirements.some(({ request }) => request.trim());
   const canPreview = draft.requirements.length > 0 && draft.requirements.every(({ request }) => request.trim());
+
+  const clearApproval = useCallback(() => {
+    setConsent(false);
+    setPreview(null);
+    if (copiedSharedCard.current) {
+      copiedSharedCard.current = false;
+      setDraft(emptyDraft());
+      setStatus('');
+    }
+  }, []);
 
   function changeDraft(next: Draft) {
     setDraft(next);
@@ -97,6 +112,14 @@ function App() {
         </section>}
       </section>
     </div>
+    {SharingPanel && <Suspense fallback={<p role="status">Loading event sharing…</p>}>
+      <SharingPanel approved={consent ? preview : null} onContextChange={clearApproval}
+        onShareAcknowledged={() => { setConsent(false); setPreview(null); }}
+        onLoadCard={card => {
+          copiedSharedCard.current = true;
+          changeDraft({ requirements: card.requirements.map(({ category, request }) => ({ category, request })), questions: [] });
+        }}/>
+    </Suspense>}
     <dialog ref={clearDialog} aria-labelledby="clear-title" aria-describedby="clear-description"
       onClose={() => (clearButton.current?.disabled ? firstRequest.current : clearButton.current)?.focus()}>
       <h2 id="clear-title">Clear this session?</h2>
@@ -104,6 +127,7 @@ function App() {
       <div className="actions">
         <button ref={keepEditing} onClick={() => clearDialog.current?.close()}>Keep editing</button>
         <button className="destructive" onClick={() => {
+          copiedSharedCard.current = false;
           changeDraft(emptyDraft());
           setStatus('Session cleared.');
           clearDialog.current?.close();
