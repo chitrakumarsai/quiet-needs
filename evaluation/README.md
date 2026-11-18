@@ -16,3 +16,5 @@ Use `experiment=timing` for the departure and break-duration instructions. `expe
 Use `experiment=compact` to reproduce the rejected short prompt. It defaults to two passes over E02, E05, E13, E19, E25 and E27.
 
 Use `experiment=explicit` for all 30 cases with direct local rules on fully recognized notes and the production model adapter for the remaining notes. Use `experiment=explicit-constraints` for the same rules with the constraints system prompt and production draft checks on the model path. Saved rows distinguish `LOCAL_RULES` from verified `ON_DEVICE` inference. The first two saved runs predate the direct sensory rules.
+
+Use `experiment=step-out` to run the original 30 and four mixed-note cases. Add `&examples=paired` for the prompt used in the latest run. The first two stepping-out runs predate the rule that combines fully recognized clauses.

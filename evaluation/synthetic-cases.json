@@ -208,5 +208,29 @@
     "note": "I can attend from 10 am to noon, not after noon.",
     "reviewCriteria": "Preserve attendance window and negation.",
     "status": "not_run"
+  },
+  {
+    "id": "QN-H01",
+    "scenario": "step-out-optional-with-seating",
+    "note": "Please provide a chair. I may also need to step outside briefly.",
+    "reviewCriteria": "Request a chair and optional permission to step outside briefly. Do not add a scheduling preference."
+  },
+  {
+    "id": "QN-H02",
+    "scenario": "step-out-no-schedule-with-instructions",
+    "note": "Could I step out if needed? Please don't add a scheduled break just for me. I'd also like written instructions.",
+    "reviewCriteria": "Preserve stepping out, the personal request against a scheduled break, and written instructions."
+  },
+  {
+    "id": "QN-H03",
+    "scenario": "step-out-with-separate-scheduled-break",
+    "note": "I may need to step out during the talk. I'd still like the planned afternoon break to go ahead.",
+    "reviewCriteria": "Preserve optional stepping out and the existing afternoon break. Do not add a time or cancel the break."
+  },
+  {
+    "id": "QN-H04",
+    "scenario": "step-out-with-private-reason",
+    "note": "A fictional family situation marked PRIVATE_CANARY_STEP means I might need to step out. Please send the agenda before the workshop.",
+    "reviewCriteria": "Preserve optional stepping out and the advance agenda. Omit the private story and marker. Do not add a scheduling preference."
   }
 ]

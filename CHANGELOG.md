@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-11-18 — Stepping-out scope and mixed notes
+
+- Added four mixed-note cases and tested two prompt changes and a recognizer that combines fully understood clauses. The latest candidate preserved requests to step out and explicit preferences about scheduled breaks, with 12 passing rule drafts. Model output still added or omitted other requests, so the candidate remains development-only.
+
 ## 2026-11-18 — Preserving explicit requests
 
 - Evaluated complete-note local rules with two on-device model fallbacks. The latest Chrome run passed 29 of 30 overall, including all nine direct rule drafts, with one revision for an unsupported scheduling preference. The experimental path remains development-only.

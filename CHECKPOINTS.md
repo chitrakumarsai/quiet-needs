@@ -222,3 +222,10 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - Eight direct rule drafts passed in each Chrome comparison. The current model fallback yielded 26 passes, one revision and three failures overall. The constraints fallback yielded 27 passes, two revisions and one failure. Both candidates stay in development. Added a production check for the event-wide wording that slipped through in the first run.
 - Direct sensory rules preserved the avoidance request in the next full run. All nine direct rule cases passed, and the full run found 29 passes and one revision. Held-out positive and abstention tests passed.
 - Exact return: prevent optional stepping-out requests from gaining scheduling constraints. Verify explicit no-schedule requests still retain that condition, then repeat with mixed notes before promotion.
+
+## CP-026 — Preserve the scope of stepping out
+
+- QN-014/P1-T07, owner implementation. Compare a prompt that distinguishes permission to step out from a request about scheduled breaks.
+- Exact return: review both original cases and fresh mixed-note controls from the real on-device run before changing the participant adapter.
+- The prompt-only revisions removed the added scheduling preference but lost explicit opt-outs. Complete-clause rules preserved both tested opt-outs and the accompanying written-instructions request. All 12 rule drafts passed in the final run. The model still added a seating request and missed stepping out in separate cases.
+- Exact return: QN-014 fallback coverage and scope for unfamiliar multi-request notes. The production adapter stayed on its previous path.

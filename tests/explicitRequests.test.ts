@@ -13,6 +13,8 @@ test('explicit recognition keeps list items, personal amounts and departure scop
     ['I can’t stand during the training session.', ['Please offer me a seated way to take part in the training session.']],
     ['I need to avoid strobe lights.', ['Please avoid strobe lights.']],
     ['I need a quiet break and a seat.', ['Please allow me to take a quiet break.', 'Please provide a seat.']],
+    ['I might need to step away briefly. Please bring a seat.', ['Please let me step away briefly if needed.', 'Please provide a seat.']],
+    ['Could I step out? Please do not add an extra break for me. I’d like written instructions.', ['Please let me step out.', 'Please do not schedule a separate break for me.', 'Please provide written instructions.']],
   ] as const;
   for (const [note, expected] of examples) {
     const draft = parseDraft(draftExplicitRequests(note));
@@ -31,6 +33,8 @@ test('unrecognized clauses, negation and private explanations stay on the normal
     'My supplies budget is 500 INR and I may need time to rest.',
     'Please avoid loud music if you can keep the lights dim.',
     'I need a quiet break. Please also leave the doors open.',
+    'I may need to step away. Please keep the current meal break.',
+    'Please do not schedule a break for me if the first session runs late.',
   ];
   for (const note of examples) assert.equal(draftExplicitRequests(note), null, note);
 });

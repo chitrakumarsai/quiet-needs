@@ -110,3 +110,15 @@ The model changed a personal departure into an event-wide end time (E13), invent
 The production schedule-scope check now blocks the observed “end this event” phrasing when the source asks only for personal departure. A test verifies that the same wording remains valid when the participant explicitly asks to change the event schedule.
 
 [Third thirty-case Chrome run](quietneeds-explicit-sensory-full.json) used the constraints fallback after the addition of direct sensory rules. Manual review found 29 passes and one revision. All nine direct rule drafts preserved the case criteria, including “avoid flashing lights,” and all 21 verified ON_DEVICE drafts passed schema. The model kept the quiet-break request in this run and again added an unsupported scheduling preference to E29. Held-out unit examples verified avoiding strobe lights, a quiet break paired with a seat, and abstention on conditional and mixed notes. The full candidate remains in development pending evidence that the fallback preserves participant scope consistently.
+
+## Stepping out and scheduled breaks
+
+Three Chrome runs each covered the original 30 cases plus four mixed notes. All 102 drafts passed schema. No synthetic private marker or reason appeared in the drafts. Manual review checked whether each request retained its own scope and qualifiers.
+
+| Candidate | Pass / revision / fail | Finding |
+| --- | --- | --- |
+| [Scheduling instruction](quietneeds-step-out-full.json) | 28 / 2 / 4 | Removed the added scheduling preference in E29. Dropped the explicit opt-out in E26 and H02. H03 and H04 also lost independent requests. |
+| [Paired examples](quietneeds-step-out-paired-full.json) | 30 / 2 / 2 | E29 passed. E26 and H02 still lost the opt-out. H04 passed in this run. |
+| [Paired examples and complete-clause recognition](quietneeds-step-out-clauses-full.json) | 29 / 3 / 2 | All 12 rule drafts passed, including E26, H01 and H02. E29 passed via the model. The model invented support-person seating in E22 and omitted stepping out in H04. |
+
+The recognizer checks every clause before using its result. When a clause is unfamiliar, the full note goes to the existing on-device fallback in the evaluator. Held-out unit examples cover mixed positive and negative requests and verify abstention on conditional and unknown clauses. The participant adapter stays on its verified production path. QN-014 is open because the latest candidate still loses or adds requests in model-generated drafts.

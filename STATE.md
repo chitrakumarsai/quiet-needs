@@ -4,7 +4,7 @@ Updated: November 18, 2026 IST
 
 - Active phase: **P1 — Private vertical slice**.
 - Active task: **P1-T07 extraction-quality correction**.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-025.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-026.
 - P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, automated tests and npm audit pass. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. Offline reload remains unimplemented.
@@ -19,7 +19,7 @@ Updated: November 18, 2026 IST
 
 ## Exact next action
 
-Stay in P1. QN-014 is the remaining product gate. The latest candidate passed 29 of 30, with one unsupported scheduling preference. Verify that the fallback preserves both plain stepping-out requests and explicit requests against a scheduled break, then repeat with mixed notes before promotion. Participant review and selected-text recovery remain available.
+Stay in P1. QN-014 is the remaining product gate. The latest candidate preserved the plain stepping-out request and the explicit opt-outs, including one with a separate written-instructions request. It still lost an independent request in a mixed note and added another to a support-person request. Return to verifying request coverage and source scope on unfamiliar mixed notes before promotion. Participant review and selected-text recovery remain available.
 
 November 18 verification:
 
@@ -38,6 +38,7 @@ November 18 verification:
 - CP-023: Eleven automated tests and the production build passed. Local guards blocked four historically failed drafts in replay across 272 saved drafts. Two real 30-case batches passed source/schema. Final semantic review found 23 pass, 2 revisions and 5 failures. Total recorded evaluation runs: 382.
 - CP-024: Thirteen automated tests and the production build passed. Chrome verified three selected-text extractions, reapproval, exact JSON with both synthetic requests, and the new control at 390 CSS pixels. Full-note extraction was not re-evaluated for this workflow change.
 - CP-025: Fifteen automated tests and the production privacy build passed. Three full Chrome comparisons scored 26/1/3, 27/2/1 and 29/1/0 for pass/revision/fail. The latest run used nine direct rule drafts and 21 verified ON_DEVICE outputs. The first run withheld one model output on a local check. The experimental path remains development-only. Production now also rejects “end this event” when the source only requests personal departure.
+- CP-026: Fifteen tests and production privacy build passed. Three 34-case Chrome runs scored 28/2/4, 30/2/2 and 29/3/2. The latest run used 12 passing direct rule drafts and 22 verified ON_DEVICE drafts. The added mixed cases exposed remaining completeness failures. The candidate remains development-only.
 
 ## Gate checklist
 
