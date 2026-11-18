@@ -16,7 +16,7 @@
 | QN-012 | UX correction | P1-T09 | Resolved | Readable snapshot/JSON preview and clear confirmation implemented; keyboard cancellation/confirmation and downloaded-byte comparison passed | P1 browser/design gate |
 | QN-013 | Local extraction | P1-T04 | Resolved | Added device responseConstraint after invalid JSON; real online/offline synthetic extractions passed | P1-T06/P1-T07 |
 
-| QN-014 | Model quality | P1-T07 | Open | Latest candidate preserved the stepping-out and opt-out cases. Mixed-note testing found a dropped request and unsupported seating from the fallback. Production checks reject the observed event-wide timing substitution | P1 gate |
+| QN-014 | Model quality | P1-T07 | Open | Two-pass source coverage failed the four fresh mixed cases. The model can omit requests before drafting or lose conditions despite a matching count. Production participant review and selected-text recovery remain available | P1 gate |
 
 | QN-015 | SDK memory | P1-T06 | Correction verified | Clear after AI preparation reloads page to end SDK context; manual-only clear stays in page. Browser restart verified; no secure memory-erasure promise | Full privacy audit |
 

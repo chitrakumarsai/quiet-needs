@@ -122,3 +122,15 @@ Three Chrome runs each covered the original 30 cases plus four mixed notes. All 
 | [Paired examples and complete-clause recognition](quietneeds-step-out-clauses-full.json) | 29 / 3 / 2 | All 12 rule drafts passed, including E26, H01 and H02. E29 passed via the model. The model invented support-person seating in E22 and omitted stepping out in H04. |
 
 The recognizer checks every clause before using its result. When a clause is unfamiliar, the full note goes to the existing on-device fallback in the evaluator. Held-out unit examples cover mixed positive and negative requests and verify abstention on conditional and unknown clauses. The participant adapter stays on its verified production path. QN-014 is open because the latest candidate still loses or adds requests in model-generated drafts.
+
+## Two-pass coverage against source text
+
+Each Chrome run used the original 34 cases and four new mixed notes. Both passes require verified `ON_DEVICE` responses. The evaluator checks the draft count, timings and costs against the selected source. It saves counts and drafts without separate evidence text. All 12 rule drafts passed in each run.
+
+| Candidate | Pass / revision / fail | Finding |
+| --- | --- | --- |
+| [Initial array constraint](quietneeds-coverage-initial-full.json) | 12 / 0 / 26 | No usable evidence response on the model path. |
+| [Verbatim quotations in an object](quietneeds-coverage-full.json) | 30 / 1 / 7 | Seven drafts withheld. Evidence for all four new cases failed validation. The model also found no passage for the departure request in E13. |
+| [Numbered passages](quietneeds-coverage-ids-full.json) | 26 / 3 / 9 | Seven drafts withheld. Two new cases produced drafts, but C01 lost a condition and C02 omitted two of three requests. |
+
+Neither candidate passed any of the four new mixed cases. The identifiers reduced quoting failures, but a count match can still leave an entire request unrepresented when the first pass skips it. No private marker or private reason appeared in the saved drafts. The production participant path stays on the previous adapter. A future coverage experiment should test whether participants can confirm the source passages before the model drafts from them.

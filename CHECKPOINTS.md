@@ -229,3 +229,10 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - Exact return: review both original cases and fresh mixed-note controls from the real on-device run before changing the participant adapter.
 - The prompt-only revisions removed the added scheduling preference but lost explicit opt-outs. Complete-clause rules preserved both tested opt-outs and the accompanying written-instructions request. All 12 rule drafts passed in the final run. The model still added a seating request and missed stepping out in separate cases.
 - Exact return: QN-014 fallback coverage and scope for unfamiliar multi-request notes. The production adapter stayed on its previous path.
+
+## CP-027 — Check request coverage against source text
+
+- QN-014/P1-T07, owner implementation. Compare development-only source identification and drafting with the earlier single-pass candidates.
+- Exact return: review all 34 existing cases and four fresh mixed notes. Check whether the first pass omits evidence or the second pass changes its meaning before considering participant integration.
+- Ran both quotation and numbered-passage coverage with live Chrome. Each withheld seven drafts, and neither passed any of the four fresh cases. Numbered passages avoided literal quoting errors on those cases, exposing missed requests and a lost condition even where draft counts matched.
+- Exact return: test participant confirmation of source passages through the existing selection and manual review workflow before considering any replacement of the production adapter.

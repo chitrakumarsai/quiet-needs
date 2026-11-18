@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-11-18 — On-device request coverage evaluation
+
+- Evaluated source quotations and numbered passages before drafting, using 38 synthetic cases that included four new mixed notes. The guards withheld seven drafts in each completed candidate. Neither candidate passed any of the four new cases, so both remain development-only.
+
 ## 2026-11-18 — Stepping-out scope and mixed notes
 
 - Added four mixed-note cases and tested two prompt changes and a recognizer that combines fully understood clauses. The latest candidate preserved requests to step out and explicit preferences about scheduled breaks, with 12 passing rule drafts. Model output still added or omitted other requests, so the candidate remains development-only.
