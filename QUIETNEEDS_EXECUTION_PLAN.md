@@ -89,7 +89,7 @@ npm run build
 npm run dev
 ```
 
-Open the localhost address printed by Vite in current desktop Chrome. Without Firebase configuration, manual editing and the fixed example are available; real AI remains disabled. Never describe the fixed example as inference.
+Open the localhost address printed by Rsbuild in current desktop Chrome. Without Firebase configuration, manual editing and the fixed example are available; real AI remains disabled. Never describe the fixed example as inference.
 
 After a lockfile exists, use `npm ci --cache .npm-cache` for repeatable installation. Commit package.json and package-lock.json together. Do not commit node_modules, .npm-cache, .env.local, logs, or App Check debug tokens.
 
@@ -100,7 +100,7 @@ The creation environment has Node 22.14.0 and npm 11.1.0, but registry.npmjs.org
 ## 4. Firebase and browser setup
 
 1. Sign into Firebase Console and create/select a dedicated QuietNeeds development project.
-2. Register a web app. Copy its public web configuration into .env.local. Do not put a Gemini API secret or service-account credentials in VITE variables: Vite embeds them in browser bundles.
+2. Register a web app. Copy its public web configuration into .env.local. The retained VITE variable names in the public Firebase allowlist are embedded in browser bundles. Keep Gemini API secrets and service-account credentials out of these variables.
 3. Enable Firebase AI Logic with the Gemini Developer API provider through the console workflow.
 4. Configure App Check for the web app. The implementation uses ReCaptchaV3Provider. Supply its public site key.
 5. For local development only, set VITE_APPCHECK_DEBUG=true. Register the generated token privately in Firebase App Check. Never paste it into project docs, screenshots, public repositories, or submission materials.
@@ -344,12 +344,11 @@ These are documented setup steps for the next network-enabled implementation ses
 
 1. Read current AGENTS.md/STATE.md, checkpoint the working tree, and inspect installed skills/MCP connections. Reuse equivalent capabilities already available.
 2. Restore the existing app's install/build first. Pin the Node version that satisfies selected tool engines; if an upgrade is needed, record it in DECISIONS.md and .nvmrc. Do not silently replace the app with a fresh scaffold.
-3. Install UI UX Pro Max for Codex from the project root using the maintainer's current CLI. The documented command is below; `uipro-cli` is an older package name and is not selected.
+3. See DESIGN.md for the verified selected workspace skills. To recreate the UI UX Pro Max install, run the pinned CLI in a temporary directory and copy only the generated `ui-ux-pro-max` skill into the project's `.agents/skills`.
 
 ```bash
-# Preview changes, then install for Codex in this project:
-npx ui-ux-pro-max-cli init --ai codex --dry-run
-npx ui-ux-pro-max-cli init --ai codex
+# Run in a disposable directory to generate the pinned templates:
+npm exec --yes --package=ui-ux-pro-max-cli@2.15.0 -- uipro init --ai codex --offline
 
 # Design-search tooling only; no NumPy needed:
 python3 --version
@@ -359,7 +358,7 @@ source .venv-design/bin/activate
 deactivate
 ```
 
-Before activation add .venv-design/ to .gitignore. Read the generated skill instructions, verify Codex detects them, and record the installed release/source revision. Keep installed skill files under version control according to their license; never claim an installation succeeded without verifying discovery.
+Create the design-search environment outside the project or add .venv-design/ to .gitignore before activation. Read the generated skill instructions, verify Codex detects them, and record the release or source revision. Keep the workspace installation local and track the versions in DESIGN.md.
 
 4. For OpenAI's catalog, use the built-in skill installer where available. The following is a **Codex prompt**, not a shell command:
 
@@ -381,15 +380,7 @@ npx skills add vercel-labs/agent-skills
 
 Record the exact selected names printed by the installer; names and catalogs can evolve. Restart/reload Codex as needed and verify that the skills are listed. The name of the repository does not mean QuietNeeds must migrate to Next.js or Vercel.
 
-6. Add shadcn/ui to the **existing** Vite project using the [official existing-project guide](https://ui.shadcn.com/docs/installation/vite). Adapt its split-tsconfig example to this project's single tsconfig.json. Install compatible Tailwind/Vite tooling, configure the Vite plugin and @/ alias, and preserve current styles while introducing semantic tokens. Then initialize and add only the needed components:
-
-```bash
-# After the existing-project Tailwind/plugin/alias setup is complete:
-npx shadcn@latest init
-npx shadcn@latest add button textarea label checkbox alert dialog badge card
-```
-
-Review CLI changes before accepting overwrites. Match DESIGN.md rather than retaining default colors/spacing. Record resolved versions and retain the lockfile; `latest` is bootstrap syntax, not a reproducible long-term version policy.
+6. Keep the P1 participant screen's verified native controls and semantic tokens. Consider shadcn/ui when a later screen needs a reusable component that the native controls or existing components cannot provide. Match DESIGN.md and verify the component against the current Rsbuild setup before adding it.
 
 7. Optional MCP configuration: only add missing capabilities. The official shadcn instructions use this additive entry in Codex's config; merge it without replacing unrelated settings:
 
@@ -442,8 +433,8 @@ Use skills in a sequence: design brief → tokens/components → implement one s
 Read AGENTS.md, STATE.md, CHECKPOINTS.md, and DESIGN.md.
 Stay within P1. Inspect the existing React app and dependency versions.
 Use the installed ui-ux-pro-max skill to refine the specified QuietNeeds
-design system. Use shadcn primitives only after the existing Vite setup
-is compatible. Preserve device-only inference and consent invalidation.
+design system. Reuse the verified native controls unless the screen needs a
+new component. Preserve device-only inference and consent invalidation.
 Implement the participant workflow with responsive layouts and complete
 empty/loading/error states. Use browser checks with synthetic data.
 Then run a separate web-design/React review using the selected Vercel

@@ -4,7 +4,7 @@
 
 Run `npm test` using Node 22.14+; it requires no downloaded packages. These tests verify approval gating, export field allowlisting, immutable approved snapshots, malformed response rejection, clarification-only handling, prompt data delimiting, and a static device-only adapter guard.
 
-After dependency installation run `npm run build` for TypeScript and Vite. These checks do not establish model quality, actual network privacy, or browser usability.
+After dependency installation run `npm run build` for TypeScript, Rsbuild and artifact privacy checks. These checks do not establish model quality, actual network privacy, or browser usability.
 
 ## Browser smoke checklist
 
@@ -111,3 +111,9 @@ Cloud payload contains only approved cards and supplied event facts. Determinist
 - Chrome retained the same fictional approved card and available download control at 390, 768 and 1440 CSS pixels. The 390 visual check showed stacked panels and readable disclosure and download controls. Prior visual checks covered the wider layouts.
 - A keyboard pass approved the fictional draft and opened the preview and exact JSON. At Chrome 200% zoom, Tab reached Download approved card after the expanded JSON. Reset page zoom after the check.
 - Under reduced-motion emulation, Clear session opened the confirmation and Keep editing preserved the approved card and consent. The earlier keyboard Escape check restored focus. Restored the motion preference and device emulation settings.
+
+## Build migration regression
+
+- Rsbuild 1.7.6 builds to `dist/`. TypeScript, seven tests, and npm audit passed. A synthetic App Check debug token was absent from the production assets, and production omitted the evaluation page and case fixtures.
+- Chrome on the Rsbuild development server prepared the actual device model and drafted a fictional seating request. DevTools Offline then produced a second valid ON_DEVICE result for written instructions with no new requests in the recorded Network panel. Restored normal networking.
+- Approval opened the exact preview and an edit cleared approval and hid the old preview. The developer-only evaluator completed both E18 and E22 on device.

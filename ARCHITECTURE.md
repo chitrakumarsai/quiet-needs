@@ -198,7 +198,7 @@ A source change immediately makes dependent proposals and published confirmation
 
 Use local Firebase emulators for rule tests, a separate development Firebase project for actual AI, and an isolated submission/demo project only when needed. Never assume emulators execute real on-device/cloud inference. Keep public web configuration separate from private App Check debug tokens. Pin dependencies after successful install and keep secrets outside repository artifacts.
 
-Hosting serves the Vite build; use restrictive headers appropriate to verified Firebase endpoints. Cache only app assets for offline reload, not private drafts or authenticated cloud responses. Sign-in and sharing remain online requirements.
+Hosting serves the production build in `dist/`; use restrictive headers appropriate to verified Firebase endpoints. Cache only app assets for offline reload, not private drafts or authenticated cloud responses. Sign-in and sharing remain online requirements.
 
 Observe error category, operation duration, model source, and nonidentifying counts. Exclude prompt bodies, request text, names, account identifiers, and model output from custom logs/traces. Review provider-side logging and data terms before real participant use; disabling application logs alone is not a provider retention guarantee.
 

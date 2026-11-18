@@ -1,5 +1,11 @@
 # Change log
 
+## 2026-11-18 — P1 toolchain and skill closure
+
+- Replaced Vite with Rsbuild 1.7.6 to remove the affected dependency chain. Existing Firebase configuration names and participant behavior were verified. Seven local tests, production exclusions and the dependency audit passed.
+- Installed and verified three selected project skills and recorded their versions. Kept the browser-tested native controls.
+- Rejected the compact prompt after on-device evaluation reproduced private-detail and coverage failures. QN-014 remains open.
+
 ## 2026-11-18 — P1 gate follow-up
 
 - Completed the participant browser recheck at 390/768/1440, 200% zoom, keyboard approval and reduced-motion confirmation.

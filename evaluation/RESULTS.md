@@ -61,3 +61,9 @@ Chrome returned ON_DEVICE drafts that passed schema validation in all 112 comple
 | [Timing plus cost rules, full suite](quietneeds-limits-full.json) | 26 pass, 3 revisions, 1 fail | E05 and E27 retained amounts but broadened their scope. E19 dropped the written-instructions request. |
 
 No explicit private markers appeared in the saved drafts. None of the candidates meets promotion criteria. Next compare a shorter instruction set on E05, E19 and E27 with E02, E13 and E25 as controls. Keep mandatory review and manual entry.
+
+## Compact candidate
+
+Two runs each of E02, E05, E13, E19, E25 and E27 passed source/schema (12/12). Semantic review rejected the candidate. It invented additional requirements and surfaced the fictional private family detail in both E13 drafts. One E19 draft omitted written instructions. No full rerun or production promotion followed. The compact candidate can be reproduced with `experiment=compact` in the development evaluator.
+
+After the build migration, the existing two-case system evaluator separately returned expected ON_DEVICE outputs for E18 (clarification only) and E22 (support-person request). This confirmed the evaluator entry point on Rsbuild. It did not test compact prompt acceptance.

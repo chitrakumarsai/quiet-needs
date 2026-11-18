@@ -9,18 +9,18 @@
 | QN-005 | Deferred feature | P4 | Deferred | Evaluate opt-in local draft persistence with shared-device deletion controls | P4 |
 | QN-006 | Deferred feature | P4 | Deferred | Add cached app shell and test offline reload separately from offline inference | P4 |
 | QN-007 | Deferred idea | Post-MVP | Deferred | Native mobile platform only after reliable web submission | None |
-| QN-008 | Tool setup | P1-T08 | Open | Install only selected design skills/components after network recovery; verify Codex discovery and versions | P1-T09 |
+| QN-008 | Tool setup | P1-T08 | Resolved | Three selected workspace skills installed and listed as enabled by Codex. Kept the reviewed native controls and recorded versions in DESIGN.md | P1-T07 |
 | QN-009 | Planned enforcement | P4-T01 | Planned | Add plan-state validation and CI evidence checks after Git setup; docs alone are not enforcement | P4 |
 | QN-010 | Architecture review | P1-T10 | Design review complete | Scenario review recorded; rule evaluation limits and enforcement must still pass P2/P3 tests | P1-T01 then remaining P1 gates |
 | QN-011 | Dependency audit | P1-T02 | Resolved | Scoped override to gRPC 1.13.6; audit zero, build and tests pass; test Firestore runtime in P2 | Remaining P1 gates |
 | QN-012 | UX correction | P1-T09 | Resolved | Readable snapshot/JSON preview and clear confirmation implemented; keyboard cancellation/confirmation and downloaded-byte comparison passed | P1 browser/design gate |
 | QN-013 | Local extraction | P1-T04 | Resolved | Added device responseConstraint after invalid JSON; real online/offline synthetic extractions passed | P1-T06/P1-T07 |
 
-| QN-014 | Model quality | P1-T07 | Open | E13 and E25 corrected across targeted and full runs. Later regressions broaden cost scope or drop an independent request. Compare shorter instructions on E05/E19/E27 with E02/E13/E25 as controls. Candidates remain development-only | P1 gate |
+| QN-014 | Model quality | P1-T07 | Open | Full variants have cost scope or completeness regressions. The compact candidate also surfaced a synthetic private reason. Compare source-grounded verification against known bad drafts before considering another production candidate | P1 gate |
 
 | QN-015 | SDK memory | P1-T06 | Correction verified | Clear after AI preparation reloads page to end SDK context; manual-only clear stays in page. Browser restart verified; no secure memory-erasure promise | Full privacy audit |
 
-| QN-016 | Dependency audit | P1-T02 | Open | Local audit still flags GHSA-fc5q-39xc-vjpf. Latest picomatch is 4.0.7 and Vite 8.3.8 still depends on it. Recheck for a compatible published fix and rerun the audit | P1-T07/P1-T08 |
+| QN-016 | Dependency audit | P1-T02 | Resolved locally | Replaced the Vite build dependency with Rsbuild 1.7.6, which removes the affected dependency chain. npm audit reports zero findings. Review remote CI on the new commit | P1-T07 |
 
 ## Issue template
 

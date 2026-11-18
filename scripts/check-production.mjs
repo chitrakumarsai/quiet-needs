@@ -1,10 +1,11 @@
-import { loadEnv } from 'vite';
+import { loadEnv } from '@rsbuild/core';
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
-const token = loadEnv('production', process.cwd(), 'VITE_').VITE_APPCHECK_DEBUG_TOKEN?.trim();
+const token = loadEnv({ mode: 'production', prefixes: ['VITE_'] }).rawPublicVars.VITE_APPCHECK_DEBUG_TOKEN?.trim();
 async function scan(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const file = path.join(directory, entry.name);
+    if (entry.name === 'evaluation.html' || entry.name === 'synthetic-cases.json') throw new Error('Production output contains development evaluation assets.');
     if (entry.isDirectory()) await scan(file);
     else if (/\.(js|html|map)$/.test(file)) {
       const content = await readFile(file, 'utf8');

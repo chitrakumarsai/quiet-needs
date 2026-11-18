@@ -7,9 +7,9 @@
     "node": ">=22.14.0 <23"
   },
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
-    "build": "tsc --noEmit && vite build && node scripts/check-production.mjs",
-    "preview": "vite preview --host 127.0.0.1",
+    "dev": "rsbuild dev",
+    "build": "tsc --noEmit && rsbuild build && node scripts/check-production.mjs",
+    "preview": "rsbuild preview",
     "test": "node --experimental-strip-types --test tests/*.test.ts"
   },
   "dependencies": {
@@ -18,10 +18,10 @@
     "react-dom": "18.3.1"
   },
   "devDependencies": {
+    "@rsbuild/core": "1.7.6",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
-    "typescript": "5.9.3",
-    "vite": "^6.4.0"
+    "typescript": "5.9.3"
   },
   "overrides": {
     "@firebase/firestore": {

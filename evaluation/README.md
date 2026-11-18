@@ -12,3 +12,5 @@ For the participation and scope comparison, use `/evaluation.html?experiment=sys
 The seated and attendance example candidate runs E02, E05, E18, E22, E26, E28 and E30 twice at `/evaluation.html?experiment=seated`. Add `&scope=all` to run all 30 once.
 
 Use `experiment=timing` for the departure and break-duration instructions. `experiment=constraints` adds a free-materials example and `experiment=limits` uses cost rules without that example. Each accepts `&scope=all` for the full suite.
+
+Use `experiment=compact` to reproduce the rejected short prompt. It defaults to two passes over E02, E05, E13, E19, E25 and E27.

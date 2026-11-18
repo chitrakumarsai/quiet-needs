@@ -193,3 +193,9 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - Exact return: rerun the full synthetic suite if the targeted candidate passes and keep P2 gated until P1 evidence is complete.
 - Completed 22 targeted runs and three full 30-case runs. Timing fixes held, with critical cost or multiple-request regressions in all three full runs. Participant browser recheck passed. npm audit still fails and the latest Vite retains the affected dependency.
 - Return to QN-014 on E05/E19/E27 with E02/E13/E25 controls, QN-008 workspace discovery and QN-016 patched release verification. P1 is still active.
+
+## CP-022 — P1 closure attempts
+
+- QN-014/P1-T07, QN-008/P1-T08 and QN-016/P1-T02, owner implementation. Compare a compact extraction prompt, verify selected skill discovery, and test a clean alternative build dependency tree in a disposable directory before changing tooling.
+- Exact return: full synthetic evaluation if the compact model passes, then record the gate evidence and keep any unmet requirement explicit.
+- Production build, token/evaluation exclusion, npm audit and Chrome browser regression passed after adopting Rsbuild 1.7.6. Codex app-server listed all three selected workspace skills enabled. The compact candidate failed on semantic privacy and completeness. Exact return is QN-014 source-grounded verification before any new promotion.
