@@ -81,11 +81,16 @@ Use category timing, participation, seating, sensory, cost or other. Return JSON
           row.textContent = `${item.id} ${item.scenario}: ${JSON.stringify(draft)} | Review: ${item.reviewCriteria}`;
         } catch (error) {
           const message = localFailureMessage(error);
-          results.push({ id: item.id, scenario: item.scenario, reviewCriteria: item.reviewCriteria, source: 'unverified', error: message, semanticReview: 'failed generation or validation' });
+          const blockedByGuard = error instanceof Error && error.message === 'UNVERIFIED_DRAFT_DETAILS';
+          results.push({
+            id: item.id, scenario: item.scenario, reviewCriteria: item.reviewCriteria,
+            source: blockedByGuard ? 'ON_DEVICE' : 'unverified', error: message,
+            semanticReview: blockedByGuard ? 'blocked by local checks' : 'failed generation or validation',
+          });
           row.textContent = `${item.id}: ${message}`;
         }
       }
-      status.textContent = `Complete: ${results.length} actual runs; ${results.filter(r => r.draft).length} source/schema passes. Semantic review required.`;
+      status.textContent = `Complete: ${results.length} actual runs; ${results.filter(r => r.draft).length} drafts available for semantic review.`;
       download.disabled = false;
     } catch { status.textContent = 'Evaluation could not initialize. Check local setup and retry.'; }
     finally { run.disabled = false; }

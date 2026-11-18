@@ -82,3 +82,11 @@ An experimental second pass received the original synthetic note and a saved inc
 | E27 | Restored free materials and added a redundant availability request. |
 
 The six incorrect starting drafts came from the saved system (E02), constraints (E05), seated (E13/E25), limits (E19), and timing (E27) batches. The correction pass was rejected and its temporary harness was removed. Before another model promotion attempt, evaluate whether explicit participant confirmation of constraints can prevent unsupported or omitted requirements from being accepted. Manual editing and approval remain in effect.
+
+## Deterministic checks on the local adapter
+
+- Replaying 272 saved drafts with the final checks blocked four previously failed drafts and removed an exact duplicate in one other draft. No draft previously rated as passing was blocked. The rejections were a fabricated free-materials claim, an unresolved arrival placeholder, an omitted explicit break duration, and an event-wide end time substituted for a participant's departure.
+- [First live batch](quietneeds-guarded-first-full.json), before the event-wide scope check was added: 30/30 ON_DEVICE and valid schema. Semantic review found 22 pass, 3 revisions, and 5 failures. The newly observed event-wide end time was blocked when replayed after the scope check was added.
+- [Final live batch](quietneeds-guarded-final-full.json): 30/30 ON_DEVICE and valid schema. Semantic review found 23 pass, 2 revisions, and 5 failures. No draft in this batch triggered the checks. Some drafts still omit independent requests or alter intent despite preserving a literal time. Neither live batch contained a synthetic private marker.
+
+These checks improve what can reach review when they recognize a failure. They cannot establish intent, detect all omissions or verify confidentiality. QN-014 remains open.

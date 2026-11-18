@@ -1,7 +1,7 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 import { getAI, getGenerativeModel, GoogleAIBackend, InferenceMode, InferenceSource } from 'firebase/ai';
-import { buildPrivatePrompt, draftResponseSchema, parseDraft } from './domain.ts';
+import { buildPrivatePrompt, checkExtractedDraft, draftResponseSchema, parseDraft } from './domain.ts';
 import type { Draft } from './domain.ts';
 
 let model: ReturnType<typeof getGenerativeModel> | undefined;
@@ -47,6 +47,8 @@ export async function extractLocally(note: string): Promise<Draft> {
   let value: unknown;
   try { value = JSON.parse(result.response.text()); }
   catch { throw new Error('INVALID_LOCAL_JSON'); }
-  try { return parseDraft(value); }
+  let draft: Draft;
+  try { draft = parseDraft(value); }
   catch { throw new Error('INVALID_LOCAL_DRAFT'); }
+  return checkExtractedDraft(draft, note);
 }

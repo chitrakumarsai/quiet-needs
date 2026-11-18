@@ -2,7 +2,7 @@ import test from 'node:test';
 import { localFailureMessage } from '../src/localErrors.ts';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { buildPrivatePrompt, makeApprovedCard, parseDraft } from '../src/domain.ts';
+import { buildPrivatePrompt, checkExtractedDraft, makeApprovedCard, parseDraft } from '../src/domain.ts';
 
 test('export rejects missing consent', () => {
   assert.throws(() => makeApprovedCard({ requirements: [{ category: 'timing', request: 'Leave early' }], questions: [] }, false));
@@ -31,6 +31,48 @@ test('prompt delimits note as data and explicitly forbids invented details', () 
   assert.ok(prompt.includes('Do not invent times'));
   assert.throws(() => buildPrivatePrompt(' '));
 });
+test('extraction rejects invented numeric constraints, free costs and unresolved placeholders', () => {
+  const requirements = [
+    { category: 'timing', request: 'Please let me leave at 5 pm.' },
+    { category: 'timing', request: 'Please let me attend from [start time] until 4 pm.' },
+    { category: 'timing', request: 'Please end the event by 4 pm.' },
+    { category: 'cost', request: 'Please offer the materials at no charge.' },
+    { category: 'cost', request: 'My materials budget is 55 INR.' },
+  ];
+  for (const requirement of requirements) {
+    const draft = parseDraft({ requirements: [requirement], questions: [] });
+    assert.throws(() => checkExtractedDraft(draft, 'I need to leave at 4 pm. My materials budget is 50 INR.'), /UNVERIFIED_DRAFT_DETAILS/);
+    assert.deepEqual(makeApprovedCard(draft, true).requirements, [requirement]);
+  }
+});
+test('extraction accepts matching clock and cost formats and deduplicates equivalent text', () => {
+  const requirements = [
+    { category: 'timing', request: 'Please let me attend from 10:00 to 12:00.' },
+    { category: 'participation', request: 'PLEASE LET ME ATTEND FROM 10:00 TO 12:00' },
+    { category: 'cost', request: 'Please keep supply costs within 1,500 INR.' },
+    { category: 'cost', request: 'Please offer the materials at no cost.' },
+    { category: 'other', request: 'Please provide written instructions.' },
+  ];
+  const questions = ['How should the instructions be provided?'];
+  const draft = parseDraft({ requirements, questions });
+  assert.deepEqual(checkExtractedDraft(draft, 'I can attend from 10 am to noon. My supply limit is 1500 INR. Materials need to be free.'), {
+    requirements: [requirements[0], ...requirements.slice(2)],
+    questions,
+  });
+  assert.equal(draft.requirements.length, 5);
+});
+test('extraction rejects a drafted break that drops its explicit duration', () => {
+  const note = 'I need a 10-minute break every hour.';
+  const draft = parseDraft({ requirements: [{ category: 'participation', request: 'Please let me take breaks every hour.' }], questions: [] });
+  assert.throws(() => checkExtractedDraft(draft, note), /UNVERIFIED_DRAFT_DETAILS/);
+  const grounded = parseDraft({ requirements: [{ category: 'timing', request: 'Please allow me a break for 10 minutes every hour.' }], questions: [] });
+  assert.deepEqual(checkExtractedDraft(grounded, note), grounded);
+});
+test('extraction preserves an explicitly requested event schedule change', () => {
+  const note = 'I need to leave at 4 pm. Can we end the event at 4 pm?';
+  const draft = parseDraft({ requirements: [{ category: 'timing', request: 'Please end the event at 4 pm.' }], questions: [] });
+  assert.deepEqual(checkExtractedDraft(draft, note), draft);
+});
 test('local adapter is device-only and has no cloud fallback (static regression guard)', () => {
   const source = readFileSync(new URL('../src/localAi.ts', import.meta.url), 'utf8');
   assert.match(source, /mode: InferenceMode\.ONLY_ON_DEVICE/);
@@ -45,6 +87,7 @@ test('local failure messages do not disclose arbitrary SDK errors or private tex
   assert.equal(localFailureMessage(privateError).includes('secret'), false);
   assert.match(localFailureMessage(new Error('INVALID_LOCAL_JSON')), /not valid JSON/);
   assert.match(localFailureMessage(new Error('INVALID_LOCAL_DRAFT')), /format or limits/);
+  assert.match(localFailureMessage(new Error('UNVERIFIED_DRAFT_DETAILS')), /could not be verified/);
   assert.match(localFailureMessage(new Error('UNEXPECTED_INFERENCE_SOURCE')), /rejected/);
   assert.match(localFailureMessage(null), /Cloud fallback is disabled/);
 });

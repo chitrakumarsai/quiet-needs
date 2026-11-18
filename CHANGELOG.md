@@ -1,5 +1,10 @@
 # Change log
 
+## 2026-11-18 — Local extraction constraint checks
+
+- Added a local check before an AI draft reaches review. It blocks common unsupported numerals, unresolved placeholders, introduced free costs, some dropped durations, and recognizable event-wide schedule substitutions. Exact duplicate requests are removed. Manual entry and approval stay available.
+- Replayed 272 prior and interim drafts and ran two 30-case on-device evaluations. Four historical failures were blocked. The final live batch still has five semantic failures, so QN-014 remains open.
+
 ## 2026-11-18 — P1 toolchain and skill closure
 
 - Replaced Vite with Rsbuild 1.7.6 to remove the affected dependency chain. Existing Firebase configuration names and participant behavior were verified. Seven local tests, production exclusions and the dependency audit passed.

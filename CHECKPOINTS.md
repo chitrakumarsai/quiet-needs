@@ -200,3 +200,10 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - Exact return: full synthetic evaluation if the compact model passes, then record the gate evidence and keep any unmet requirement explicit.
 - Production build, token/evaluation exclusion, npm audit and Chrome browser regression passed after adopting Rsbuild 1.7.6. Codex app-server listed all three selected workspace skills enabled. The compact candidate failed on semantic privacy and completeness. Exact return is QN-014 source-grounded verification before any new promotion.
 - Follow-up: push and PR checks on 9f68d2b passed. The second-pass verification corrected E25 only and needs revision or fails on the other five synthetic drafts. The temporary harness was removed. Exact return remains P1-T07, now with participant confirmation of source constraints to evaluate.
+
+## CP-023 — Local guards for model-generated constraints
+
+- QN-014/P1-T07, owner implementation. Check model output for unfinished placeholders, unsupported timing or cost numerals, and introduced free-materials claims. Test against known failures and preserve manual entry.
+- Exact return: run the production extraction path on the synthetic suite and review omissions and scope errors that deterministic checks cannot detect.
+- Eleven automated tests and the production privacy build passed. Both 30-case on-device batches completed. Four prior failures were blocked in replay. Final batch retained five meaning or coverage failures.
+- Exact return: QN-014 participant confirmation of distinct requests and source constraints before considering P2.

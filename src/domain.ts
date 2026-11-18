@@ -46,6 +46,56 @@ export function parseDraft(value: unknown): Draft {
   };
 }
 
+function numericDetails(text: string): string[] {
+  const details: string[] = [];
+  const clocks = text.replace(/\bnoon\b/gi, '12:00').replace(/\bmidnight\b/gi, '00:00');
+  const rest = clocks.replace(/\b(\d{1,2})(?::([0-5]\d))?\s*([ap])\.?m\b|\b(\d{1,2}):([0-5]\d)\b/gi,
+    (_, hour, minute, period, hour24, minute24) => {
+      const hours = period ? Number(hour) % 12 + (period.toLowerCase() === 'p' ? 12 : 0) : Number(hour24);
+      details.push(`time:${hours}:${Number(minute ?? minute24 ?? 0)}`);
+      return ' ';
+    });
+  for (const number of rest.match(/(?:(?<!\d)-)?\d+(?:,\d{3})*(?:\.\d+)?/g) ?? []) {
+    details.push(String(Number(number.replaceAll(',', ''))));
+  }
+  return details;
+}
+
+const costFree = /\b(?:free(?=\s|[.!?,]|$)|complimentary|(?:0|zero|no)\s+(?:cost|charge|fee)|without (?:a fee|charge)|costs? nothing)\b|(?:[$€£₹]\s*0(?![\d.])|\b0\s*(?:INR|USD|EUR|GBP)\b)/i;
+const placeholder = /\[\s*(?:(?:start|end|departure|arrival|leave|insert|your|preferred)\s+)?(?:time|date|amount|location|currency|duration)\s*\]/i;
+const breakDuration = /\b(\d+)\s*-?\s*(minute|hour)s?\s+breaks?\b/i;
+const personalTiming = /\b(?:I|me)\b[^.!?\n]{0,55}\b(?:leave|depart|arrive|attend)\b/i;
+const eventTiming = /\b(?:start|end|reschedule|extend|move)\s+the\s+(?:event|workshop|session)\b/i;
+
+export function checkExtractedDraft(draft: Draft, note: string): Draft {
+  const sourceDetails = new Set(numericDetails(note));
+  const duration = note.match(breakDuration);
+  const onlyPersonalTiming = personalTiming.test(note) && !eventTiming.test(note);
+  const seen = new Set<string>();
+  const requirements = draft.requirements.filter(({ category, request }) => {
+    // shortcut: check literal numerals and common cost-free wording, expand only with evidence of missed or valid equivalent phrasing.
+    if (placeholder.test(request) ||
+      ((category === 'timing' || category === 'cost') && numericDetails(request).some(detail => !sourceDetails.has(detail))) ||
+      (category === 'timing' && onlyPersonalTiming && eventTiming.test(request)) ||
+      (category === 'cost' && costFree.test(request) && !costFree.test(note))) {
+      throw new Error('UNVERIFIED_DRAFT_DETAILS');
+    }
+    const key = request.toLowerCase().replace(/\s+/g, ' ').replace(/[.!?]+$/, '');
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  if (duration) {
+    const breaks = requirements.filter(({ category, request }) =>
+      (category === 'timing' || category === 'participation') && /\bbreaks?\b/i.test(request));
+    const statedDuration = new RegExp(`(?<!every )\\b${duration[1]}\\s*-?\\s*${duration[2]}s?\\b`, 'i');
+    if (breaks.length && !breaks.some(({ request }) => statedDuration.test(request))) {
+      throw new Error('UNVERIFIED_DRAFT_DETAILS');
+    }
+  }
+  return { requirements, questions: draft.questions };
+}
+
 // This is an allowlist boundary, not automatic anonymization. Request TEXT still needs human review.
 export function makeApprovedCard(draft: Draft, consent: boolean): ApprovedCard {
   if (!consent) throw new Error('Explicit approval required');
