@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { checkRequestCoverage, parseRequestEvidence, requestSourcePassages, resolveRequestSourceIds } from '../src/requestCoverage.ts';
+import { checkRequestCoverage, parseRequestEvidence, preservesConfirmedPassage, requestSourcePassages, resolveRequestSourceIds } from '../src/requestCoverage.ts';
 import type { Draft } from '../src/domain.ts';
 
 test('source passages must be bounded, unique and quoted verbatim', () => {
@@ -33,4 +33,25 @@ test('source IDs must resolve in order and keep conditions with their request', 
   for (const ids of [[0], [4], [2, 1], ['1'], [1.5]]) {
     assert.throws(() => resolveRequestSourceIds(ids, passages), /UNVERIFIED_DRAFT_DETAILS/);
   }
+});
+
+test('confirmed passage checks catch the wording drift observed in Chrome', () => {
+  const examples = [
+    ["If the kit costs more than 20 USD, I'll need to borrow one.", 'Please provide a kit if the kit costs more than 20 USD.', 'Please let me borrow a kit if it costs more than 20 USD.'],
+    ['Please keep the activity ending at the advertised time.', 'Please ensure the activity ends by the advertised time.', 'Please ensure the activity ends at the advertised time.'],
+    ['Let me move to the hallway if things get loud.', 'Please let me move to the hallway if it becomes too loud.', 'Please let me move to the hallway if it gets loud.'],
+    ['Let me move to the hallway if things get loud.', 'Please let me move to a quieter area if it gets loud.', 'Please let me go to the hallway if it becomes loud.'],
+    ["If the rental fee exceeds 15 GBP, I'd like to bring my own headset.", 'Please increase the rental fee if it exceeds 15 GBP.', 'Please let me bring my own headset if the rental fee exceeds 15 GBP.'],
+  ];
+  const asDraft = (request: string): Draft => ({ requirements: [{ category: 'other', request }], questions: [] });
+  for (const [passage, drifted, faithful] of examples) {
+    assert.equal(preservesConfirmedPassage(asDraft(drifted), passage), false);
+    assert.equal(preservesConfirmedPassage(asDraft(faithful), passage), true);
+  }
+  assert.equal(preservesConfirmedPassage(asDraft('Please send the timetable in advance.'), 'Send the timetable.'), true);
+  assert.equal(preservesConfirmedPassage({ requirements: [], questions: [] }, 'Send the timetable.'), false);
+  const [headsetPassage, , faithfulHeadset] = examples[4];
+  const duplicate = asDraft(faithfulHeadset);
+  duplicate.requirements.push({ category: 'cost', request: 'Please calculate the rental fee if it exceeds 15 GBP.' });
+  assert.equal(preservesConfirmedPassage(duplicate, headsetPassage), false);
 });

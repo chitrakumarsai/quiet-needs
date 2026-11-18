@@ -256,5 +256,41 @@
     "scenario": "mixed-negation-and-sensory-scope",
     "note": "I don't need a seat. Please turn off the background music during the group discussion, and let me move to the hallway if things get loud.",
     "reviewCriteria": "No seating request. Preserve both the background-music request scoped to the discussion and the conditional hallway option."
+  },
+  {
+    "id": "QN-D01",
+    "scenario": "conditional-substitution",
+    "note": "If the rental fee exceeds 15 GBP, I'd like to bring my own headset. Please send the timetable in advance.",
+    "reviewCriteria": "Allow a personal headset if rental exceeds 15 GBP and send the timetable in advance."
+  },
+  {
+    "id": "QN-D02",
+    "scenario": "conditional-specific-location",
+    "note": "If the rehearsal gets too loud, please let me finish the exercise in the courtyard. Please provide written instructions for the exercise.",
+    "reviewCriteria": "Preserve finishing in the courtyard under the noise condition and provide written exercise instructions."
+  },
+  {
+    "id": "QN-F01",
+    "scenario": "borrow-with-nonprice-condition",
+    "note": "If the venue runs out of markers, I'll need to borrow a pencil. Please send the room number before class.",
+    "reviewCriteria": "Borrow a pencil only if markers run out. Send the room number before class."
+  },
+  {
+    "id": "QN-F02",
+    "scenario": "exact-end-paraphrase",
+    "note": "Please keep the practice ending at the published time. Please send the warm-up instructions in advance.",
+    "reviewCriteria": "Keep the exact published end time and share the warm-up instructions in advance."
+  },
+  {
+    "id": "QN-F03",
+    "scenario": "specific-location-paraphrase",
+    "note": "Let me go to the hallway if the discussion gets loud. Please keep the door open during the break.",
+    "reviewCriteria": "Preserve hallway access when the discussion gets loud and keep the door open during the break."
+  },
+  {
+    "id": "QN-F04",
+    "scenario": "alternate-equipment-wording",
+    "note": "Could I use a loan headset if the rental fee exceeds 10 GBP? Please share the agenda in advance.",
+    "reviewCriteria": "Allow use of a loan headset above the rental threshold and share the agenda in advance."
   }
 ]

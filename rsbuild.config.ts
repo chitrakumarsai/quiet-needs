@@ -15,7 +15,7 @@ export default defineConfig(({ command, envMode }) => {
     },
     source: {
       entry: { index: './src/main.tsx', ...(development ? { evaluation: './src/evaluation.ts' } : {}) },
-      define: Object.fromEntries(keys.map(key => ['import.meta.env.' + key, JSON.stringify(rawPublicVars[key] ?? '')])),
+      define: development ? Object.fromEntries(keys.map(key => ['import.meta.env.' + key, JSON.stringify(rawPublicVars[key] ?? '')])) : {},
     },
     html: { template: ({ entryName }) => './' + entryName + '.html' },
   };

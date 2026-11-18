@@ -2,6 +2,8 @@
 
 Version: 1.2 · Updated: November 15, 2026 (IST)
 
+P1 release scope approved November 18, 2026: manually write requests, preview, approve, and export a local card. Device-only extraction stays in the synthetic development evaluator. Future promotion requires separate quality evidence under QN-014.
+
 Revision 1.2 adds [ARCHITECTURE.md](ARCHITECTURE.md): system boundaries, data contracts, access matrix, concurrency, cloud placement, failure behavior, retention limits, and a P1 architecture review gate. Runtime architecture remains unimplemented beyond the existing first slice.
 
 Development entry point: **Codex CLI**. Follow [CODEX_CLI.md](CODEX_CLI.md) for installation, authentication, launch, recovery, and review. The prepared launcher is `bash scripts/start-codex.sh`; it reads the stored kickoff prompt and operates from the app directory. Firebase AI Logic remains the application's AI runtime.
@@ -154,7 +156,7 @@ Phase IDs are permanent. Do not create P1.1.1-style nested subphases. Use task I
 | Phase | Tasks | Exit gate | Status at creation |
 | --- | --- | --- | --- |
 | P0 — Baseline | Record scope, constraints, architecture, interview questions | Plan and exclusions agreed; interviews scheduled or evidence gap recorded | Baseline written; user validation pending |
-| P1 — Private vertical slice | Install, compile, configure local AI, edit/approve/export, verify data boundary | Build + tests + real local/offline inference + network audit pass | ACTIVE; source created, external checks blocked |
+| P1 — Private vertical slice | Build manual entry, exact preview, approval, and local export | Production excludes inference. Build, tests, and browser approval/export checks pass. P1-T10 review recorded | Complete for the approved manual-entry scope |
 | P2 — Approved sharing | Auth, event creation, enrollment, Firestore, permissions, revisions, withdrawal | Two isolated user sessions demonstrate only approved event-scoped sharing; rule tests pass | Not started |
 | P3 — Organizer adaptation | Cloud AI, schema validation, deterministic checks, evidence references, plan review, participant confirmation | Genuine cloud run uses approved content only; conflicts and unknowns handled | Not started |
 | P4 — Reliability and UX | Offline shell, accessibility, recovery, responsive layouts, retention choices, evaluation | User trials and privacy/security regression checks pass | Not started |
@@ -172,7 +174,7 @@ Suggested timebox: P1 2–3 days; P2 2–3 days; P3 2–3 days; P4 2 days; P5 2 
 | P1-T04 | Generate a requirement from synthetic input | Actual ON_DEVICE response; no fake badge |
 | P1-T05 | Repeat with network disabled after setup | Local inference succeeds; limitations documented |
 | P1-T06 | Audit network, persistence, exports, and consent reset | TEST_PLAN.md completed |
-| P1-T07 | Review extraction on 30 synthetic cases | Failures recorded; no invented critical details accepted |
+| P1-T07 | Review extraction for release scope | Evaluation findings are recorded. Manual production entry ships under the approved scope. QN-014 tracks future promotion of automatic extraction. |
 | P1-T08 | Inspect/install selected design tooling; record versions; establish design tokens and screen states | DESIGN.md reconciled with existing app; selected skills available in Codex |
 | P1-T09 | Implement the designed participant flow using reusable primitives | Responsive screenshots and keyboard review; consent/privacy behavior preserved |
 | P1-T10 | Specify and review architecture before P2 | ARCHITECTURE.md complete; authorization/concurrency/consent review recorded; runtime security tests remain P2/P3 gates |

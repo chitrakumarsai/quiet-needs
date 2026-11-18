@@ -41,3 +41,20 @@ export function checkRequestCoverage(draft: Draft, evidence: string[], note: str
   });
   return checked;
 }
+
+// shortcut: check observed wording changes for recognized forms; this is not a semantic equivalence check.
+export function preservesConfirmedPassage(draft: Draft, passage: string): boolean {
+  if (draft.requirements.length !== 1) return false;
+  const borrow = /\b(?:need|want|like) to borrow\b/i;
+  const exactEnd = /\bend(?:s|ing)? at the (?:advertised|scheduled|published) time\b/i;
+  const noise = /\bif\b[^.!?]*\b(?:gets?|becomes?) loud\b/i;
+  const hallway = /\b(?:move|go) to the hallway\b/i;
+  const ownItem = passage.match(/\bbring my own [\p{L}-]+/iu)?.[0].toLowerCase();
+  return draft.requirements.some(({ request }) => (
+    (!borrow.test(passage) || /\bborrow\b/i.test(request)) &&
+    (!exactEnd.test(passage) || exactEnd.test(request)) &&
+    (!noise.test(passage) || (noise.test(request) && !/\b(?:too|excessively|very) loud\b/i.test(request))) &&
+    (!hallway.test(passage) || hallway.test(request)) &&
+    (!ownItem || request.toLowerCase().includes(ownItem))
+  ));
+}

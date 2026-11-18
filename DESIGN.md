@@ -38,8 +38,8 @@ These are candidate tokens, not verified contrast results. Validate normal text,
 
 | Screen | Primary action | Necessary UX states |
 | --- | --- | --- |
-| Private preparation | Draft privately / write manually | Empty, model setup, real download progress if available, ready, processing, unavailable, failure |
-| Card review | Edit practical requests | No requests, clarification needed, valid draft, removed request, edited draft invalidating approval |
+| Private preparation | Write practical requests | Empty, incomplete request, ready for preview |
+| Card review | Edit practical requests | Empty request, valid draft, removed request, editing clears preview and approval |
 | Sharing preview | Approve exact content | Audience shown, all outgoing user text visible, consent unchecked by default, local export clearly distinguished from actual sharing |
 | Organizer workspace (P2/P3) | Review unmet requirements | No cards, new card, conflicting needs, missing venue facts, stale plan, proposed change |
 | Revised plan (P3) | Confirm whether needs are met | Met, unmet, unknown, outdated revision, participant feedback |
@@ -49,9 +49,9 @@ In P1 the primary action is an approved local export, not “Send to organizer.�
 ## Critical interactions
 
 1. Do not ask for a diagnosis, identity characteristic, or justification. Ask what practical adjustment helps.
-2. Model setup explains download and manual alternatives before processing a note.
-3. Show plain-language processing status; report device/cloud source only when known.
-4. Keep clarifications private. Participants add confirmed details to the requirement themselves.
+2. Ask for the action and any condition, place, time, or amount in the request editor.
+3. Show preview and approval feedback in plain language.
+4. Participant requests remain in tab memory until approved for local download.
 5. Show a human-readable exact preview. Put JSON under an optional “Technical details” disclosure.
 6. All edits invalidate prior approval and hide stale previews; this is a behavior contract, not optional polish.
 7. Clearing a populated session uses a confirmation dialog with a clear destructive label; focus returns sensibly on cancellation.

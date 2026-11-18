@@ -2,20 +2,29 @@
 import { initializeLocalAi, extractLocally } from './localAi.ts';
 import { localFailureMessage } from './localErrors.ts';
 import type { Draft } from './domain.ts';
-import { buildPrivatePrompt, checkExtractedDraft, draftResponseSchema, parseDraft } from './domain.ts';
+import { appendSelectedDraft, buildPrivatePrompt, checkExtractedDraft, draftResponseSchema, parseDraft } from './domain.ts';
 import { draftExplicitRequests } from './explicitRequests.ts';
-import { checkRequestCoverage, parseRequestEvidence, requestEvidenceSchema, requestSourceIdSchema, requestSourcePassages, resolveRequestSourceIds } from './requestCoverage.ts';
+import { renderReviewExercise } from './reviewExercise.ts';
+import { checkRequestCoverage, parseRequestEvidence, preservesConfirmedPassage, requestEvidenceSchema, requestSourceIdSchema, requestSourcePassages, resolveRequestSourceIds } from './requestCoverage.ts';
 import { getApps } from 'firebase/app';
 import { getAI, getGenerativeModel, GoogleAIBackend, InferenceMode, InferenceSource } from 'firebase/ai';
 import './style.css';
 
 type Case = { id: string; scenario: string; note: string; reviewCriteria: string };
 const root = document.getElementById('evaluation')!;
+const params = new URLSearchParams(location.search);
+const mode = params.get('experiment');
 if (!import.meta.env.DEV) {
   root.textContent = 'Synthetic evaluation is available only in development.';
+} else if (mode === 'request-review' || mode === 'request-comparison' || mode === 'authored-review' || mode === 'authored-comparison') {
+  renderReviewExercise(root, mode);
+} else if (mode === 'participant-review' || mode === 'guided-review') {
+  renderReviewExercise(root, mode === 'guided-review' ? 'guided' : params.get('set') === 'fresh' ? 'comparison' : 'original');
 } else {
-  const params = new URLSearchParams(location.search);
-  const mode = params.get('experiment');
+  const confirmedSelectionExperiment = mode === 'confirmed-selection';
+  const checkAction = confirmedSelectionExperiment && params.get('variant') === 'check-action';
+  const freshPassages = checkAction && params.get('scope') === 'fresh';
+  const preserveAction = checkAction || (confirmedSelectionExperiment && params.get('variant') === 'preserve-action');
   const sourceIdExperiment = mode === 'coverage-ids';
   const coverageExperiment = mode === 'coverage' || sourceIdExperiment;
   const stepOutExperiment = mode === 'step-out' || coverageExperiment;
@@ -46,7 +55,85 @@ if (!import.meta.env.DEV) {
   const download = document.createElement('button'); download.textContent = 'Download synthetic results'; download.disabled = true;
   const results: { id: string; scenario: string; reviewCriteria: string; source: string; draft?: Draft; identifiedRequests?: number; error?: string; semanticReview: string }[] = [];
   root.append(title, warning, run, status, output, download);
-  run.onclick = async () => {
+  if (confirmedSelectionExperiment) {
+    title.textContent = 'Participant-confirmed passage check';
+    warning.textContent = 'Use these fictional notes to check whether an on-device draft preserves each selected request.';
+    run.textContent = 'Load mixed-note examples';
+    run.onclick = async () => {
+      run.disabled = true;
+      try {
+        const response = await fetch('/synthetic-cases.json');
+        if (!response.ok) throw new Error('CASES_UNAVAILABLE');
+        const fixtures: Case[] = await response.json();
+        const cases = fixtures.filter(item => freshPassages ? item.id.startsWith('QN-F')
+          : item.id.startsWith('QN-C') || (preserveAction && item.id.startsWith('QN-D')));
+        let ready = false;
+        let generating = false;
+        for (const item of cases) {
+          const section = document.createElement('section');
+          const label = document.createElement('label');
+          label.textContent = `${item.id} ${item.scenario}`;
+          const note = document.createElement('textarea'); note.value = item.note; note.readOnly = true;
+          note.id = `${item.id}-note`; label.htmlFor = note.id;
+          const help = document.createElement('p'); help.textContent = 'Select each complete request you want drafted, including its conditions.';
+          const passages = document.createElement('textarea'); passages.setAttribute('aria-label', `${item.id} passages, one per line`);
+          const confirm = document.createElement('button'); confirm.textContent = 'Confirm selected passages';
+          const draft = document.createElement('button'); draft.textContent = 'Draft confirmed passages on device'; draft.disabled = true;
+          const result = document.createElement('p'); result.setAttribute('role', 'status');
+          const review = document.createElement('ol');
+          section.append(label, note, help, passages, confirm, draft, result, review); root.insertBefore(section, download);
+          let confirmed: string[] = [];
+          passages.oninput = () => {
+            confirmed = []; draft.disabled = true; review.replaceChildren();
+            const previous = results.findIndex(row => row.id === item.id);
+            if (previous >= 0) results.splice(previous, 1);
+            download.disabled = results.length === 0;
+            result.textContent = 'Confirm the edited passages before drafting.';
+          };
+          confirm.onclick = () => {
+            const selected = [...new Set(passages.value.split('\n').map(value => value.trim()).filter(Boolean))];
+            if (!selected.length || selected.length > 8 || selected.some(value => !item.note.includes(value))) { result.textContent = 'Enter up to eight exact passages from this note.'; return; }
+            confirmed = selected;
+            passages.value = selected.join('\n'); draft.disabled = false; result.textContent = `${selected.length} passages confirmed. Review the text, then draft.`;
+          };
+          draft.onclick = async () => {
+            if (!confirmed.length || generating) return;
+            generating = true;
+            draft.disabled = true; passages.disabled = true; confirm.disabled = true;
+            review.replaceChildren();
+            const previous = results.findIndex(row => row.id === item.id);
+            if (previous >= 0) results.splice(previous, 1);
+            download.disabled = results.length === 0;
+            try {
+              if (!ready) {
+                result.textContent = 'Preparing the device model…';
+                await initializeLocalAi(percent => { result.textContent = `Preparing device model (${percent}%).`; });
+                ready = true;
+              }
+              let combined: Draft = { requirements: [], questions: [] };
+              let flagged = 0;
+              for (const [index, passage] of confirmed.entries()) {
+                result.textContent = `Drafting passage ${index + 1} of ${confirmed.length}…`;
+                const generated = await extractLocally(passage, preserveAction ? `Rewrite the selected passage as a practical request. Copy the requested action and concrete object or destination into the request. If it contains a condition, include that condition with the same action. Preserve the direction of any comparison. For “If the workbook costs over 35 EUR, I need to use a shared copy,” request “Please let me use a shared copy if the workbook costs over 35 EUR.” For “If the room gets crowded, let me wait at the entrance,” request “Please let me wait at the entrance if the room gets crowded.”` : '');
+                const flaggedPassage = checkAction && !preservesConfirmedPassage(generated, passage);
+                const row = document.createElement('li');
+                const requests = generated.requirements.map(item => item.request).join(' / ');
+                row.textContent = `${passage} → ${flaggedPassage ? 'Needs manual review. ' : ''}${requests || 'No request drafted'}`;
+                review.append(row);
+                if (flaggedPassage) { flagged++; continue; }
+                combined = appendSelectedDraft(combined, generated);
+              }
+              const recorded = flagged ? { error: `${flagged} passages need manual review.`, semanticReview: 'blocked by local checks' } : { draft: combined, semanticReview: 'pending participant review' };
+              results.push({ id: item.id, scenario: item.scenario, reviewCriteria: item.reviewCriteria, source: 'ON_DEVICE', identifiedRequests: confirmed.length, ...recorded });
+              result.textContent = flagged ? `Review ${flagged} flagged passages. The combined draft was withheld.` : `Drafted ${combined.requirements.length} requests on-device. Check each against its passage.`;
+            } catch (error) { result.textContent = localFailureMessage(error); }
+            finally { generating = false; passages.disabled = false; confirm.disabled = false; draft.disabled = false; download.disabled = results.length === 0; }
+          };
+        }
+        status.textContent = 'Select source passages in each mixed note, confirm them, and draft.';
+      } catch { run.disabled = false; status.textContent = 'Synthetic examples could not be loaded.'; }
+    };
+  } else run.onclick = async () => {
     run.disabled = true; download.disabled = true; results.length = 0; output.replaceChildren();
     try {
       status.textContent = 'Preparing device model…';
@@ -88,7 +175,7 @@ Use category timing, participation, seating, sensory, cost or other. Return JSON
       const response = await fetch('/synthetic-cases.json');
       if (!response.ok) throw new Error('CASES_UNAVAILABLE');
       const fixtures: Case[] = await response.json();
-      const allCases = coverageExperiment ? fixtures : fixtures.filter(item => item.id.startsWith('QN-E') || (stepOutExperiment && item.id.startsWith('QN-H')));
+      const allCases = fixtures.filter(item => item.id.startsWith('QN-E') || (stepOutExperiment && item.id.startsWith('QN-H')) || (coverageExperiment && item.id.startsWith('QN-C')));
       const selectedCases = systemExperiment && !fullSystemRun ? allCases.filter(item => targetIds.includes(item.id)) : allCases;
       if (systemExperiment && !fullSystemRun && selectedCases.length !== targetIds.length) throw new Error('CASES_UNAVAILABLE');
       const cases = repeat && !fullSystemRun ? [...selectedCases, ...selectedCases] : selectedCases;
@@ -148,7 +235,7 @@ Use category timing, participation, seating, sensory, cost or other. Return JSON
     finally { run.disabled = false; }
   };
   download.onclick = () => {
-    const experiment = sourceIdExperiment ? 'request-coverage-source-ids' : coverageExperiment ? 'request-coverage' : pairedStepOut ? 'step-out-paired-examples' : stepOutExperiment ? 'step-out-scope' : explicitSystemExperiment ? 'explicit-local-rules-with-constraints' : explicitExperiment ? 'explicit-local-rules' : timingExperiment || compactExperiment ? `system-message-${mode}` : seatedExperiment ? 'system-message-seated' : scopeExperiment ? 'system-message-participation-scope' : systemExperiment ? 'system-message' : 'single-user-prompt';
+    const experiment = freshPassages ? 'confirmed-selection-check-action-fresh' : checkAction ? 'confirmed-selection-check-action' : preserveAction ? 'confirmed-selection-preserve-action' : confirmedSelectionExperiment ? 'confirmed-selection' : sourceIdExperiment ? 'request-coverage-source-ids' : coverageExperiment ? 'request-coverage' : pairedStepOut ? 'step-out-paired-examples' : stepOutExperiment ? 'step-out-scope' : explicitSystemExperiment ? 'explicit-local-rules-with-constraints' : explicitExperiment ? 'explicit-local-rules' : timingExperiment || compactExperiment ? `system-message-${mode}` : seatedExperiment ? 'system-message-seated' : scopeExperiment ? 'system-message-participation-scope' : systemExperiment ? 'system-message' : 'single-user-prompt';
     const url = URL.createObjectURL(new Blob([JSON.stringify({ kind: 'synthetic-evaluation', experiment, results }, null, 2)], { type: 'application/json' }));
     const link = document.createElement('a'); link.href = url; link.download = 'quietneeds-synthetic-results.json'; link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);

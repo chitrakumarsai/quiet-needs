@@ -117,6 +117,10 @@ export function appendSelectedDraft(current: Draft, selected: Draft): Draft {
 // This is an allowlist boundary, not automatic anonymization. Request TEXT still needs human review.
 export function makeApprovedCard(draft: Draft, consent: boolean): ApprovedCard {
   if (!consent) throw new Error('Explicit approval required');
+  return makeCardPreview(draft);
+}
+
+export function makeCardPreview(draft: Draft): ApprovedCard {
   const validated = parseDraft(draft);
   if (!validated.requirements.length) throw new Error('Add at least one requirement');
   return { schemaVersion: 1, requirements: validated.requirements.map(({ category, request }) => ({ category, request })) };

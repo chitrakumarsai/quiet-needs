@@ -38,9 +38,11 @@ export async function initializeLocalAi(progress: (percent: number) => void): Pr
   await getLocalModel().initializeDeviceModel(value => progress(Math.round(value * 100)));
   initialized = true;
 }
-export async function extractLocally(note: string): Promise<Draft> {
+export async function extractLocally(note: string, evaluationInstructions = ''): Promise<Draft> {
   if (!initialized) throw new Error('INITIALIZE_FIRST');
-  const result = await getLocalModel().generateContent(buildPrivatePrompt(note)).catch(() => {
+  const prompt = buildPrivatePrompt(note);
+  const result = await getLocalModel().generateContent(import.meta.env.DEV && evaluationInstructions
+    ? `${evaluationInstructions}\n${prompt}` : prompt).catch(() => {
     throw new Error('LOCAL_GENERATION_FAILED');
   });
   if (result.response.inferenceSource !== InferenceSource.ON_DEVICE) throw new Error('UNEXPECTED_INFERENCE_SOURCE');

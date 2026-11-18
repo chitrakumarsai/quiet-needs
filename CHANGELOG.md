@@ -1,5 +1,41 @@
 # Change log
 
+## 2026-11-18 — P1 manual-entry release
+
+- Completed the approved participant slice with manual request entry, an exact preview, explicit approval, and local JSON export. Automatic extraction remains available in the development evaluator.
+
+## 2026-11-18 — Participant-authored review comparison
+
+- Added a fictional exercise where reviewers enter actions and details before preview. Prepared a matched comparison and verified the exact approved wording in the authored download.
+
+## 2026-11-18 — Request-by-request review comparison
+
+- Added a development exercise that confirms each request and checks for omissions before approval. Prepared the matching unguided exercise and verified the guided download in Chrome.
+
+## 2026-11-18 — Guided participant review comparison
+
+- Prepared guided and unguided review variants with the same fresh fictional cases. The guided checks reset when the draft changes. Chrome verified both downloads and the guided approval flow.
+
+## 2026-11-18 — Participant review exercise
+
+- Added a four-card fictional exercise for reviewing source and draft together. Chrome verified approval, editing, skipping, and the results download. The facilitator guide covers independent review and scoring.
+
+## 2026-11-18 — Fresh wording controls
+
+- Compared the confirmed-passage checks against four fresh fictional notes in offline replay and live Chrome. The checks missed changes and flagged faithful paraphrases, so the experiment remains in development.
+
+## 2026-11-18 — Confirmed passage checks
+
+- Added development checks for observed changes to borrowing, personal equipment, scheduled end times, and hallway requests. The evaluator flags the passage and withholds the combined draft.
+
+## 2026-11-18 — Confirmed passage wording comparison
+
+- Compared guidance about preserving the requested action, condition, and destination. Chrome drafted 13 passages across six notes. Both fresh controls passed. Other drafts still changed borrowing, scheduled event timing, or a noise qualifier.
+
+## 2026-11-18 — Confirmed passage evaluation
+
+- Verified manual passage confirmation and nine on-device drafts in Chrome. Two of four mixed notes passed review. The remaining drafts changed a borrowing condition and a specific hallway request.
+
 ## 2026-11-18 — On-device request coverage evaluation
 
 - Evaluated source quotations and numbered passages before drafting, using 38 synthetic cases that included four new mixed notes. The guards withheld seven drafts in each completed candidate. Neither candidate passed any of the four new cases, so both remain development-only.

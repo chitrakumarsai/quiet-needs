@@ -148,6 +148,8 @@ Firebase App Check and project quotas reduce abuse, but do not enforce the organ
 
 ### Local extraction
 
+The approved P1 production slice collects each request manually and uses the card schema for local preview and download. The extraction contract below applies to the synthetic development evaluator.
+
 Input: 1–4000 character synthetic/private note in one single-turn request. Output: at most 8 practical requests and 5 private clarification questions, each within 500 characters. No invented time, amount, diagnosis, or venue feature. Treat the note as data, including any embedded instructions. Current parser checks shape and bounds; semantic correctness still needs evaluation and review.
 
 ### Organizer cloud request

@@ -124,3 +124,7 @@ Cloud payload contains only approved cards and supplied event facts. Determinist
 - The existing aisle-chair request stayed intact, the written-instructions request was added, and prior consent and preview cleared. After reapproval, the exact JSON contained both requests and no private-note marker.
 - Checked that the recovery control wrapped and remained readable at 390 CSS pixels. Verified an unchanged working card on request overflow and duplicate handling through the automated tests.
 - In a second synthetic note, selected the departure and materials-budget sentences individually. The first result requested a personal departure by 4 p.m. The next preserved that request and added the participant's 500 INR materials budget.
+
+## Manual-entry P1 release verification
+
+Chrome opened the production build and verified entering two requests, blocking preview for a blank request, displaying the exact requested text before approval, disabling download until approval, and clearing preview and consent after editing. The downloaded JSON matched the expected schema and both revised requests. Escape cancelled clearing and restored focus to Clear session. Confirming cleared the form and returned focus to the first request. Production inspection found no Firebase App Check host, model endpoint, private prompt, or evaluation runner. Historical device-only inference checks apply to the development evaluator.

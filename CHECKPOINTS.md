@@ -236,3 +236,113 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - Exact return: review all 34 existing cases and four fresh mixed notes. Check whether the first pass omits evidence or the second pass changes its meaning before considering participant integration.
 - Ran both quotation and numbered-passage coverage with live Chrome. Each withheld seven drafts, and neither passed any of the four fresh cases. Numbered passages avoided literal quoting errors on those cases, exposing missed requests and a lost condition even where draft counts matched.
 - Exact return: test participant confirmation of source passages through the existing selection and manual review workflow before considering any replacement of the production adapter.
+
+## CP-028 — Confirm passages before drafting
+
+- QN-014/P1-T07, owner implementation. Verify individual drafts from evaluator-confirmed passages in Chrome.
+- Nine selected passages produced nine verified on-device requests. QN-C01 and QN-C02 passed manual review. QN-C03 changed a borrowing condition into a price limit, and QN-C04 changed a specific hallway request. Editing a selection cleared its confirmation and prior result.
+- Exact return: preserve the action and condition in QN-C03 and QN-C04, then repeat on both cases and fresh mixed notes before considering participant integration.
+
+## CP-029 — Preserve the action in confirmed passages
+
+- QN-014/P1-T07, owner implementation. Test explicit instructions about keeping the requested action, condition, and concrete destination. Rerun QN-C01 through QN-C04 with two fresh mixed notes.
+- Chrome produced 13 requests across six notes. Manual review recorded three passes, two revisions, and one failure. Both fresh controls passed. The borrowing action and timing and noise qualifiers still drifted.
+- Exact return: evaluate whether requiring an exact action and condition in the draft catches the observed drift before participant review, including the advertised-end regression.
+
+## CP-030 — Flag changes to confirmed requests
+
+- QN-014/P1-T07, owner implementation. Replay the observed borrowing, event-end timing, and hallway changes and verify the prototype with a real on-device draft.
+- Chrome withheld the borrowing draft and exposed two headset errors. Replay now rejects the dropped headset action and an unsupported second request. Nineteen tests and the production build passed.
+- Exact return: measure omissions and unnecessary flags against fresh notes before considering participant integration. QN-014 remains open.
+
+## CP-031 — Test the wording checks on unfamiliar passages
+
+- QN-014/P1-T07, owner implementation. Compare faithful paraphrases and altered requests on four fresh notes, then review actual drafts in Chrome.
+- Offline replay flagged three of four faithful paraphrases and missed four intentional changes. In Chrome, the check correctly withheld one draft, accepted one faithful draft, and let two meaning changes through.
+- Exact return: retain source and draft side by side during participant review. Evaluate whether people catch omissions and changes without a word-matching gate before considering integration.
+
+## CP-032 — Prepare and verify the participant review exercise
+
+- QN-014/P1-T07, owner implementation. Built a fictional four-card review exercise with a faithful control and seeded changes or omissions.
+- The Chrome walkthrough verified editing, blank-draft validation, approval, skip, focus, and the downloaded review record. The facilitator guide defines the meaning checks.
+- Exact return: run independent participant sessions, score the approved text, and record assistance and friction. QN-014 remains open.
+
+## CP-033 — Prepare the participant pilot
+
+- QN-014/P1-T07, owner implementation. Packaged a standalone fictional review exercise and facilitator packet with invitation and scoring criteria.
+- Verified all four cards and the exported JSON in Chrome from a local file. The exercise needs no server or account.
+- Exact return: arrange independent reviewer sessions and collect their exercise exports before scoring. The local walkthrough remains implementation verification.
+
+## CP-034 — Score the first participant review
+
+- QN-014/P1-T07, owner implementation. Scored one returned participant export against all four fictional cards. One of four seeded issues was corrected, three remained in approved text, and the faithful control passed.
+- Exact return: collect and score the other two planned pilot sessions using the same exercise. Compare missed errors, skips, and reported friction before changing the review design. The raw return remains outside Git.
+
+## CP-035 — Score the second participant review
+
+- QN-014/P1-T07, owner implementation. The second participant corrected the captions omission and approved the same three remaining errors as the first participant. Both faithful controls passed.
+- Exact return: score the remaining planned pilot session using the same exercise, then use the repeated misses to prioritize review changes. The raw return remains outside Git.
+
+## CP-036 — Complete and score the three-participant pilot
+
+- QN-014/P1-T07, owner implementation. Scored all three pilot returns. Three of 12 seeded errors were corrected and nine remained in approved text. All three faithful controls passed.
+- Exact return: prototype focused review prompts for actions, conditions, locations, and requests added without source support. Retest on fresh fictional cases. Raw participant exports remain outside Git.
+
+## CP-037 — Prepare the guided review comparison
+
+- QN-014/P1-T07, owner implementation. Added prompts for requested actions, conditions and details, and unsupported additions. A matched unguided exercise uses the same fresh fictional cards.
+- Chrome verified approval gating, checks resetting after edits, and both standalone downloads.
+- Exact return: collect fresh participant results with one variant per reviewer, compare corrections, misses, and friction between variants, and keep raw returns outside Git.
+
+## CP-038 — Score the first matched review returns
+
+- QN-014/P1-T07, owner implementation. Scored one guided and one unguided export. Each corrected the same two of four seeded issues and left a missing location and unsupported parking request in approved text.
+- Exact return: score additional fresh returns from each variant before drawing a comparison. Keep the current cases and instructions fixed. The raw exports remain outside Git.
+
+## CP-039 — Score the second matched review returns
+
+- QN-014/P1-T07, owner implementation. Scored the second return for each variant. Both variants have four of eight seeded issues corrected. All four returns still miss the location and unsupported parking request.
+- Exact return: score one additional fresh return per variant on the same exercise, then decide whether to test review prompts on each request.
+
+## CP-040 — Complete the guided review comparison
+
+- QN-014/P1-T07, owner implementation. Scored the final pair. Both variants corrected six of 12 seeded issues. All six reviewers missed the main entrance and unsupported parking. No skips or new errors.
+- Exact return: prototype review of each draft request against the source and include a check for omitted requests. Compare against the current exercise using fresh fictional cases.
+
+## CP-041 — Prepare request-by-request review
+
+- QN-014/P1-T07, owner implementation. Built matched exercises on four fresh fictional cards. The new variant checks each request and includes a separate omission check.
+- Chrome verified edits clearing confirmations, adding missing requests, removing unsupported requests, and the exported approval record.
+- Exact return: compare fresh participant results in both variants. Focus on corrected locations, removed unsupported requests, missed details, and friction.
+
+## CP-042 — Score the first request-by-request returns
+
+- QN-014/P1-T07, owner implementation. Scored the request-by-request export and matched comparison. Each corrected two of four seeded issues. Both still changed the waiting location and approved an unsupported meal.
+- Exact return: assess the request-by-request flow with fresh matched returns before deciding whether to promote it. The raw exports remain outside Git.
+
+## CP-043 — Complete the request-by-request comparison
+
+- QN-014/P1-T07, owner implementation. Scored six distinct returns. Both variants corrected eight of 12 seeded issues. Neither corrected the reception-desk location, and each removed the unsupported meal in two of three sessions.
+- Exact return: prototype participant-authored requests with explicit conditions and details before showing a proposed draft. Use fresh fictional cases. Raw participant exports remain outside Git.
+
+## CP-044 — Prepare participant-authored request comparison
+
+- QN-014/P1-T07, owner implementation. Built a variant where participants enter actions and associated details before preview. The matched comparison uses the same fictional cases.
+- Chrome verified blank action validation, preview, editing, approval, skips, and the exact authored download.
+- Exact return: collect fresh returns for both variants and score preservation of locations, conditions, and requested actions, alongside new unsupported requests and friction.
+
+## CP-045 — Score the participant-authored returns
+
+- QN-014/P1-T07, owner implementation. Scored three authored exports, counting the paste and its matching file once. All 12 cards passed. Approved wording was identical across returns. Times and reported friction differed.
+- Exact return: score the three prepared-draft comparison returns before comparing the two exercises. The raw exports remain outside Git.
+
+## CP-046 — Complete the participant-authored comparison
+
+- QN-014/P1-T07, owner implementation. Scored the three prepared-draft returns. Both variants passed 12 of 12 cards. The prepared-draft users repaired every seeded issue. Within each variant the approved wording matched across its three returns.
+- Exact return: decide the launch scope for automatic extraction and the evidence required to close QN-014. The raw exports remain outside Git.
+
+## CP-047 — Close P1 with the approved manual-entry scope
+
+- QN-014/P1-T07, owner implementation. User approved manual-entry release. The participant build supports editable requests, preview, explicit approval, and local JSON download. Inference remains available in the development evaluator.
+- Verified the production build in Chrome. Incomplete drafts cannot preview, approval gates download, edits clear the preview, and the exported JSON matches the revised card. Clearing and focus return passed.
+- Exact return: begin P2 approved sharing using the P1-T10 architecture review. Evaluate QN-014 separately before promoting automatic extraction.

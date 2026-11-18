@@ -12,9 +12,9 @@ Plan v1.1 includes researched modern design tooling and the shared Managing Plan
 
 ## First slice
 
-Private preparation → editable requirement card → explicit approval → exact JSON preview → local export. Manual entry works without configured AI after dependencies are installed. The fictional example is labeled; it is not inference.
+Write practical requests → preview the exact card → approve → download JSON. The P1 participant page works without Firebase credentials or model setup. Session content stays in the tab.
 
-Real local inference is implemented through Firebase AI Logic ONLY_ON_DEVICE, but requires Firebase/App Check configuration and a supported Chrome model. Current local inference is verified, but App Check debug-token authorization still needs correction (QN-002). No cloud inference or organizer sharing is implemented yet.
+The development evaluator uses synthetic data to study device-only extraction. See [evaluation/README.md](evaluation/README.md) for evaluator setup and [evaluation/RESULTS.md](evaluation/RESULTS.md) for the results.
 
 ## Start
 
@@ -22,18 +22,17 @@ Use Node 22.14+ on Node 22. Python and NumPy are not required.
 
 ```bash
 npm ci --cache .npm-cache
-cp .env.example .env.local
 npm test
 npm run build
 npm run dev
 ```
 
-The committed lockfile supports `npm ci --cache .npm-cache`. Fill .env.local only when enabling real AI; never commit it. See the execution plan for App Check setup and verification gates.
+The committed lockfile supports `npm ci --cache .npm-cache`. The synthetic evaluator can use a private .env.local. See the execution plan for App Check setup.
 
 ## Current limits
 
 - Dependencies installed and lockfile generated; use Node 22.14+ and `npm ci --cache .npm-cache`.
-- Production build and seven tests pass; real on-device extraction works online and with Chrome DevTools Offline. Full privacy/browser audits remain pending.
+- The production build contains the manual participant page and its local export. Device-only inference is part of the synthetic evaluator.
 - Dependency audit passes with zero findings after a scoped gRPC override; Firestore runtime testing remains a P2 gate.
 - Memory-only session; reload clears content. Exported files remain on disk.
 - No anonymity guarantee or automatic sensitive-text sanitizer.

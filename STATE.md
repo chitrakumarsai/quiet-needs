@@ -2,9 +2,9 @@
 
 Updated: November 18, 2026 IST
 
-- Active phase: **P1 — Private vertical slice**.
-- Active task: **P1-T07 extraction-quality correction**.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-027.
+- Completed phase: **P1 — Private vertical slice**, in the approved manual-entry scope.
+- Next implementation phase: **P2 — Approved sharing**. Start with authentication and event-scoped authorization.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-047.
 - P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, automated tests and npm audit pass. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. Offline reload remains unimplemented.
@@ -19,7 +19,7 @@ Updated: November 18, 2026 IST
 
 ## Exact next action
 
-Stay in P1. QN-014 remains open. Two-pass source coverage failed all four new mixed notes because evidence selection and drafting can each omit information. Return to testing whether participants can confirm source passages through the existing selection and manual review workflow. The production adapter stays on its verified participant path.
+P1 manual entry is ready for handoff. Start P2 with the reviewed event and membership authorization design. QN-014 remains open as a development-only extraction quality issue.
 
 November 18 verification:
 
@@ -41,6 +41,44 @@ November 18 verification:
 - CP-026: Fifteen tests and production privacy build passed. Three 34-case Chrome runs scored 28/2/4, 30/2/2 and 29/3/2. The latest run used 12 passing direct rule drafts and 22 verified ON_DEVICE drafts. The added mixed cases exposed remaining completeness failures. The candidate remains development-only.
 - CP-027: Eighteen tests and production privacy build passed. In Chrome, verbatim evidence scored 30/1/7 and numbered evidence scored 26/3/9 across 38 cases. Both reused 12 passing local rule drafts and withheld seven model drafts. Numbered passages still allowed a lost condition and missed requests. Both experiments remain development-only.
 
+- CP-028: Chrome confirmed nine selected passages and produced nine on-device requests. Two of four cases passed manual review. Editing cleared confirmation and removed the old result. Eighteen tests and the production build passed.
+
+- CP-029: Chrome drafted 13 confirmed passages. Manual review recorded three passes, two revisions, and one failure across six cases. Eighteen tests and the production privacy build passed.
+
+- CP-030: Chrome withheld the borrowing draft. The observed headset substitution and all earlier drift examples fail the replay checks. Nineteen tests and the production privacy build passed.
+
+- CP-031: Three of four faithful replay drafts were incorrectly flagged. All four altered replay drafts were accepted. Chrome correctly withheld one result and let two meaning changes through. Nineteen tests and the production privacy build passed.
+
+- CP-032: Chrome verified the review exercise, including validation and the downloaded record. Nineteen tests and the production build passed. Independent participant evidence is pending.
+
+- CP-033: Chrome verified the standalone exercise from disk and the four-record download. Independent participant sessions are pending.
+
+- CP-034: Scored the first participant return. All four cards were approved. One seeded issue was corrected, three remained, and the faithful control passed. Two planned pilot sessions remain.
+
+- CP-035: Scored the second participant return. Both participants corrected the same omission. Across eight opportunities, two errors were corrected and six remained. Both faithful controls passed. One planned pilot review remains.
+
+- CP-036: Completed the three-participant pilot. Three of 12 seeded errors were corrected and nine remained approved. The three faithful controls passed. QN-014 remains open.
+
+- CP-037: Verified both review variants in Chrome. Guided confirmation clears after edits, and both downloads identify the variant. Nineteen automated tests and the production build passed. Fresh participant results are pending.
+
+- CP-038: Scored the first matched review returns. Both variants had two corrections and two missed issues for one reviewer each. Both faithful controls passed. QN-014 remains open.
+
+- CP-039: Two returns per variant scored four corrections and four misses out of eight seeded issues. Every faithful control passed. One planned return per variant remains.
+
+- CP-040: Completed the six-reviewer comparison. Each variant corrected six of 12 seeded issues. All faithful controls passed. QN-014 remains open.
+
+- CP-041: Verified request-by-request review and the matched comparison in Chrome. Nineteen tests and the production build passed. Participant evidence is pending.
+
+- CP-042: Scored one return per request-by-request variant. Each corrected two of four seeded issues. Both faithful controls passed.
+
+- CP-043: Completed the six-return request-by-request comparison. Both variants corrected eight of 12 seeded issues. All six faithful controls passed. QN-014 remains open.
+
+- CP-044: Verified participant-authored preview, edit, and exact download in Chrome. Nineteen tests and the production build passed. Participant comparison results are pending.
+
+- CP-045: Three participant-authored returns passed all 12 cards. Their approved wording matched exactly. The prepared-draft comparison returns are pending.
+
+- CP-046: Both participant-authored variants passed all 12 cards. The small sample and identical wording within each variant limit conclusions. QN-014 remains open.
+
 ## Gate checklist
 
 - [x] Dependencies installed and lockfile generated
@@ -50,7 +88,7 @@ November 18 verification:
 - [x] DevTools Offline inference after initialization
 - [x] Keyboard manual export and clear confirmation smoke checks
 - [x] Thirty-case evaluation executed and failures recorded (three runs)
-- [ ] Extraction-quality acceptance (QN-014)
+- [x] Manual release scope verified. QN-014 tracks future promotion of automatic extraction
 - [x] P1 synthetic browser network/privacy audit
 - [x] Selected design tooling verified and participant controls reconciled with DESIGN.md
 - [x] Participant responsive/200%/keyboard/reduced-motion browser review
