@@ -207,3 +207,10 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - Exact return: run the production extraction path on the synthetic suite and review omissions and scope errors that deterministic checks cannot detect.
 - Eleven automated tests and the production privacy build passed. Both 30-case on-device batches completed. Four prior failures were blocked in replay. Final batch retained five meaning or coverage failures.
 - Exact return: QN-014 participant confirmation of distinct requests and source constraints before considering P2.
+
+## CP-024 — Recover an omitted request from the private note
+
+- QN-014/P1-T07, owner implementation. Test drafting a participant-selected passage on device and adding the result to the existing card without replacing edited requests.
+- Exact return: verify the synthetic written-instructions omission through the participant interface. Keep full-note extraction acceptance separate.
+- Verified real on-device recovery with an existing edited aisle-chair request. Both requests appeared in the JSON only after reapproval. Marked the selected-text workflow checked at 390 CSS pixels. Thirteen automated tests and the production build passed.
+- Follow-up: two selections retained the personal 4 p.m. departure and 500 INR materials scope. Exact return is QN-014 whole-note semantic acceptance.

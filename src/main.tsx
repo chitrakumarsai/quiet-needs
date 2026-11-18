@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
-import { makeApprovedCard, sampleDraft } from './domain.ts';
+import { appendSelectedDraft, makeApprovedCard, sampleDraft } from './domain.ts';
 import type { ApprovedCard, Draft } from './domain.ts';
 import { extractLocally, initializeLocalAi, isConfigured } from './localAi.ts';
 import { localFailureMessage } from './localErrors.ts';
@@ -8,6 +8,7 @@ import './style.css';
 
 function App() {
   const [note, setNote] = useState('');
+  const [selection, setSelection] = useState('');
   const [draft, setDraft] = useState<Draft>({ requirements: [], questions: [] });
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState(isConfigured() ? 'Write a request manually, or prepare local AI to help draft it.' : 'Manual editing is available. Local AI requires setup.');
@@ -37,14 +38,30 @@ function App() {
     } catch { setStatus('Local AI could not initialize. Check Chrome and Firebase setup, or create a card manually.'); }
     finally { setBusy(false); }
   }
-  async function generate() {
-    setBusy(true); setConsent(false); setPreview(null); setStatus('Drafting on this device…');
-    try { changeDraft(await extractLocally(note)); setStatus('Generated on-device. Check every word before approving.'); }
+  async function generate(selected?: string) {
+    const source = selected ?? note;
+    if (!source.trim() || busy) return;
+    setBusy(true); setStatus('Drafting on this device…');
+    if (selected === undefined) { setConsent(false); setPreview(null); }
+    try {
+      const generated = await extractLocally(source);
+      if (selected === undefined) {
+        changeDraft(generated);
+        setStatus('Generated on-device. Check every word before approving.');
+      } else {
+        const next = appendSelectedDraft(draft, generated);
+        const added = next.requirements.length - draft.requirements.length;
+        if (added || next.questions.length > draft.questions.length) changeDraft(next);
+        setStatus(added
+          ? 'Added requests from the selection on-device. Review the updated card before approving.'
+          : 'The selection produced no new requests. Check any private questions or add the missing request manually.');
+      }
+    }
     catch (error) { setStatus(localFailureMessage(error)); }
     finally { setBusy(false); }
   }
   function clear() {
-    setNote(''); changeDraft({ requirements: [], questions: [] }); setStatus('Session content cleared.');
+    setNote(''); setSelection(''); changeDraft({ requirements: [], questions: [] }); setStatus('Session content cleared.');
     // Firebase retains its last model session; reload ends this document's SDK context.
     if (ready) window.location.reload();
   }
@@ -62,10 +79,17 @@ function App() {
     <div className="grid"><section className="panel">
       <p className="step">01 / PRIVATE PREPARATION</p><h2>What would help you take part?</h2>
       <label htmlFor="note">Your private explanation</label>
-      <textarea ref={noteInput} id="note" aria-describedby="note-hint" autoComplete="off" autoCorrect="off" spellCheck={false} value={note} disabled={busy} maxLength={4000} placeholder="For example: I find standing for long periods difficult. A seated option would help." onChange={e => { setNote(e.target.value); changeDraft({ requirements: [], questions: [] }); }}/>
+      <textarea ref={noteInput} id="note" aria-describedby={ready ? 'note-hint selection-hint' : 'note-hint'} autoComplete="off" autoCorrect="off" spellCheck={false} value={note} disabled={busy} maxLength={4000} placeholder="For example: I find standing for long periods difficult. A seated option would help."
+        onSelect={e => { const field = e.currentTarget; setSelection(field.value.slice(field.selectionStart, field.selectionEnd).trim()); }}
+        onChange={e => { setNote(e.target.value); setSelection(''); changeDraft({ requirements: [], questions: [] }); }}/>
       <p className="hint" id="note-hint">Use fictional information during testing.</p>
       <p className="hint">The initial local AI download needs internet. You can add a request manually at any time.</p>
-      <div className="actions"><button onClick={setup} disabled={busy || ready || !isConfigured()}>Prepare local AI</button><button className="primary" onClick={generate} disabled={busy || !ready || !note.trim()}>Draft on this device</button></div>
+      <div className="actions">
+        <button onClick={setup} disabled={busy || ready || !isConfigured()}>Prepare local AI</button>
+        <button className="primary" onClick={() => void generate()} disabled={busy || !ready || !note.trim()}>Draft on this device</button>
+        {ready && <button onClick={() => void generate(selection)} disabled={busy || !selection || draft.requirements.length >= 8}>Add from selection</button>}
+      </div>
+      {ready && <p className="hint" id="selection-hint">If a request is missing, select its text and any conditions above. Add from selection keeps your existing requests.</p>}
       <p role="status" aria-live="polite" className="status">{status}</p>
       <button className="text-button" disabled={busy} onClick={() => { changeDraft(structuredClone(sampleDraft)); setStatus('Loaded a fixed example, not AI output. Your private note was not processed.'); }}>Try a fictional example</button>
     </section><section className="panel">
@@ -81,14 +105,15 @@ function App() {
       {!!draft.questions.length && <div className="questions"><h3>Details to consider privately</h3><ul>{draft.questions.map((q, i) => <li key={i}>{q}</li>)}</ul><p>Add any confirmed details to the request above. These questions are excluded from the export.</p></div>}
     </section></div>
     <section className="panel approval"><p className="step">03 / REVIEW BEFORE SHARING</p><h2>You have the final say.</h2>
-      <label className="check"><input type="checkbox" disabled={busy} checked={consent} onChange={e => { setConsent(e.target.checked); setPreview(null); }}/>I reviewed the request text and approve it for an export preview.</label>
+      <p className="hint" id="review-hint">Check that each request you want to share is included. Confirm who each request applies to, along with any amounts, times, and conditions.</p>
+      <label className="check"><input type="checkbox" aria-describedby="review-hint" disabled={busy} checked={consent} onChange={e => { setConsent(e.target.checked); setPreview(null); }}/>I reviewed the request text and approve it for an export preview.</label>
       <div className="actions"><button className="primary" disabled={busy || !consent || !draft.requirements.length || draft.requirements.some(r => !r.request.trim())} onClick={() => { try { setPreview(makeApprovedCard(draft, consent)); } catch { setStatus('Check that every request contains valid text.'); } }}>Preview approved content</button><button ref={clearButton} onClick={requestClear} disabled={busy || (!note && !draft.requirements.length && !draft.questions.length)}>Clear session</button></div>
       {preview && <section className="export-preview" aria-labelledby="preview-title">
         <h3 id="preview-title">Your approved card</h3>
         <p>This file contains only the categories and requests below. Downloading keeps it on your computer. You choose whether to share the file with someone later.</p>
         <ol>{preview.requirements.map((r, i) => <li key={i}><span className="category">{r.category}</span><p>{r.request}</p></li>)}</ol>
         <details><summary>Technical details: exact JSON file</summary><pre>{JSON.stringify(preview, null, 2)}</pre></details>
-        <button className="primary" onClick={exportCard}>Download approved card</button>
+        <button className="primary" disabled={busy} onClick={exportCard}>Download approved card</button>
       </section>}
     </section>
     <dialog ref={clearDialog} aria-labelledby="clear-title" aria-describedby="clear-description" onCancel={event => { event.preventDefault(); closeClear(); }} onClose={restoreClearFocus}>

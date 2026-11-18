@@ -1,5 +1,11 @@
 # Change log
 
+## 2026-11-18 — Recovering a missing request
+
+- Added an on-device action that drafts from a selected passage of the private note and keeps existing requests.
+- Approval guidance now asks participants to confirm coverage, scope, amounts, timing, and conditions. An addition clears prior approval.
+- Chrome verified keyboard recovery of the written-instructions request, reapproval, and the exact JSON. Thirteen tests and the production build passed.
+
 ## 2026-11-18 — Local extraction constraint checks
 
 - Added a local check before an AI draft reaches review. It blocks common unsupported numerals, unresolved placeholders, introduced free costs, some dropped durations, and recognizable event-wide schedule substitutions. Exact duplicate requests are removed. Manual entry and approval stay available.

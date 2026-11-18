@@ -67,6 +67,10 @@ const breakDuration = /\b(\d+)\s*-?\s*(minute|hour)s?\s+breaks?\b/i;
 const personalTiming = /\b(?:I|me)\b[^.!?\n]{0,55}\b(?:leave|depart|arrive|attend)\b/i;
 const eventTiming = /\b(?:start|end|reschedule|extend|move)\s+the\s+(?:event|workshop|session)\b/i;
 
+function requestKey(request: string): string {
+  return request.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[.!?]+$/, '');
+}
+
 export function checkExtractedDraft(draft: Draft, note: string): Draft {
   const sourceDetails = new Set(numericDetails(note));
   const duration = note.match(breakDuration);
@@ -80,7 +84,7 @@ export function checkExtractedDraft(draft: Draft, note: string): Draft {
       (category === 'cost' && costFree.test(request) && !costFree.test(note))) {
       throw new Error('UNVERIFIED_DRAFT_DETAILS');
     }
-    const key = request.toLowerCase().replace(/\s+/g, ' ').replace(/[.!?]+$/, '');
+    const key = requestKey(request);
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
@@ -94,6 +98,20 @@ export function checkExtractedDraft(draft: Draft, note: string): Draft {
     }
   }
   return { requirements, questions: draft.questions };
+}
+
+export function appendSelectedDraft(current: Draft, selected: Draft): Draft {
+  const requirements = [...current.requirements];
+  const seen = new Set(requirements.map(({ request }) => requestKey(request)));
+  for (const requirement of selected.requirements) {
+    const key = requestKey(requirement.request);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    requirements.push(requirement);
+  }
+  if (requirements.length > 8) throw new Error('TOO_MANY_REQUIREMENTS');
+  const questions = [...new Set([...current.questions, ...selected.questions])].slice(0, 5);
+  return { requirements, questions };
 }
 
 // This is an allowlist boundary, not automatic anonymization. Request TEXT still needs human review.

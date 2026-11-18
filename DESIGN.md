@@ -103,3 +103,7 @@ This brief is part of execution-plan v1.1. Use P1-T08/P1-T09 for the participant
 - UI/UX Pro Max 2.15.0 was installed from the pinned npm installer's Codex templates. Only `ui-ux-pro-max` was copied from the temporary installer output. Its UX search ran under an isolated Python environment.
 - Vercel's `web-design-guidelines` and `vercel-react-best-practices` were installed from `vercel-labs/agent-skills` at `1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62`. To recreate the workspace install, use the Codex skill installer with that revision and the paths `skills/web-design-guidelines` and `skills/react-best-practices`, targeting `.agents/skills`.
 - Codex app-server 0.169.0 returned all three workspace entries as enabled after a forced rescan. The selected installations are local and the version references are tracked. The participant screen keeps its verified native controls. See the execution plan for when a component library is appropriate.
+
+## Recovering an omitted request
+
+Once local AI is ready, the private explanation supports keyboard and pointer selection and an Add from selection action. Guidance asks participants to include any conditions in the selection. The action keeps the existing card in place and updates status through the existing live region. Before approving, participants check that the card includes each intended request and preserves who it applies to, amounts, timing, and conditions.

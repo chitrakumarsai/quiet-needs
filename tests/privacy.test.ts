@@ -2,7 +2,7 @@ import test from 'node:test';
 import { localFailureMessage } from '../src/localErrors.ts';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { buildPrivatePrompt, checkExtractedDraft, makeApprovedCard, parseDraft } from '../src/domain.ts';
+import { appendSelectedDraft, buildPrivatePrompt, checkExtractedDraft, makeApprovedCard, parseDraft } from '../src/domain.ts';
 
 test('export rejects missing consent', () => {
   assert.throws(() => makeApprovedCard({ requirements: [{ category: 'timing', request: 'Leave early' }], questions: [] }, false));
@@ -72,6 +72,30 @@ test('extraction preserves an explicitly requested event schedule change', () =>
   const note = 'I need to leave at 4 pm. Can we end the event at 4 pm?';
   const draft = parseDraft({ requirements: [{ category: 'timing', request: 'Please end the event at 4 pm.' }], questions: [] });
   assert.deepEqual(checkExtractedDraft(draft, note), draft);
+});
+test('adding a selected draft keeps edited requests, deduplicates, and exports only approved fields', () => {
+  const chair = { category: 'seating' as const, request: ' Please provide an aisle chair. ' };
+  const current = { requirements: [chair], questions: ['Which day?'] };
+  const selected = parseDraft({
+    requirements: [
+      { category: 'other', request: 'Please provide an aisle chair' },
+      { category: 'other', request: 'Please send written instructions.' },
+    ],
+    questions: ['Which day?', 'How should instructions be delivered?'],
+  });
+  const combined = appendSelectedDraft(current, selected);
+  assert.deepEqual(combined.requirements, [chair, selected.requirements[1]]);
+  assert.deepEqual(combined.questions, ['Which day?', 'How should instructions be delivered?']);
+  assert.equal(current.requirements.length, 1);
+  assert.deepEqual(makeApprovedCard(combined, true), { schemaVersion: 1, requirements: [
+    { ...chair, request: chair.request.trim() }, selected.requirements[1],
+  ] });
+});
+test('adding a selected draft refuses overflow without discarding existing entries', () => {
+  const current = { requirements: Array.from({ length: 8 }, (_, i) => ({ category: 'other' as const, request: `Request ${i}` })), questions: [] };
+  const selected = parseDraft({ requirements: [{ category: 'other', request: 'A new request' }], questions: [] });
+  assert.throws(() => appendSelectedDraft(current, selected), /TOO_MANY_REQUIREMENTS/);
+  assert.equal(current.requirements.length, 8);
 });
 test('local adapter is device-only and has no cloud fallback (static regression guard)', () => {
   const source = readFileSync(new URL('../src/localAi.ts', import.meta.url), 'utf8');

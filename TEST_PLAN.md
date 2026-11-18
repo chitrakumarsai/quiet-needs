@@ -117,3 +117,10 @@ Cloud payload contains only approved cards and supplied event facts. Determinist
 - Rsbuild 1.7.6 builds to `dist/`. TypeScript, seven tests, and npm audit passed. A synthetic App Check debug token was absent from the production assets, and production omitted the evaluation page and case fixtures.
 - Chrome on the Rsbuild development server prepared the actual device model and drafted a fictional seating request. DevTools Offline then produced a second valid ON_DEVICE result for written instructions with no new requests in the recorded Network panel. Restored normal networking.
 - Approval opened the exact preview and an edit cleared approval and hid the old preview. The developer-only evaluator completed both E18 and E22 on device.
+
+## Selected-text recovery
+
+- Prepared local AI in Chrome using a synthetic note with distinct chair and written-instructions requests. Created and approved an edited aisle-chair request, then used keyboard selection and activation to add only the written-instructions passage on device.
+- The existing aisle-chair request stayed intact, the written-instructions request was added, and prior consent and preview cleared. After reapproval, the exact JSON contained both requests and no private-note marker.
+- Checked that the recovery control wrapped and remained readable at 390 CSS pixels. Verified an unchanged working card on request overflow and duplicate handling through the automated tests.
+- In a second synthetic note, selected the departure and materials-budget sentences individually. The first result requested a personal departure by 4 p.m. The next preserved that request and added the participant's 500 INR materials budget.

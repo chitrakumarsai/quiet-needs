@@ -90,3 +90,11 @@ The six incorrect starting drafts came from the saved system (E02), constraints 
 - [Final live batch](quietneeds-guarded-final-full.json): 30/30 ON_DEVICE and valid schema. Semantic review found 23 pass, 2 revisions, and 5 failures. No draft in this batch triggered the checks. Some drafts still omit independent requests or alter intent despite preserving a literal time. Neither live batch contained a synthetic private marker.
 
 These checks improve what can reach review when they recognize a failure. They cannot establish intent, detect all omissions or verify confidentiality. QN-014 remains open.
+
+## Participant-assisted recovery
+
+The participant flow recovered the written-instructions request that whole-note E19 drafts missed. In a synthetic reproduction, the participant kept an edited aisle-chair request and selected only “Please send written instructions.” The production adapter returned an ON_DEVICE result, “Please provide written instructions.” The card added that request, cleared prior approval, and displayed both exportable requests after reapproval. The private marker elsewhere in the note was absent from the approved JSON.
+
+A second synthetic note supplied a personal departure and a materials budget. Separately selecting the two sentences added “Please allow me to depart by 4 pm.” and “Please be aware that my materials budget is 500 INR.” The time and budget scope were retained. The departure phrasing changed from “at” to “by,” so participant review still matters.
+
+These checks cover three selected-text extractions. The initial chair request was entered manually. Whole-note extraction quality remains open under QN-014.
