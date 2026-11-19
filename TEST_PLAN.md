@@ -60,6 +60,18 @@ Cloud payload contains approved active requests and organizer-supplied facts and
 - An invalid time zone produced a correction example and retained the event title. An invalid agenda time range retained the activity and times. Corrected times appeared in the exact agenda review after refreshing event access.
 - Source review covered target sizes, long content, field labels and names, keyboard focus, and live announcements. Full viewport, keyboard-only walkthrough, and write-failure fault injection from an active participant session remain open. [Vercel Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines/blob/main/command.md)
 
+## P4 cross-role browser regression — November 19, 2026
+
+- Safari used two independent Auth Emulator sessions. The participant previewed a fictional local-only marker, edited it out, shared a different approved request, and approved a separate replacement. Before the second approval, the original shared revision remained visible and the replacement action was absent. The organizer saw the replacement, published a fictional agenda, and the participant saw that agenda become stale after withdrawal.
+- A temporary loopback harness counted markers in outgoing Fetch, XHR, WebSocket sends, and beacon calls without saving request bodies. The participant trace counted 2 auth calls, 63 Firestore read or listen calls, 4 commits, and 2 other calls. The local-only marker appeared in zero captured requests and zero resource URLs. Each distinct approved request appeared in one Firestore commit. The card writes held one request, one replacement request, and an empty requirements list for withdrawal.
+- The local-only marker was absent from localStorage and sessionStorage. The audit origin reported one IndexedDB database and zero Cache Storage entries. IndexedDB record contents and browser-managed network metadata were outside this check.
+- In a separate Chrome fixture, one real Firebase AI Logic request included the approved fictional text once and excluded the withdrawn text and both fictional account identifiers. Its payload keys were `agenda`, `agendaRevision`, `inputRevision`, `requirements`, `schemaVersion`, `timeZone`, and `venueFacts`. Each requirement had only `category`, `ref`, and `request`. Firebase reported `IN_CLOUD`. This exercised the shared cloud adapter with a fixed fixture rather than a hosted organizer sign-in.
+- The populated participant preview in Safari and the populated organizer editor in Chrome fit in same-origin frames at 390, 768, and 1440 CSS pixels with no horizontal document overflow. Chrome reached Preview, opened the exact JSON disclosure, approved the card, and reached Download using Tab, Enter, and Space. At Chrome's reported 200% zoom, the populated organizer editor with an approved manual preview fit the 390 CSS-pixel frame, with Download and Save still available. The full event workflow with a screen reader remains open.
+
+## P4 independent organizer trial
+
+Run the same fictional event with two organizers in separate sessions. Supply one approved request for seating, one conflicting standing-only request, an unresolved step-free access request, and a verified venue fact that chairs are available. Give each organizer the task of preparing and publishing a traceable agenda and then checking participant feedback. Observe without prompting until they get stuck. Record whether they can identify the conflict and unknown, explain their selected change, approve the exact public preview, and find feedback for the current revision. Keep organizer names and private notes out of the results.
+
 ## Recorded run — November 15, 2026
 
 - Node 22.14.0: domain tests 6/6, typecheck/build pass; npm audit zero findings.

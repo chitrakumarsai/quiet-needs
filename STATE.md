@@ -5,8 +5,8 @@ Updated: November 19, 2026 IST
 - Completed phase: **P1 — Private vertical slice**, in the approved manual-entry scope.
 - Completed phase: **P2 — Approved sharing**, verified in the local Firebase demo.
 - Completed phase: **P3 — Organizer adaptation**, verified with a genuine synthetic cloud proposal and local publication and confirmation.
-- Active implementation phase: **P4 — Reliability and UX**. QN-006 is verified, and QN-019 has a focused accessibility and recovery pass.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-051.
+- Active implementation phase: **P4 — Reliability and UX**. The offline shell, focused accessibility and recovery, and synthetic cross-role trace are verified.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-052.
 - P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, automated tests and npm audit pass. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. P4 offline reload covers manual entry in the production app.
@@ -18,18 +18,20 @@ Updated: November 19, 2026 IST
 - QN-015 SDK-memory correction: after local AI preparation, clear now reloads the document to end its SDK context. Browser verified blank note/draft/consent and disabled inference after restart; no secure-erasure guarantee. Manual-only clear retains focus recovery.
 - CLI 0.169.0 available. Ponytail 5.3.3 installed/enabled. Ponytail review applied; report in evaluation/SOURCE_REVIEW.md. Hook trust/restart not verified and not changed.
 - Authentication and database sharing verified in local emulators. Hosted sign-in, rules rollout, and cloud configuration remain unverified.
-- GitHub PRs #1–#4 merged into `main` in stack order after CI and their recorded phase or task checks.
+- GitHub PRs #1–#5 merged into `main` after CI and their recorded phase or task checks.
 
 ## Exact next action
 
-Continue P4 with the cross-role browser privacy regression. Trace fictional canaries through sharing, replacement, withdrawal, and planning requests. Full viewport coverage, independent organizer trials, and retention choices remain open. QN-014 remains open for automatic extraction promotion.
+Continue P4 with independent organizer trials using the fictional brief in TEST_PLAN.md. Retention choices, full screen-reader coverage, and IndexedDB record inspection remain open. QN-014 remains open for automatic extraction promotion.
 
 ## P4 evidence
 
 - Passed QN-006: Safari reloaded the cached production app with the preview server stopped. The draft was empty on reload. An event link opened the same shell, and a fresh approved download matched the expected synthetic JSON.
 - Passed: 22 automated tests, Firestore rules and connectivity checks, and the production build and privacy scan.
 - Passed QN-019 first pass: Safari confirmed focus in new and remaining request fields, new venue and activity fields, invalid time-zone recovery, and agenda retry after an invalid time range. Event views now ignore optimistic snapshots when tracking authoritative membership and revision changes.
-- Unverified: browser behavior with the OS reporting offline, broader accessibility and request interception, and hosted cache headers.
+- Passed QN-020: the local-only marker stayed out of captured participant requests. Approved share and replacement went to the Firestore emulator and withdrawal cleared request text. A separate live cloud fixture sent only the allowed fields and the approved fictional request.
+- Passed layout and keyboard spot checks for QN-019: populated participant and organizer views fit at 390, 768, and 1440 CSS pixels. Chrome keyboard review reached approved download. The populated organizer view also fit at 390 CSS pixels with Chrome at 200% zoom.
+- Unverified: a full screen-reader walkthrough, IndexedDB record contents, browser behavior with the OS reporting offline, and hosted cache headers.
 - Deployment discovery: GitHub Pages reported no configured site. Firebase CLI reported zero authenticated sessions. Hosted rollout remains pending.
 
 ## P3 gate
@@ -38,7 +40,7 @@ Continue P4 with the cross-role browser privacy regression. Trace fictional cana
 - Passed: Two independent Safari sessions completed card sharing, review and publication, revision-bound participant confirmation, organizer feedback, and withdrawal. Event refresh showed the publication on the participant tab and the stale state on the organizer tab.
 - Passed: 21 automated tests, the Firestore emulator suite, TypeScript and production build, production privacy checks, and a dependency audit with zero findings. The supported limit of three agenda slots and three venue facts passed at the boundary.
 - Failed during development: A six-slot and six-fact edit hit Firestore's rule evaluation limit. The three-item cap keeps supported writes within the tested limit.
-- Pending for later phases: Independent organizer trials, request interception, hosted Firebase integration, and retention enforcement. Cloud input uses approved content but can still contain sensitive practical details.
+- Pending: Independent organizer trials, hosted Firebase integration, and retention enforcement. Cloud input uses approved content but can still contain sensitive practical details.
 
 November 18 verification:
 
