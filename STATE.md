@@ -1,11 +1,12 @@
 # Current state
 
-Updated: November 18, 2026 IST
+Updated: November 19, 2026 IST
 
 - Completed phase: **P1 — Private vertical slice**, in the approved manual-entry scope.
 - Completed phase: **P2 — Approved sharing**, verified in the local Firebase demo.
-- Next implementation phase: **P3 — Organizer adaptation**. Start with the approved-card snapshot and revision checks.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-048.
+- Completed phase: **P3 — Organizer adaptation**, verified with a genuine synthetic cloud proposal and local publication and confirmation.
+- Next implementation phase: **P4 — Reliability and UX**.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-049.
 - P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, automated tests and npm audit pass. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. Offline reload remains unimplemented.
@@ -16,11 +17,19 @@ Updated: November 18, 2026 IST
 - Architecture design review P1-T10 complete. P2 emulator rules and two-session sharing checks passed.
 - QN-015 SDK-memory correction: after local AI preparation, clear now reloads the document to end its SDK context. Browser verified blank note/draft/consent and disabled inference after restart; no secure-erasure guarantee. Manual-only clear retains focus recovery.
 - CLI 0.169.0 available. Ponytail 5.3.3 installed/enabled. Ponytail review applied; report in evaluation/SOURCE_REVIEW.md. Hook trust/restart not verified and not changed.
-- Authentication and database sharing verified in local emulators. Live provider and production rules rollout remain unverified. Cloud organizer adaptation and deployment are pending.
+- Authentication and database sharing verified in local emulators. Hosted sign-in, rules rollout, and cloud configuration remain unverified.
 
 ## Exact next action
 
-P2 is ready for review. Start P3 with approved shared cards and explicit event revision checks. QN-014 remains open as a development-only extraction quality issue.
+Start P4 with QN-006. Verify a cached app shell can reload offline while event actions require server acknowledgement. QN-014 remains open for automatic extraction promotion.
+
+## P3 gate
+
+- Passed: A fictional Chrome run returned SDK source `IN_CLOUD` using Gemini 3.5 Flash-Lite. It proposed a venue-supported alternate, reported a conflicting request, and kept an unverified access question open. Withdrawn material was absent from the input.
+- Passed: Two independent Safari sessions completed card sharing, review and publication, revision-bound participant confirmation, organizer feedback, and withdrawal. Event refresh showed the publication on the participant tab and the stale state on the organizer tab.
+- Passed: 21 automated tests, the Firestore emulator suite, TypeScript and production build, production privacy checks, and a dependency audit with zero findings. The supported limit of three agenda slots and three venue facts passed at the boundary.
+- Failed during development: A six-slot and six-fact edit hit Firestore's rule evaluation limit. The three-item cap keeps supported writes within the tested limit.
+- Pending for later phases: Independent organizer trials, request interception, hosted Firebase integration, and retention enforcement. Cloud input uses approved content but can still contain sensitive practical details.
 
 November 18 verification:
 

@@ -59,6 +59,7 @@ In P1 the primary action is an approved local export, not “Send to organizer.�
 8. Error messages state what happened and offer a next action. Preserve editable requests on recoverable failures.
 9. Never claim “saved” for memory-only state. Explain refresh loss without alarming language.
 10. Sharing copy distinguishes participants, organizer, and cloud processing. Do not imply anonymity.
+11. Organizers preview approved requests before cloud generation. Label unresolved conflicts and unknowns, show the exact agenda before publication, and clear revision-specific approval and feedback when inputs change.
 
 ## Component strategy
 

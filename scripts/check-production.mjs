@@ -11,11 +11,11 @@ async function scan(directory) {
       const content = await readFile(file, 'utf8');
       if (token && content.includes(token)) throw new Error('Production output contains the development App Check token.');
       if (content.includes('Run 30 synthetic cases on device')) throw new Error('Production output contains the development evaluation runner.');
-      if (/PRIVATE_NOTE_JSON|firebaseappcheck\.googleapis\.com|generativelanguage\.googleapis\.com/.test(content)) {
-        throw new Error('Production output contains an inference adapter or prompt.');
+      if (/PRIVATE_NOTE_JSON|Generate synthetic cloud proposal/.test(content)) {
+        throw new Error('Production output contains a private extraction prompt or synthetic cloud runner.');
       }
     }
   }
 }
 await scan('dist');
-console.log('Production privacy checks passed. Model inference and evaluation are development-only.');
+console.log('Production privacy checks passed. Private extraction and evaluation are development-only.');

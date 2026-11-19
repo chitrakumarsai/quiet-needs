@@ -39,7 +39,12 @@ Prepare 30 synthetic cases and expected constraints. Include explicit/absent tim
 
 ## P3 organizer checks
 
-Cloud payload contains only approved cards and supplied event facts. Deterministic code checks time/budget constraints. Suggestions reference existing requirement IDs. Missing venue information stays unknown. Editing/withdrawing cards marks dependent plans stale. Participants confirm against a specific plan revision.
+Cloud payload contains approved active requests and organizer-supplied facts and agenda options. The app preserves the organizer's times and validates references. Unknowns and conflicts stay visible for review. Editing or withdrawing a card marks dependent plans stale. Participants confirm against a specific plan and card revision.
+
+- Chrome, November 18: the development runner returned `IN_CLOUD` from the Firebase SDK with `gemini-3.5-flash-lite`. The proposal chose the seated alternative with R01/A01 as evidence, flagged R02 as conflicting, and marked R03 step-free access unknown. The withdrawn synthetic marker and user identifiers were excluded by the same allowlisted builder used in the organizer flow.
+- Safari, November 19: two local demo sessions verified share approval, publish gating, exact agenda, participant confirmation, organizer feedback, and the stale state after withdrawal. Used event refresh to read publication on the participant tab and stale feedback on the organizer tab.
+- Emulator, November 19: accepted a full three-slot plan and rejected an unsupported alternate, changed time, invented title, private extra field, stale inputs, and obsolete confirmation. Initial six-slot test exceeded the rule expression limit and led to the lower cap.
+- Passed: 21 automated tests, emulator rules, TypeScript/build, production privacy scan, and dependency audit. Full browser request interception, independent organizer trials, and live hosted integration remain pending.
 
 
 ## Recorded run — November 15, 2026

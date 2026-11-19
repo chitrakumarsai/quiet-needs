@@ -29,7 +29,7 @@ const withdrawCard = revision => ({
   status: 'withdrawn', requirements: [], revision, approvedAt: null, updatedAt: serverTimestamp(), operationId: randomUUID(),
 });
 
-test('event isolation, enrollment, approved revisions, withdrawal and revocation', async () => {
+test('event isolation, enrollment, approved revisions, publication, confirmation and revocation', async () => {
   const environment = await initializeTestEnvironment({
     projectId, firestore: { rules: readFileSync(new URL('../firestore.rules', import.meta.url), 'utf8') },
   });
@@ -132,19 +132,82 @@ test('event isolation, enrollment, approved revisions, withdrawal and revocation
     again.set(nested(member, 'cards'), newCard(4));
     await again.commit();
 
+    const slot = { id: 'S01', start: '10:00', end: '10:30', title: 'Gallery walk',
+      alternate: 'Seated discussion', factId: 'A01' };
+    const { alternate, factId, ...original } = slot;
+    const agenda = [...Array.from({ length: 2 }, (_, index) => ({ ...slot,
+      id: 'S0' + (index + 1), start: (10 + index) + ':00', end: (10 + index) + ':30', factId: 'A03',
+    })), { ...slot, id: 'S03', start: '12:00', end: '12:30' }];
+    const venueFacts = Array.from({ length: 3 }, (_, index) => ({
+      id: 'A0' + (index + 1), statement: 'Chairs are available.', status: index === 0 ? 'unknown' : 'verified',
+    }));
+    const edit = { agenda, venueFacts, agendaRevision: 2, inputRevision: 6, currentPlanId: null };
+    await assertFails(updateDoc(event(member), edit));
+    await updateDoc(event(admin), edit);
+    const proposalId = 'proposal';
+    const proposal = {
+      inputRevision: 6, agendaRevision: 2, referenceMap: {},
+      proposal: { proposedAgenda: [], changes: [], conflicts: [], unknowns: [] },
+      modelMetadata: { source: 'IN_CLOUD', model: 'synthetic-model' }, status: 'draft',
+    };
+    await assertFails(setDoc(nested(member, 'proposals', proposalId), proposal));
+    await assertFails(setDoc(nested(admin, 'proposals', proposalId), { ...proposal, inputRevision: 5 }));
+    await setDoc(nested(admin, 'proposals', proposalId), proposal);
+    await assertFails(getDocFromServer(nested(member, 'proposals', proposalId)));
+    const first = 'aaaaaaaaaaaaaaaaaaaa';
+    const second = 'bbbbbbbbbbbbbbbbbbbb';
+    const plan = (revision, agenda) => ({ inputRevision: 6, planRevision: revision, agenda, publishedAt: serverTimestamp() });
+    const originals = agenda.map(({ id, start, end, title }) => ({ id, start, end, title }));
+    const withFirst = value => [value, ...originals.slice(1)];
+    const publish = (id, value) => {
+      const batch = writeBatch(admin);
+      batch.update(event(admin), { currentPlanId: id, planRevision: value.planRevision });
+      batch.set(nested(admin, 'publishedPlans', id), value);
+      return batch.commit();
+    };
+    await assertFails(setDoc(nested(admin, 'publishedPlans', first), plan(1, [original])));
+    await assertFails(publish(first, { ...plan(1, originals), inputRevision: 5 }));
+    await assertFails(publish(first, plan(1, withFirst({ ...original, end: '10:31' }))));
+    await assertFails(publish(first, plan(1, withFirst({ ...original, title: 'Invented activity' }))));
+    await assertFails(publish(first, plan(1, withFirst({ ...original, requirement: 'Private reasoning' }))));
+    const verifiedAlternates = originals.map((item, index) => index < 2 ? { ...item, title: alternate } : item);
+    await assertFails(publish(first, plan(1, [...verifiedAlternates.slice(0, 2), { ...originals[2], title: alternate }])));
+    await publish(first, plan(1, verifiedAlternates));
+    assert.deepEqual((await getDocFromServer(nested(member, 'publishedPlans', first))).data().agenda,
+      verifiedAlternates);
+    await assertFails(getDocFromServer(nested(other, 'publishedPlans', first)));
+    const confirmation = {
+      planId: first, planRevision: 1, inputRevision: 6, cardRevision: 4,
+      status: 'met', comment: '', updatedAt: serverTimestamp(),
+    };
+    assert.equal((await getDocFromServer(nested(member, 'confirmations'))).exists(), false);
+    await assertFails(setDoc(nested(admin, 'confirmations'), confirmation));
+    await assertFails(setDoc(nested(member, 'confirmations'), { ...confirmation, cardRevision: 3 }));
+    await assertFails(setDoc(nested(member, 'confirmations'), { ...confirmation, comment: 'Private comment' }));
+    await setDoc(nested(member, 'confirmations'), confirmation);
+    assert.equal((await getDocFromServer(nested(admin, 'confirmations'))).data().status, 'met');
+    await publish(second, plan(2, originals));
+    await assertFails(getDocFromServer(nested(member, 'publishedPlans', first)));
+    await assertFails(getDocFromServer(nested(member, 'confirmations')));
+    await assertFails(setDoc(nested(member, 'confirmations'), confirmation));
+    await setDoc(nested(member, 'confirmations'), { ...confirmation, planId: second, planRevision: 2, status: 'unknown' });
+
     const revokeWithoutWithdrawal = writeBatch(admin);
-    bump(revokeWithoutWithdrawal, admin, 6);
+    bump(revokeWithoutWithdrawal, admin, 7);
     revokeWithoutWithdrawal.update(nested(admin, 'members'), { active: false });
     await assertFails(revokeWithoutWithdrawal.commit());
     const revoke = writeBatch(admin);
-    bump(revoke, admin, 6);
+    bump(revoke, admin, 7);
     revoke.update(nested(admin, 'members'), { active: false });
     revoke.update(nested(admin, 'cards'), withdrawCard(5));
     await revoke.commit();
     await assertFails(getDocFromServer(event(member)));
     await assertFails(getDocFromServer(nested(member, 'cards')));
     assert.deepEqual((await getDocFromServer(nested(admin, 'cards'))).data().requirements, []);
-    assert.equal((await getDocFromServer(event(admin))).data().inputRevision, 6);
+    assert.equal((await getDocFromServer(event(admin))).data().inputRevision, 7);
+    await assertFails(getDocFromServer(nested(admin, 'publishedPlans', second)));
+    await assertFails(getDocFromServer(nested(admin, 'confirmations')));
+    await assertFails(getDocFromServer(nested(admin, 'proposals', proposalId)));
   } finally {
     await environment.cleanup();
   }
