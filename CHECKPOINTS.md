@@ -365,3 +365,9 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - QN-006/P4, owner implementation. Cache built assets only and keep the offline workspace focused on manual entry, review, and download. Verify a warm reload, an empty draft after reload, and server acknowledgement for event writes.
 - Safari reloaded without the local preview server and downloaded a new fictional approved card. The prior draft cleared. Firestore checks cover event creation with the emulator available and rejection when the connection is dropped.
 - Exact return: P4 accessibility and recovery regression for participant and organizer. Continue independent trials and retention review before closing P4.
+
+## CP-051 — P4 accessibility and recovery
+
+- QN-019/P4, owner implementation. Review keyboard focus for added requests and agenda fields, narrow event layout, and recovery from unconfirmed event writes. Verify in the local two-role demo.
+- Safari verified new-field focus, a specific time-zone error with title retained, and correction of a backwards agenda time range with the draft retained. The saved time range appeared in the exact publish preview after refreshing event access.
+- Exact return: P4 cross-role privacy regression with fictional records and a network trace. Full viewport and independent trial coverage remain pending.

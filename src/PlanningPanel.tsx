@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createCloudProposal, organizerCloudEnabled } from './organizerCloud.ts';
 import { maxPlanningItems, publicAgenda } from './planning.ts';
 import type { AgendaSlot, Choice, PlanningInput, Proposal, VenueFact } from './planning.ts';
@@ -35,7 +35,14 @@ export function OrganizerPlanner({ event, eventId, uid, cards, refresh }:
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState('');
   const [feedback, setFeedback] = useState<Awaited<ReturnType<typeof loadPlanFeedback>> | null>(null);
+  const newField = useRef<string | null>(null);
   const cloud = organizerCloudEnabled();
+
+  useEffect(() => {
+    if (!newField.current) return;
+    document.getElementById(newField.current)?.focus();
+    newField.current = null;
+  }, [agenda.length, facts.length]);
 
   const plan = (() => { try { return publicAgenda(choices, event); } catch { return null; } })();
 
@@ -57,17 +64,18 @@ export function OrganizerPlanner({ event, eventId, uid, cards, refresh }:
     <p>Active participants can access the agenda options and venue facts. Keep these entries about the event.</p>
     {event.currentPlanId ? <p>Agenda revision {event.planRevision} is published.</p> :
       event.planRevision > 0 && <p>The earlier agenda is out of date. Review current inputs before publishing again.</p>}
-    <button disabled={busy} onClick={() => {
+    <button disabled={busy} aria-expanded={editing} aria-controls="agenda-editor" onClick={() => {
       setEditing(value => !value);
       setConfirm(false);
       setSnapshot(null);
     }}>{editing ? 'Close agenda editor' : 'Edit agenda and venue facts'}</button>
-    {editing && <fieldset disabled={busy}>
+    <fieldset id="agenda-editor" disabled={busy} hidden={!editing}>
       <legend>Agenda and venue facts</legend>
       <h4>Venue facts</h4>
       {facts.map((fact, index) => <fieldset key={fact.id}>
         <legend>Venue fact {index + 1}</legend>
-        <label>Fact <input value={fact.statement} maxLength={240} onChange={e => {
+        <label>Fact <input id={`venue-${fact.id}`} name={`venue-${fact.id}`} autoComplete="off"
+          value={fact.statement} maxLength={240} onChange={e => {
           const statement = e.target.value;
           setFacts(items => items.map(item => item.id === fact.id ? { ...item, statement } : item));
         }}/></label>
@@ -80,14 +88,22 @@ export function OrganizerPlanner({ event, eventId, uid, cards, refresh }:
           setAgenda(items => items.map(slot => slot.factId === fact.id ? { ...slot, alternate: '', factId: '' } : slot));
         }}>Remove venue fact {index + 1}</button>
       </fieldset>)}
-      <button disabled={facts.length >= maxPlanningItems} onClick={() => setFacts(items => [...items, { id: nextId('A', items), statement: '', status: 'unknown' }])}>Add a venue fact</button>
+      <button disabled={facts.length >= maxPlanningItems} onClick={() => {
+        const id = nextId('A', facts);
+        newField.current = `venue-${id}`;
+        setFacts(items => [...items, { id, statement: '', status: 'unknown' }]);
+      }}>Add a venue fact</button>
       <h4>Agenda slots</h4>
+      <p className="hint" id="agenda-time-hint">Enter times in 24-hour format, such as 09:30 or 14:00.</p>
       {agenda.map((slot, index) => <fieldset key={slot.id}>
         <legend>Agenda slot {index + 1}</legend>
-        <label>Activity <input value={slot.title} maxLength={120} onChange={e => editSlot(slot.id, { title: e.target.value })}/></label>
-        <label>Starts (HH:MM) <input value={slot.start} maxLength={5} onChange={e => editSlot(slot.id, { start: e.target.value })}/></label>
-        <label>Ends (HH:MM) <input value={slot.end} maxLength={5} onChange={e => editSlot(slot.id, { end: e.target.value })}/></label>
-        <label>Alternate activity <input value={slot.alternate} maxLength={120} onChange={e =>
+        <label>Activity <input id={`activity-${slot.id}`} name={`activity-${slot.id}`} autoComplete="off"
+          value={slot.title} maxLength={120} onChange={e => editSlot(slot.id, { title: e.target.value })}/></label>
+        <label>Start time <input name={`start-${slot.id}`} autoComplete="off" aria-describedby="agenda-time-hint"
+          value={slot.start} maxLength={5} onChange={e => editSlot(slot.id, { start: e.target.value })}/></label>
+        <label>End time <input name={`end-${slot.id}`} autoComplete="off" aria-describedby="agenda-time-hint"
+          value={slot.end} maxLength={5} onChange={e => editSlot(slot.id, { end: e.target.value })}/></label>
+        <label>Alternate activity <input name={`alternate-${slot.id}`} autoComplete="off" value={slot.alternate} maxLength={120} onChange={e =>
           editSlot(slot.id, { alternate: e.target.value, factId: e.target.value ? slot.factId : '' })}/></label>
         {slot.alternate && <label>Supporting venue fact <select value={slot.factId} onChange={e => editSlot(slot.id, { factId: e.target.value })}>
           <option value="">Choose a fact</option>
@@ -95,15 +111,17 @@ export function OrganizerPlanner({ event, eventId, uid, cards, refresh }:
         </select></label>}
         <button onClick={() => setAgenda(items => items.filter(item => item.id !== slot.id))}>Remove agenda slot {index + 1}</button>
       </fieldset>)}
-      <button disabled={agenda.length >= maxPlanningItems} onClick={() => setAgenda(items => [...items, {
-        id: nextId('S', items), start: '', end: '', title: '', alternate: '', factId: '',
-      }])}>Add an agenda slot</button>
+      <button disabled={agenda.length >= maxPlanningItems} onClick={() => {
+        const id = nextId('S', agenda);
+        newField.current = `activity-${id}`;
+        setAgenda(items => [...items, { id, start: '', end: '', title: '', alternate: '', factId: '' }]);
+      }}>Add an agenda slot</button>
       <button className="primary" onClick={() => void perform(async () => {
         await updateAgenda(db, eventId, event, agenda, facts);
         setEditing(false);
         refresh();
       }, 'Agenda saved.')}>Save agenda and venue facts</button>
-    </fieldset>}
+    </fieldset>
     {!editing && event.agenda.length > 0 && <>
       <h4>Choose activities to publish</h4>
       {event.agenda.map((slot, index) => <label key={slot.id}>

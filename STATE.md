@@ -5,8 +5,8 @@ Updated: November 19, 2026 IST
 - Completed phase: **P1 — Private vertical slice**, in the approved manual-entry scope.
 - Completed phase: **P2 — Approved sharing**, verified in the local Firebase demo.
 - Completed phase: **P3 — Organizer adaptation**, verified with a genuine synthetic cloud proposal and local publication and confirmation.
-- Active implementation phase: **P4 — Reliability and UX**. QN-006 is verified.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-050.
+- Active implementation phase: **P4 — Reliability and UX**. QN-006 is verified, and QN-019 has a focused accessibility and recovery pass.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-051.
 - P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, automated tests and npm audit pass. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. P4 offline reload covers manual entry in the production app.
@@ -18,16 +18,19 @@ Updated: November 19, 2026 IST
 - QN-015 SDK-memory correction: after local AI preparation, clear now reloads the document to end its SDK context. Browser verified blank note/draft/consent and disabled inference after restart; no secure-erasure guarantee. Manual-only clear retains focus recovery.
 - CLI 0.169.0 available. Ponytail 5.3.3 installed/enabled. Ponytail review applied; report in evaluation/SOURCE_REVIEW.md. Hook trust/restart not verified and not changed.
 - Authentication and database sharing verified in local emulators. Hosted sign-in, rules rollout, and cloud configuration remain unverified.
+- GitHub PRs #1–#4 merged into `main` in stack order after CI and their recorded phase or task checks.
 
 ## Exact next action
 
-Continue P4 with the accessibility and recovery regression for the participant and organizer workflows. Independent organizer trials, privacy and security regression, and retention choices remain open. QN-014 remains open for automatic extraction promotion.
+Continue P4 with the cross-role browser privacy regression. Trace fictional canaries through sharing, replacement, withdrawal, and planning requests. Full viewport coverage, independent organizer trials, and retention choices remain open. QN-014 remains open for automatic extraction promotion.
 
 ## P4 evidence
 
 - Passed QN-006: Safari reloaded the cached production app with the preview server stopped. The draft was empty on reload. An event link opened the same shell, and a fresh approved download matched the expected synthetic JSON.
 - Passed: 22 automated tests, Firestore rules and connectivity checks, and the production build and privacy scan.
+- Passed QN-019 first pass: Safari confirmed focus in new and remaining request fields, new venue and activity fields, invalid time-zone recovery, and agenda retry after an invalid time range. Event views now ignore optimistic snapshots when tracking authoritative membership and revision changes.
 - Unverified: browser behavior with the OS reporting offline, broader accessibility and request interception, and hosted cache headers.
+- Deployment discovery: GitHub Pages reported no configured site. Firebase CLI reported zero authenticated sessions. Hosted rollout remains pending.
 
 ## P3 gate
 

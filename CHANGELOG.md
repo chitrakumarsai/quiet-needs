@@ -1,5 +1,10 @@
 # Change log
 
+## 2026-11-19 — P4 focus and recovery
+
+- Added a skip link and focus placement in newly added requests, venue facts, and agenda slots. Event fields and long codes wrap within narrow layouts.
+- Added actionable time-zone feedback and kept the last confirmed event view during temporary write failures. Revision and membership updates wait for server snapshots.
+
 ## 2026-11-19 — P4 offline manual workspace
 
 - Cached production app files so a previously visited workspace can reopen when the server is unreachable. Manual entry and download work from the cached shell, with a new draft after reload.
