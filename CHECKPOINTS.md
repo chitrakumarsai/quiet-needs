@@ -371,3 +371,9 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - QN-019/P4, owner implementation. Review keyboard focus for added requests and agenda fields, narrow event layout, and recovery from unconfirmed event writes. Verify in the local two-role demo.
 - Safari verified new-field focus, a specific time-zone error with title retained, and correction of a backwards agenda time range with the draft retained. The saved time range appeared in the exact publish preview after refreshing event access.
 - Exact return: P4 cross-role privacy regression with fictional records and a network trace. Full viewport and independent trial coverage remain pending.
+
+## CP-052 — P4 cross-role browser regression
+
+- QN-020/P4, owner implementation. Trace fictional sharing, replacement, withdrawal, and cloud planning payloads. Check keyboard and populated viewport behavior. Keep captured request bodies and credentials out of Git and report aggregate evidence.
+- Two local sessions and a separate cloud fixture passed request marker and field checks. No private marker appeared in captured participant requests. The withdrawal write contained zero requests. The populated role views fit all three widths. Chrome keyboard navigation reached the approved download button.
+- Exact return: run the independent organizer trials described in TEST_PLAN.md. Continue retention and broader accessibility evidence before closing P4.

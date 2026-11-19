@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-11-19 — P4 browser regression evidence
+
+- Verified fictional share, replacement, withdrawal, and cloud planning requests. Recorded populated layout and keyboard results and a brief for independent organizer trials.
+
 ## 2026-11-19 — P4 focus and recovery
 
 - Added a skip link and focus placement in newly added requests, venue facts, and agenda slots. Event fields and long codes wrap within narrow layouts.
