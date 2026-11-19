@@ -76,6 +76,19 @@ Record whether they identify the conflict and unresolved entrance question, expl
 
 Chrome smoke check: opened the HTML directly from disk, verified that changing an activity resets approval, published revision 1, opened its feedback, and downloaded the synthetic result.
 
+### Results from two independent organizers
+
+| Check | Result |
+| --- | --- |
+| Opened the prepared proposal, published revision 1, and opened that revision's feedback | 2 of 2 |
+| Identified the seating conflict and the unverified step-free entrance | 2 of 2 |
+| Explained the selected activity using a verified venue fact | 1 of 2. The seated choice cited the verified chairs. The standing choice identified the evidence for seating in retrospect and reported publishing before resolving the conflict. |
+| Understood what revision the feedback referred to | 2 of 2. Both identified revision 1, and both wanted more detail about the scope of the response. |
+
+One organizer published the original in 137 seconds and one published the alternate in 128 seconds. Both questioned publishing with unresolved needs. The export confirms that the approval gate was completed. It does not independently measure how carefully either reviewer read the exact preview. These two offline returns provide usability findings. Hosted sign-in, live inference, and real participant feedback require separate evidence.
+
+Follow-up QN-021: make unresolved requests visible at the publish decision and clarify that each response applies to the participant's card as a whole for that revision. Keep raw returns outside Git.
+
 ## Recorded run — November 15, 2026
 
 - Node 22.14.0: domain tests 6/6, typecheck/build pass; npm audit zero findings.
