@@ -147,3 +147,11 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+dist/
+.npm-cache/
+.DS_Store
+
+# Local workspace skills installed from the versions recorded in DESIGN.md.
+.agents/skills/ui-ux-pro-max/
+.agents/skills/react-best-practices/
+.agents/skills/web-design-guidelines/

@@ -1,0 +1,27 @@
+Develop QuietNeeds using the current project files as the source of truth.
+
+First read AGENTS.md, STATE.md, QUIETNEEDS_EXECUTION_PLAN.md,
+CHECKPOINTS.md, ARCHITECTURE.md, DESIGN.md, BACKLOG.md, and CODEX_CLI.md.
+Inspect actual source files, package versions, and Git status if available.
+Preserve completed work. Report current phase/task and the next action.
+
+Resume P1-T01: install dependencies, generate a lockfile, then run npm test
+and npm run build for P1-T02. Fix actual build/type/API failures. If the
+environment blocks installation, record the exact blocker and continue
+only useful independent P1 work. Never claim a blocked check passed.
+
+Use the planned UI/UX tools for P1-T08/T09 when available; verify tools are
+installed rather than assuming. Follow DESIGN.md and preserve behavior.
+
+Keep private inference ONLY_ON_DEVICE, fail to manual entry, and never
+upload private notes in runtime code, logs, test traces, or prompts. Use
+synthetic data. Every card edit invalidates approval. Do not claim real
+inference until Firebase/App Check and device execution are verified.
+
+Keep stable P0-P5 IDs. Before complex detours, save a checkpoint and link
+the issue to its parent task and exact return point. After 15 minutes
+without progress, summarize evidence and choose a bounded next action.
+Do not begin P2 until P1 gates pass. Do not add unrequested features.
+
+At handoff update STATE.md, CHANGELOG.md, and CHECKPOINTS.md as appropriate.
+Report actual changes, verification results, blockers, and next action.
