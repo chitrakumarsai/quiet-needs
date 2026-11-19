@@ -8,10 +8,10 @@
   },
   "scripts": {
     "dev": "rsbuild dev",
-    "build": "tsc --noEmit && rsbuild build && node scripts/check-production.mjs",
+    "build": "tsc --noEmit && rsbuild build && node scripts/build-offline.mjs && node scripts/check-production.mjs",
     "preview": "rsbuild preview",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
-    "test:rules": "node --test tests/firestore.rules.mjs"
+    "test:rules": "node --experimental-strip-types --test tests/firestore.rules.mjs"
   },
   "dependencies": {
     "firebase": "^12.5.0",

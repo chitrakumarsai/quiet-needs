@@ -60,6 +60,7 @@ In P1 the primary action is an approved local export, not “Send to organizer.�
 9. Never claim “saved” for memory-only state. Explain refresh loss without alarming language.
 10. Sharing copy distinguishes participants, organizer, and cloud processing. Do not imply anonymity.
 11. Organizers preview approved requests before cloud generation. Label unresolved conflicts and unknowns, show the exact agenda before publication, and clear revision-specific approval and feedback when inputs change.
+12. When the browser is offline, explain that event sharing needs a connection. Keep entry, review, and download available without changing their controls. Make the offline message available to screen readers.
 
 ## Component strategy
 

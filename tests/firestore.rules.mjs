@@ -1,11 +1,15 @@
 import { readFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
+import { createServer } from 'node:net';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { assertFails, initializeTestEnvironment } from '@firebase/rules-unit-testing';
+import { deleteApp, initializeApp } from 'firebase/app';
 import {
-  collection, doc, getDocFromServer, getDocsFromServer, runTransaction, serverTimestamp, setDoc, updateDoc, writeBatch,
+  collection, connectFirestoreEmulator, doc, getDocFromServer, getDocsFromServer, getFirestore,
+  runTransaction, serverTimestamp, setDoc, terminate, updateDoc, writeBatch,
 } from 'firebase/firestore';
+import { createEvent } from '../src/sharing.ts';
 
 const projectId = 'demo-quietneeds';
 const eventId = 'abcdefghijklmnopqrst';
@@ -40,6 +44,8 @@ test('event isolation, enrollment, approved revisions, publication, confirmation
     const other = environment.authenticatedContext(outsider).firestore();
     const anonymous = environment.unauthenticatedContext().firestore();
     await setDoc(event(admin), newEvent(owner));
+    const created = await createEvent(admin, owner, 'Fictional event via the app', 'UTC');
+    assert.equal((await getDocFromServer(event(admin, created))).data().organizerUid, owner);
     await setDoc(event(other, otherEvent), newEvent(outsider));
     await assertFails(setDoc(event(member, '12345678901234567890'), newEvent(owner)));
     await assertFails(getDocFromServer(event(anonymous)));
@@ -210,5 +216,23 @@ test('event isolation, enrollment, approved revisions, publication, confirmation
     await assertFails(getDocFromServer(nested(admin, 'proposals', proposalId)));
   } finally {
     await environment.cleanup();
+  }
+});
+
+test('event creation rejects when Firestore cannot acknowledge the write', { timeout: 25000 }, async () => {
+  const server = createServer(socket => socket.destroy());
+  await new Promise((resolve, reject) => {
+    server.once('error', reject);
+    server.listen(0, '127.0.0.1', resolve);
+  });
+  const app = initializeApp({ projectId }, 'qn-offline-write');
+  const db = getFirestore(app);
+  try {
+    connectFirestoreEmulator(db, '127.0.0.1', server.address().port, { mockUserToken: { sub: owner } });
+    await assert.rejects(createEvent(db, owner, 'Fictional disconnected event', 'UTC'), { code: 'unavailable' });
+  } finally {
+    await terminate(db);
+    await deleteApp(app);
+    await new Promise(resolve => server.close(resolve));
   }
 });
