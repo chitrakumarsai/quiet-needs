@@ -70,7 +70,11 @@ Cloud payload contains approved active requests and organizer-supplied facts and
 
 ## P4 independent organizer trial
 
-Run the same fictional event with two organizers in separate sessions. Supply one approved request for seating, one conflicting standing-only request, an unresolved step-free access request, and a verified venue fact that chairs are available. Give each organizer the task of preparing and publishing a traceable agenda and then checking participant feedback. Observe without prompting until they get stuck. Record whether they can identify the conflict and unknown, explain their selected change, approve the exact public preview, and find feedback for the current revision. Keep organizer names and private notes out of the results.
+Send each organizer the [standalone trial HTML](evaluation/quietneeds-organizer-trial.html). Ask them to download it, open it in a browser, and work independently. They review the fictional requests and venue facts, consider the prepared proposal, choose an activity, and preview and approve it if ready. They can publish a practice agenda and inspect the simulated feedback for that revision. They answer the three feedback prompts and return `quietneeds-organizer-trial-results.json`. A reviewer who gets stuck can still submit the feedback.
+
+Record whether they identify the conflict and unresolved entrance question, explain the evidence supporting their choice, review the exact preview, and find feedback for the published revision. Keep organizer names and private notes out of the results. This standalone exercise measures review comprehension and navigation. Hosted sign-in, live cloud generation, and real publication still need separate trial evidence.
+
+Chrome smoke check: opened the HTML directly from disk, verified that changing an activity resets approval, published revision 1, opened its feedback, and downloaded the synthetic result.
 
 ## Recorded run — November 15, 2026
 

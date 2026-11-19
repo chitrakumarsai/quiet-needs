@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-11-19 — Shareable organizer exercise
+
+- Added a standalone fictional organizer trial with agenda review, a practice publication, simulated revision-specific feedback, and a local JSON results download.
+
 ## 2026-11-19 — P4 browser regression evidence
 
 - Verified fictional share, replacement, withdrawal, and cloud planning requests. Recorded populated layout and keyboard results and a brief for independent organizer trials.
