@@ -382,3 +382,9 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 
 - QN-021/P4, owner implementation. Two organizers completed the standalone trial and found revision-specific feedback. Both recognized the seating conflict and the unverified entrance. Both questioned publication with unresolved requests and wanted clearer feedback scope.
 - Exact return: put unresolved requests next to the publish approval and clarify the scope of revision-bound feedback. Hosted organizer trials, retention, and broader accessibility remain open.
+
+## CP-054 — Provision Firestore for the hosted trial
+
+- QN-017/P4, owner implementation. Enabled the Firestore API after the initial create request returned 403. Verified the project had no databases before creating its default database in the requested `us-east1` location.
+- Firebase reported Standard edition, native mode, and free-tier eligibility. The repository rules compiled and were released. A signed-out REST query to the events collection returned `403 PERMISSION_DENIED`.
+- Exact return: QN-021 remains the next implementation task. Hosted testing still needs Google sign-in, a preview URL, and two signed-in synthetic sessions.
