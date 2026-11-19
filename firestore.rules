@@ -1,0 +1,122 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function own(uid) { return signedIn() && request.auth.uid == uid; }
+    function exact(data, fields) {
+      return data.keys().hasAll(fields) && data.keys().hasOnly(fields);
+    }
+    function eventPath(eventId) { return /databases/$(database)/documents/events/$(eventId); }
+    function memberPath(eventId, uid) { return /databases/$(database)/documents/events/$(eventId)/members/$(uid); }
+    function joinPath(eventId, uid) { return /databases/$(database)/documents/events/$(eventId)/joinRequests/$(uid); }
+    function cardPath(eventId, uid) { return /databases/$(database)/documents/events/$(eventId)/cards/$(uid); }
+    function organizer(eventId) { return signedIn() && get(eventPath(eventId)).data.organizerUid == request.auth.uid; }
+    function active(eventId, uid) {
+      return exists(memberPath(eventId, uid)) && get(memberPath(eventId, uid)).data.active == true;
+    }
+    function bounded(text, limit) { return text is string && text.size() > 0 && text.size() <= limit; }
+    function eventAdvanced(eventId) {
+      return getAfter(eventPath(eventId)).data.inputRevision == get(eventPath(eventId)).data.inputRevision + 1
+        && getAfter(eventPath(eventId)).data.currentPlanId == null;
+    }
+    function cardAdvanced(path) {
+      return existsAfter(path) && getAfter(path).data.revision == (exists(path) ? get(path).data.revision + 1 : 1);
+    }
+    function validRequirement(item) {
+      return item is map && exact(item, ['id', 'category', 'request'])
+        && item.id is string && item.id.matches('^[a-f0-9-]{36}$')
+        && item.category in ['timing','seating','sensory','cost','participation','other']
+        && bounded(item.request, 500) && item.request.matches('(?s).*[^[:space:]].*');
+    }
+    function validRequirements(items) {
+      return items is list && items.size() > 0 && items.size() <= 8
+        && validRequirement(items[0])
+        && (items.size() < 2 || validRequirement(items[1]))
+        && (items.size() < 3 || validRequirement(items[2]))
+        && (items.size() < 4 || validRequirement(items[3]))
+        && (items.size() < 5 || validRequirement(items[4]))
+        && (items.size() < 6 || validRequirement(items[5]))
+        && (items.size() < 7 || validRequirement(items[6]))
+        && (items.size() < 8 || validRequirement(items[7]));
+    }
+
+    match /events/{eventId} {
+      function basicEvent(data) {
+        return exact(data, ['organizerUid','title','timeZone','agenda','venueFacts','agendaRevision','inputRevision','currentPlanId','planRevision','status','createdAt'])
+          && bounded(data.title,120) && bounded(data.timeZone,80)
+          && data.agenda == [] && data.venueFacts == []
+          && data.agendaRevision == 1 && data.planRevision == 0 && data.currentPlanId == null
+          && data.status in ['open','closed'];
+      }
+      function participantInvalidation() {
+        return signedIn() && active(eventId, request.auth.uid)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['inputRevision','currentPlanId'])
+          && cardAdvanced(cardPath(eventId,request.auth.uid));
+      }
+      allow get: if signedIn() && (resource.data.organizerUid == request.auth.uid || active(eventId,request.auth.uid));
+      allow list: if signedIn() && resource.data.organizerUid == request.auth.uid;
+      allow create: if signedIn() && own(request.resource.data.organizerUid) && basicEvent(request.resource.data)
+        && request.resource.data.inputRevision == 0 && request.resource.data.createdAt == request.time;
+      allow update: if signedIn() && request.resource.data.inputRevision == resource.data.inputRevision + 1
+        && request.resource.data.currentPlanId == null
+        && ((resource.data.organizerUid == request.auth.uid && basicEvent(request.resource.data)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['title','timeZone','status','inputRevision','currentPlanId']))
+          || participantInvalidation());
+
+      match /joinRequests/{uid} {
+        allow get: if own(uid) || organizer(eventId);
+        allow list: if organizer(eventId);
+        allow create: if own(uid) && get(eventPath(eventId)).data.status == 'open'
+          && get(eventPath(eventId)).data.organizerUid != uid
+          && exact(request.resource.data,['requestedAt','status'])
+          && request.resource.data.requestedAt == request.time && request.resource.data.status == 'pending';
+        allow update: if organizer(eventId) && resource.data.status == 'pending'
+          && request.resource.data.status == 'approved'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+          && existsAfter(memberPath(eventId,uid)) && getAfter(memberPath(eventId,uid)).data.active == true;
+      }
+
+      match /members/{uid} {
+        allow get: if organizer(eventId) || own(uid);
+        allow list: if organizer(eventId);
+        allow create: if organizer(eventId)
+          && exact(request.resource.data,['active','joinedAt'])
+          && request.resource.data.active == true && request.resource.data.joinedAt == request.time
+          && get(joinPath(eventId,uid)).data.status == 'pending'
+          && getAfter(joinPath(eventId,uid)).data.status == 'approved'
+          && eventAdvanced(eventId);
+        allow update: if organizer(eventId) && resource.data.active == true && request.resource.data.active == false
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['active'])
+          && eventAdvanced(eventId)
+          && (!exists(cardPath(eventId,uid)) || getAfter(cardPath(eventId,uid)).data.status == 'withdrawn');
+      }
+
+      match /cards/{uid} {
+        function envelope() {
+          let data = request.resource.data;
+          return exact(data,['schemaVersion','ownerUid','revision','status','requirements','consentVersion','approvedAt','updatedAt','operationId'])
+            && data.schemaVersion == 1 && data.ownerUid == uid && data.revision is int
+            && data.consentVersion == 1 && data.updatedAt == request.time
+            && data.operationId is string && data.operationId.matches('^[a-f0-9-]{36}$');
+        }
+        function approval() {
+          return request.resource.data.status == 'approved' && request.resource.data.approvedAt == request.time
+            && validRequirements(request.resource.data.requirements);
+        }
+        function withdrawal() {
+          return resource.data.status == 'approved' && request.resource.data.status == 'withdrawn'
+            && request.resource.data.requirements == [] && request.resource.data.approvedAt == null;
+        }
+        allow get: if organizer(eventId) || (own(uid) && active(eventId,uid));
+        allow list: if organizer(eventId);
+        allow create: if own(uid) && active(eventId,uid) && envelope() && approval()
+          && request.resource.data.revision == 1 && eventAdvanced(eventId);
+        allow update: if envelope() && request.resource.data.revision == resource.data.revision + 1
+          && request.resource.data.operationId != resource.data.operationId && eventAdvanced(eventId)
+          && ((own(uid) && active(eventId,uid) && (approval() || withdrawal()))
+            || (organizer(eventId) && withdrawal() && active(eventId,uid)
+              && getAfter(memberPath(eventId,uid)).data.active == false));
+      }
+    }
+  }
+}

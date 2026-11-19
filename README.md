@@ -46,3 +46,18 @@ Paste the resume prompt from QUIETNEEDS_EXECUTION_PLAN.md. STATE.md owns live pr
 ## Repository workflow
 
 Run the commands above from the repository root. See [CONTRIBUTING.md](CONTRIBUTING.md). CI runs tests, typecheck/build, production privacy checks and dependency audit. Browser privacy and model semantics require the separate evidence in [TEST_PLAN.md](TEST_PLAN.md) and [evaluation/RESULTS.md](evaluation/RESULTS.md).
+
+## Local P2 sharing demo
+
+Use Java 21 or newer for Firestore and the pinned Firebase CLI for the demo emulators. Run these in separate terminals from the repository root.
+
+```bash
+npm exec --yes --package=firebase-tools@15.36.0 -- firebase emulators:start --only auth,firestore --project demo-quietneeds
+VITE_SHARING_EMULATORS=true npm run dev
+```
+
+In two tabs, select **Start demo session** to create separate synthetic accounts. The organizer creates an event and shares its link. The participant opens it and requests admission. Once admitted, the participant previews and approves the manual card, then chooses **Share with organizer**. Refresh the event in the organizer tab to see the shared revision.
+
+To run the access rules against the same emulator, use `FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 npm run test:rules`. The suite clears data for `demo-quietneeds` before it runs.
+
+For a hosted demo, configure the public Firebase web fields for an isolated Firebase project, enable Google sign-in and authorize the host domain, and deploy the checked-in Firestore rules before building with `VITE_SHARING_ENABLED=true`. The local emulator switch is development-only. Live Firebase setup and its provider sign-in have separate verification.

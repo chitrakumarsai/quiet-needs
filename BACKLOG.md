@@ -21,6 +21,7 @@
 | QN-015 | SDK memory | P1-T06 | Correction verified | Clear after AI preparation reloads page to end SDK context; manual-only clear stays in page. Browser restart verified; no secure memory-erasure promise | Full privacy audit |
 
 | QN-016 | Dependency audit | P1-T02 | Resolved | Rsbuild 1.7.6 removes the affected dependency chain. npm audit reports zero findings and both GitHub participant checks passed on 9f68d2b | P1-T07 |
+| QN-017 | Approved sharing | P2 | Verified locally | Emulator access rules and two isolated Chrome sessions pass. Live Google sign-in and hosted rules rollout remain pending | P3 approved input |
 
 ## Issue template
 

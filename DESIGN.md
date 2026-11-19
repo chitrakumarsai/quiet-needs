@@ -41,7 +41,8 @@ These are candidate tokens, not verified contrast results. Validate normal text,
 | Private preparation | Write practical requests | Empty, incomplete request, ready for preview |
 | Card review | Edit practical requests | Empty request, valid draft, removed request, editing clears preview and approval |
 | Sharing preview | Approve exact content | Audience shown, all outgoing user text visible, consent unchecked by default, local export clearly distinguished from actual sharing |
-| Organizer workspace (P2/P3) | Review unmet requirements | No cards, new card, conflicting needs, missing venue facts, stale plan, proposed change |
+| Event sharing (P2) | Admit participants and share approved cards | Signed out, waiting for admission, active membership, approved card, replacement, withdrawal, revoked access |
+| Organizer workspace (P3) | Review unmet requirements | No cards, new card, conflicting needs, missing venue facts, stale plan, proposed change |
 | Revised plan (P3) | Confirm whether needs are met | Met, unmet, unknown, outdated revision, participant feedback |
 
 In P1 the primary action is an approved local export, not “Send to organizer.” Only change that language when an authenticated sharing transport actually exists.
