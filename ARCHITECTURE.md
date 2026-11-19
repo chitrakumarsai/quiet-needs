@@ -22,7 +22,7 @@ Codex CLI develops the code. It is not the runtime model and must use synthetic 
 | Revised plan and participant confirmation | Browser round trip and Firestore emulator revision checks passed | P3 |
 | Offline reload | Production shell and manual export verified in Safari with the preview server stopped | P4 |
 | Full accessibility and security regression | Pending | P4 |
-| Hosting and judge access | Not deployed | P5 |
+| Hosting and judge access | Temporary preview verified for P4. Live release and judge walkthrough pending. | P5 |
 
 ## 3. System boundaries
 

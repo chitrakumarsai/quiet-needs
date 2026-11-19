@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-11-19 — Hosted trial preview
+
+- Configured Google sign-in and deployed a seven-day Hosting preview for manual organizer planning. Verified OAuth startup, the hosted shell, and service worker cache headers.
+
 ## 2026-11-19 — Firestore hosted trial setup
 
 - Created the demo Firestore database in `us-east1`, deployed the checked-in rules, and verified that a signed-out events read is denied.
