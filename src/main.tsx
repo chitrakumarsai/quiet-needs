@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useCallback, useRef, useState } from 'react';
+import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { makeApprovedCard, makeCardPreview } from './domain.ts';
 import type { ApprovedCard, Draft } from './domain.ts';
@@ -16,12 +16,19 @@ function App() {
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState('');
   const firstRequest = useRef<HTMLTextAreaElement>(null);
+  const nextRequestFocus = useRef<number | null>(null);
   const clearDialog = useRef<HTMLDialogElement>(null);
   const clearButton = useRef<HTMLButtonElement>(null);
   const keepEditing = useRef<HTMLButtonElement>(null);
   const copiedSharedCard = useRef(false);
   const hasContent = draft.requirements.some(({ request }) => request.trim());
   const canPreview = draft.requirements.length > 0 && draft.requirements.every(({ request }) => request.trim());
+
+  useEffect(() => {
+    if (nextRequestFocus.current === null) return;
+    document.getElementById(`request-${nextRequestFocus.current}`)?.focus();
+    nextRequestFocus.current = null;
+  }, [draft.requirements.length]);
 
   const clearApproval = useCallback(() => {
     setConsent(false);
@@ -63,7 +70,11 @@ function App() {
   }
 
   return <main>
-    <header><a className="brand" href="/">◌ QuietNeeds</a></header>
+    <a className="skip-link" href="#request-0" onClick={event => {
+      event.preventDefault();
+      firstRequest.current?.focus();
+    }}>Skip to requests</a>
+    <header><a className="brand" href="/"><span aria-hidden="true">◌ </span>QuietNeeds</a></header>
     <section className="intro">
       <h1>Prepare your participation card.</h1>
       <p>Describe what would help you take part. Include any conditions, places, times, or amounts you want the organizer to know.</p>
@@ -75,20 +86,22 @@ function App() {
         <p className="hint">Use one practical request per field. Share only the details needed to act on it.</p>
         {draft.requirements.map((requirement, index) => <div className="request" key={index}>
           <label htmlFor={`request-${index}`}>Request {index + 1}</label>
-          <textarea ref={index === 0 ? firstRequest : undefined} id={`request-${index}`}
+          <textarea ref={index === 0 ? firstRequest : undefined} id={`request-${index}`} name={`request-${index}`}
             autoComplete="off" autoCorrect="off" spellCheck={false} maxLength={500} value={requirement.request}
             onChange={event => {
               const request = event.target.value;
               changeDraft({ ...draft, requirements: draft.requirements.map((item, offset) => offset === index ? { ...item, request } : item) });
             }}/>
-          {draft.requirements.length > 1 && <button className="text-button" onClick={() => changeDraft({
-            ...draft, requirements: draft.requirements.filter((_, offset) => offset !== index),
-          })}>Remove request {index + 1}</button>}
+          {draft.requirements.length > 1 && <button className="text-button" onClick={() => {
+            nextRequestFocus.current = Math.min(index, draft.requirements.length - 2);
+            changeDraft({ ...draft, requirements: draft.requirements.filter((_, offset) => offset !== index) });
+          }}>Remove request {index + 1}</button>}
         </div>)}
         <div className="actions">
-          <button disabled={draft.requirements.length >= 8} onClick={() => changeDraft({
-            ...draft, requirements: [...draft.requirements, { category: 'other', request: '' }],
-          })}>Add another request</button>
+          <button disabled={draft.requirements.length >= 8} onClick={() => {
+            nextRequestFocus.current = draft.requirements.length;
+            changeDraft({ ...draft, requirements: [...draft.requirements, { category: 'other', request: '' }] });
+          }}>Add another request</button>
           <button ref={clearButton} disabled={!hasContent && draft.requirements.length === 1} onClick={() => {
             clearDialog.current?.showModal();
             keepEditing.current?.focus();

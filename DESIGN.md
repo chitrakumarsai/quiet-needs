@@ -61,6 +61,7 @@ In P1 the primary action is an approved local export, not â€œSend to organizer.â
 10. Sharing copy distinguishes participants, organizer, and cloud processing. Do not imply anonymity.
 11. Organizers preview approved requests before cloud generation. Label unresolved conflicts and unknowns, show the exact agenda before publication, and clear revision-specific approval and feedback when inputs change.
 12. When the browser is offline, explain that event sharing needs a connection. Keep entry, review, and download available without changing their controls. Make the offline message available to screen readers.
+13. Move focus into newly added request and agenda fields. Keep event codes and long requests within the screen width. Explain when a retry is needed and show the last confirmed shared revision during a temporary write failure.
 
 ## Component strategy
 

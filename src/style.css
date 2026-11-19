@@ -7,3 +7,28 @@ button{min-height:44px}button.primary{background:var(--primary);border-color:var
 :focus-visible{outline:3px solid var(--primary);outline-offset:3px}.export-preview{border-top:1px solid var(--border);margin-top:24px;padding-top:16px}.export-preview li{padding:12px 8px;overflow-wrap:anywhere}.export-preview li p{white-space:pre-wrap;margin:8px 0}.category{text-transform:capitalize;font-size:14px;font-weight:650;color:var(--muted)}details{margin:16px 0}summary{cursor:pointer;min-height:44px;padding:12px 0}
 dialog{max-width:520px;width:calc(100% - 32px);padding:28px;border:1px solid var(--border);border-radius:16px;color:var(--text);background:var(--surface)}dialog::backdrop{background:#183D3666}dialog h2{margin-top:0}.destructive{background:#9b2929;color:white;border-color:#9b2929}dialog .actions{margin-bottom:0}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+.skip-link {
+  position: absolute;
+  top: 12px;
+  transform: translateY(calc(-100% - 12px));
+  padding: 10px 14px;
+  color: var(--text);
+  background: var(--surface);
+}
+.skip-link:focus { transform: none; }
+.approval { overflow-wrap: anywhere; }
+.approval fieldset { min-inline-size: 0; margin: 12px 0; border: 1px solid var(--border); border-radius: 8px; }
+.approval input:not([type="checkbox"]), .approval select {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  margin: 4px 0 12px;
+  padding: 8px 10px;
+  border: 1px solid #778b80;
+  border-radius: 8px;
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+}
+[aria-pressed="true"] { border-color: var(--primary); background: var(--primary); color: white; }

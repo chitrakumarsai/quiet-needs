@@ -25,12 +25,16 @@ function subscribeConnection(onChange: () => void) {
   };
 }
 
+const accessDenied = (error: unknown) =>
+  error instanceof Error && 'code' in error && error.code === 'permission-denied';
+
 function errorText(error: unknown) {
   if (error instanceof Error && error.message === 'CARD_CHANGED') {
     return 'The shared card changed. Refresh event access and review the current version before replacing it.';
   }
   if (error instanceof Error && error.message === 'INVALID_TITLE') return 'Enter an event title.';
-  if (error instanceof Error && 'code' in error && error.code === 'permission-denied') {
+  if (error instanceof RangeError) return 'Enter a time zone such as Europe/London.';
+  if (accessDenied(error)) {
     return 'Access was denied. Refresh event access to check your membership.';
   }
   return 'The request could not be confirmed. Check your connection and try again.';
@@ -55,6 +59,7 @@ export default function SharingPanel(props: Props) {
 
   function openEvent(id: string) {
     const url = new URL(location.href);
+    url.hash = '';
     if (id) url.searchParams.set('event', id);
     else url.searchParams.delete('event');
     history.replaceState(null, '', url);
@@ -115,7 +120,7 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
   useEffect(() => {
     if (!eventId || access?.role !== 'participant') return;
     return onSnapshot(doc(db, 'events', eventId, 'members', uid), { includeMetadataChanges: true }, snapshot => {
-      if (!snapshot.metadata.fromCache && snapshot.data()?.active !== true) {
+      if (!snapshot.metadata.fromCache && !snapshot.metadata.hasPendingWrites && snapshot.data()?.active !== true) {
         setAccess({ role: 'revoked' });
         onContextChange();
       }
@@ -140,7 +145,7 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
   useEffect(() => {
     if (!eventId || !loadedEvent) return;
     return onSnapshot(doc(db, 'events', eventId), { includeMetadataChanges: true }, snapshot => {
-      if (snapshot.metadata.fromCache) return;
+      if (snapshot.metadata.fromCache || snapshot.metadata.hasPendingWrites) return;
       const latest = snapshot.data() as Event | undefined;
       if (!latest || latest.inputRevision !== loadedEvent.inputRevision || latest.planRevision !== loadedEvent.planRevision) {
         setAccess(null);
@@ -165,7 +170,12 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
       setStatus(message);
     } catch (error) {
       setStatus(errorText(error));
-      if (eventId) setAccess(null);
+      if (accessDenied(error)) {
+        setAccess(null);
+        onContextChange();
+      } else if (error instanceof Error && error.message === 'CARD_CHANGED') {
+        setAccess(null);
+      }
     } finally {
       setBusy(false);
     }
@@ -192,7 +202,8 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
         openEvent(eventInput.trim());
       }}>
         <label htmlFor="event-code">Event code</label>
-        <input id="event-code" value={eventInput} onChange={event => setEventInput(event.target.value)} maxLength={20}/>
+        <input id="event-code" name="event-code" autoComplete="off" autoCapitalize="none" spellCheck={false}
+          value={eventInput} onChange={event => setEventInput(event.target.value)} maxLength={20}/>
         <button type="submit">Open event</button>
       </form>
       <h3>Create an event</h3>
@@ -201,9 +212,11 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
         void perform(async () => { openEvent(await createEvent(db, uid, title, timeZone)); }, 'Event created.');
       }}>
         <label htmlFor="event-title">Event title</label>
-        <input id="event-title" required maxLength={120} value={title} onChange={event => setTitle(event.target.value)}/>
+        <input id="event-title" name="event-title" autoComplete="off" required maxLength={120}
+          value={title} onChange={event => setTitle(event.target.value)}/>
         <label htmlFor="event-zone">Time zone</label>
-        <input id="event-zone" required maxLength={80} value={timeZone} onChange={event => setTimeZone(event.target.value)}/>
+        <input id="event-zone" name="event-zone" autoComplete="off" autoCapitalize="none" spellCheck={false}
+          required maxLength={80} value={timeZone} onChange={event => setTimeZone(event.target.value)}/>
         <div className="actions"><button disabled={busy}>Create event</button></div>
       </form>
       {events.length > 0 && <><h3>Your events</h3><ul>{events.map(event => <li key={event.id}>
@@ -225,7 +238,7 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
         <h3>{access.event.title}</h3>
         <p>Share this event link with your participants. Each person still needs your approval.</p>
         <label htmlFor="invite-link">Event link</label>
-        <input id="invite-link" type="url" value={location.href} readOnly onFocus={event => event.currentTarget.select()}/>
+        <input id="invite-link" name="invite-link" type="url" value={location.href} readOnly onFocus={event => event.currentTarget.select()}/>
         <button onClick={async () => {
           try {
             await navigator.clipboard.writeText(location.href);
@@ -236,7 +249,8 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
           refresh={() => setReload(value => value + 1)}/>
         <h4>Join requests</h4>
         {access.pending.length === 0 ? <p>No requests waiting.</p> : <ul>{access.pending.map(id => <li key={id}>
-          <code>{id}</code> <button disabled={busy} onClick={() => void perform(() => admit(db, eventId, id), 'Participant admitted.')}>Admit {id}</button>
+          <code translate="no">{id}</code> <button disabled={busy} aria-label={`Admit participant ${id}`}
+            onClick={() => void perform(() => admit(db, eventId, id), 'Participant admitted.')}>Admit participant</button>
         </li>)}</ul>}
         <h4>Participants</h4>
         {access.members.length === 0 ? <p>No active participants.</p> : <ul>{access.members.map(id => <li key={id}>

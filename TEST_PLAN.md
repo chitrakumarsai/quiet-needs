@@ -54,6 +54,12 @@ Cloud payload contains approved active requests and organizer-supplied facts and
 - The Firestore test calls the actual event creation function. It confirms the event with the emulator and checks that a dropped connection yields an unavailable error.
 - Browser verification covered the unreachable app origin. Browser/OS offline indicator behavior and hosted cache headers remain unverified.
 
+## P4 focus and form recovery — November 19, 2026
+
+- Safari inserted typed text into the new request, venue fact, and activity without a second field selection. Removing a request returned typing focus to the remaining field.
+- An invalid time zone produced a correction example and retained the event title. An invalid agenda time range retained the activity and times. Corrected times appeared in the exact agenda review after refreshing event access.
+- Source review covered target sizes, long content, field labels and names, keyboard focus, and live announcements. Full viewport, keyboard-only walkthrough, and write-failure fault injection from an active participant session remain open. [Vercel Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines/blob/main/command.md)
+
 ## Recorded run — November 15, 2026
 
 - Node 22.14.0: domain tests 6/6, typecheck/build pass; npm audit zero findings.
