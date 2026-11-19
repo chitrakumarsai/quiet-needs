@@ -21,7 +21,7 @@
 | QN-015 | SDK memory | P1-T06 | Correction verified | Clear after AI preparation reloads page to end SDK context; manual-only clear stays in page. Browser restart verified; no secure memory-erasure promise | Full privacy audit |
 
 | QN-016 | Dependency audit | P1-T02 | Resolved | Rsbuild 1.7.6 removes the affected dependency chain. npm audit reports zero findings and both GitHub participant checks passed on 9f68d2b | P1-T07 |
-| QN-017 | Approved sharing | P2 | Verified locally | Emulator access rules and two isolated Chrome sessions pass. Live Google sign-in and hosted rules rollout remain pending | P3 approved input |
+| QN-017 | Approved sharing | P2 | Verified locally | Emulator sharing passed. Rules are deployed to the demo database and deny a signed-out read. Live Google sign-in and signed-in sharing remain pending | P4 hosted trial |
 | QN-018 | Organizer adaptation | P3 | Verified | Synthetic cloud output and local planning passed. Hosted integration and real participant feedback remain pending | P4 reliability and UX |
 | QN-019 | Accessibility and recovery | P4 | Focused pass verified | Populated layouts, a 200% zoom check, and keyboard card review passed. Run the full screen-reader walkthrough | P4 reliability and UX |
 | QN-020 | Browser privacy regression | P4 | Synthetic trace verified | Review IndexedDB record contents and repeat in isolated hosting before using real records | P4 retention and user trials |

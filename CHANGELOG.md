@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-11-19 — Firestore hosted trial setup
+
+- Created the demo Firestore database in `us-east1`, deployed the checked-in rules, and verified that a signed-out events read is denied.
+
 ## 2026-11-19 — Organizer trial findings
 
 - Recorded both independent standalone returns. Tracked two usability findings around unresolved requests at publication and the scope of participant feedback.
