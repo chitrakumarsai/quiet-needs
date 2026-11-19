@@ -388,3 +388,9 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - QN-017/P4, owner implementation. Enabled the Firestore API after the initial create request returned 403. Verified the project had no databases before creating its default database in the requested `us-east1` location.
 - Firebase reported Standard edition, native mode, and free-tier eligibility. The repository rules compiled and were released. A signed-out REST query to the events collection returned `403 PERMISSION_DENIED`.
 - Exact return: QN-021 remains the next implementation task. Hosted testing still needs Google sign-in, a preview URL, and two signed-in synthetic sessions.
+
+## CP-055 — Prepare the hosted trial preview
+
+- QN-017/P4, owner implementation. Configure Google sign-in with the selected support account, publish a temporary Hosting preview, and verify its sanitized production build and auth setup.
+- Enabled Google sign-in and deployed the seven-day `p4-trial` preview. Chrome displayed the sign-in control. The Identity Toolkit API returned a Google OAuth URL for the preview origin. The app shell and worker both served with `no-cache`, and the development evaluator returned 404.
+- Exact return: QN-021 remains the next implementation task. Complete the hosted workflow with separate Google identities and verify preview-domain App Check before enabling organizer cloud proposals.
