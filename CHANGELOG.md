@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-11-19 — Organizer trial findings
+
+- Recorded both independent standalone returns. Tracked two usability findings around unresolved requests at publication and the scope of participant feedback.
+
 ## 2026-11-19 — Shareable organizer exercise
 
 - Added a standalone fictional organizer trial with agenda review, a practice publication, simulated revision-specific feedback, and a local JSON results download.

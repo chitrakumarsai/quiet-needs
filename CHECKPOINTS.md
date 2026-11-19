@@ -377,3 +377,8 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - QN-020/P4, owner implementation. Trace fictional sharing, replacement, withdrawal, and cloud planning payloads. Check keyboard and populated viewport behavior. Keep captured request bodies and credentials out of Git and report aggregate evidence.
 - Two local sessions and a separate cloud fixture passed request marker and field checks. No private marker appeared in captured participant requests. The withdrawal write contained zero requests. The populated role views fit all three widths. Chrome keyboard navigation reached the approved download button.
 - Exact return: run the independent organizer trials described in TEST_PLAN.md. Continue retention and broader accessibility evidence before closing P4.
+
+## CP-053 — Review the independent organizer returns
+
+- QN-021/P4, owner implementation. Two organizers completed the standalone trial and found revision-specific feedback. Both recognized the seating conflict and the unverified entrance. Both questioned publication with unresolved requests and wanted clearer feedback scope.
+- Exact return: put unresolved requests next to the publish approval and clarify the scope of revision-bound feedback. Hosted organizer trials, retention, and broader accessibility remain open.

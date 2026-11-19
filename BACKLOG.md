@@ -22,9 +22,10 @@
 
 | QN-016 | Dependency audit | P1-T02 | Resolved | Rsbuild 1.7.6 removes the affected dependency chain. npm audit reports zero findings and both GitHub participant checks passed on 9f68d2b | P1-T07 |
 | QN-017 | Approved sharing | P2 | Verified locally | Emulator access rules and two isolated Chrome sessions pass. Live Google sign-in and hosted rules rollout remain pending | P3 approved input |
-| QN-018 | Organizer adaptation | P3 | Verified | Synthetic cloud output and local review, publication, feedback, and invalidation passed. Hosted integration and independent organizer trials remain pending | P4 reliability and UX |
+| QN-018 | Organizer adaptation | P3 | Verified | Synthetic cloud output and local planning passed. Hosted integration and real participant feedback remain pending | P4 reliability and UX |
 | QN-019 | Accessibility and recovery | P4 | Focused pass verified | Populated layouts, a 200% zoom check, and keyboard card review passed. Run the full screen-reader walkthrough | P4 reliability and UX |
 | QN-020 | Browser privacy regression | P4 | Synthetic trace verified | Review IndexedDB record contents and repeat in isolated hosting before using real records | P4 retention and user trials |
+| QN-021 | Organizer publication review | P4 | Open | Surface unresolved conflicts and unknowns next to approval. Explain that each participant response covers their card for the published revision | P4 organizer review |
 
 ## Issue template
 

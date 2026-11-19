@@ -6,7 +6,7 @@ Updated: November 19, 2026 IST
 - Completed phase: **P2 — Approved sharing**, verified in the local Firebase demo.
 - Completed phase: **P3 — Organizer adaptation**, verified with a genuine synthetic cloud proposal and local publication and confirmation.
 - Active implementation phase: **P4 — Reliability and UX**. The offline shell, focused accessibility and recovery, and synthetic cross-role trace are verified.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-052.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-053.
 - P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, automated tests and npm audit pass. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. P4 offline reload covers manual entry in the production app.
@@ -22,7 +22,7 @@ Updated: November 19, 2026 IST
 
 ## Exact next action
 
-Send the standalone HTML organizer trial described in TEST_PLAN.md to two independent reviewers and collect their JSON results. Retention choices, full screen-reader coverage, IndexedDB record inspection, and hosted trial evidence remain open. QN-014 remains open for automatic extraction promotion.
+Continue P4 with QN-021. Put unresolved requests next to the publish approval and clarify the scope of participant feedback. Both standalone organizer returns were received. Retention choices, full screen-reader coverage, IndexedDB record inspection, and hosted trial evidence remain open. QN-014 remains open for automatic extraction promotion.
 
 ## P4 evidence
 
@@ -31,6 +31,7 @@ Send the standalone HTML organizer trial described in TEST_PLAN.md to two indepe
 - Passed QN-019 first pass: Safari confirmed focus in new and remaining request fields, new venue and activity fields, invalid time-zone recovery, and agenda retry after an invalid time range. Event views now ignore optimistic snapshots when tracking authoritative membership and revision changes.
 - Passed QN-020: the local-only marker stayed out of captured participant requests. Approved share and replacement went to the Firestore emulator and withdrawal cleared request text. A separate live cloud fixture sent only the allowed fields and the approved fictional request.
 - Passed layout and keyboard spot checks for QN-019: populated participant and organizer views fit at 390, 768, and 1440 CSS pixels. Chrome keyboard review reached approved download. The populated organizer view also fit at 390 CSS pixels with Chrome at 200% zoom.
+- Two independent organizers completed the offline exercise in 128 and 137 seconds. Both identified the conflict and unknown and found feedback for revision 1. Both raised the question of publishing with unresolved requests.
 - Unverified: a full screen-reader walkthrough, IndexedDB record contents, browser behavior with the OS reporting offline, and hosted cache headers.
 - Deployment discovery: GitHub Pages reported no configured site. Firebase CLI reported zero authenticated sessions. Hosted rollout remains pending.
 
