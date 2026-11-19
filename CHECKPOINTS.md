@@ -359,3 +359,9 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - Chrome returned a genuine structured cloud proposal for a fictional event. It tied a seated alternate to a verified fact, reported the conflicting standing-only request, and left step-free access unknown. The withdrawn marker was absent from the cloud input.
 - Safari verified sharing, organizer-approved publication, participant confirmation, organizer feedback, and stale status after withdrawal across two demo sessions. The rules suite also denied the previous plan and confirmation when replaced with the same input revision.
 - Exact return: P4, QN-006. Verify offline shell reload and explicit server acknowledgement for event writes. Independent trials and hosted provider verification remain pending.
+
+## CP-050 — Cache the production app shell
+
+- QN-006/P4, owner implementation. Cache built assets only and keep the offline workspace focused on manual entry, review, and download. Verify a warm reload, an empty draft after reload, and server acknowledgement for event writes.
+- Safari reloaded without the local preview server and downloaded a new fictional approved card. The prior draft cleared. Firestore checks cover event creation with the emulator available and rejection when the connection is dropped.
+- Exact return: P4 accessibility and recovery regression for participant and organizer. Continue independent trials and retention review before closing P4.

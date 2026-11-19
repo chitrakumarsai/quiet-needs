@@ -47,6 +47,12 @@ Paste the resume prompt from QUIETNEEDS_EXECUTION_PLAN.md. STATE.md owns live pr
 
 Run the commands above from the repository root. See [CONTRIBUTING.md](CONTRIBUTING.md). CI runs tests, typecheck/build, production privacy checks and dependency audit. Browser privacy and model semantics require the separate evidence in [TEST_PLAN.md](TEST_PLAN.md) and [evaluation/RESULTS.md](evaluation/RESULTS.md).
 
+## Verify offline reload
+
+Run `npm run build` and `npm run preview` from the repository root. Open the preview once with a connection so the browser can cache the app files. Stop the preview server and reload normally. You can write, approve, and download a new manual card. A reload starts a fresh draft. Event actions require a connection and server acknowledgement.
+
+The cache setup runs in production builds served over HTTPS or loopback. The development server stays uncached.
+
 ## Local sharing and planning demo
 
 Use Java 21 or newer for Firestore and the pinned Firebase CLI for the demo emulators. Run these in separate terminals from the repository root.

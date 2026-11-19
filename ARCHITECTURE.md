@@ -20,7 +20,8 @@ Codex CLI develops the code. It is not the runtime model and must use synthetic 
 | Approved sharing and withdrawal | Browser and Firestore emulator checks passed | P2 |
 | Organizer cloud generation | Approved-content proposal verified with a fictional event and SDK source `IN_CLOUD` | P3 |
 | Revised plan and participant confirmation | Browser round trip and Firestore emulator revision checks passed | P3 |
-| Offline reload, full accessibility and security regression | Not implemented | P4 |
+| Offline reload | Production shell and manual export verified in Safari with the preview server stopped | P4 |
+| Full accessibility and security regression | Pending | P4 |
 | Hosting and judge access | Not deployed | P5 |
 
 ## 3. System boundaries
@@ -179,7 +180,7 @@ Render a proposal for human review; never publish automatically. Validate the pu
 | Device model unsupported/unavailable | Manual requirement editor; no private cloud fallback |
 | Model download interrupted | Clear setup status and retry; preserve typed note only in memory |
 | Invalid local JSON | Show recovery action; keep original note; no hidden cloud retry |
-| Offline private preparation | Works after app/model initialization; offline reload requires later cached shell |
+| Offline private preparation | Manual entry and download work after the production shell has been cached. The draft starts empty on reload. |
 | Offline share/withdraw | Do not label as shared/withdrawn; require online acknowledgement |
 | Session expired | Reauthenticate before sharing; preserve current in-memory draft while page remains open |
 | Membership revoked | Deny further server access; clear app data when detected; prior screenshots cannot be revoked |
@@ -200,7 +201,7 @@ A source change immediately makes dependent proposals and published confirmation
 
 Use local Firebase emulators for rule tests, a separate development Firebase project for actual AI, and an isolated submission/demo project only when needed. Never assume emulators execute real on-device/cloud inference. Keep public web configuration separate from private App Check debug tokens. Pin dependencies after successful install and keep secrets outside repository artifacts.
 
-Hosting serves the production build in `dist/`; use restrictive headers appropriate to verified Firebase endpoints. Cache only app assets for offline reload, not private drafts or authenticated cloud responses. Sign-in and sharing remain online requirements.
+Hosting serves the production build in `dist/`; use restrictive headers appropriate to verified Firebase endpoints. Serve `/sw.js` at the origin root so it can update and control the app. The worker installs a versioned allowlist of the built HTML and hashed scripts/styles. It serves the same static shell when root navigation loses its network response, including on event links. Drafts, personalized responses, and event records stay out of Cache Storage. Event mutations use Firestore transactions and wait for acknowledgement. [Firebase transaction behavior](https://firebase.google.com/docs/firestore/manage-data/transactions)
 
 Observe error category, operation duration, model source, and nonidentifying counts. Exclude prompt bodies, request text, names, account identifiers, and model output from custom logs/traces. Review provider-side logging and data terms before real participant use; disabling application logs alone is not a provider retention guarantee.
 

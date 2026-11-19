@@ -1,5 +1,10 @@
 # Change log
 
+## 2026-11-19 — P4 offline manual workspace
+
+- Cached production app files so a previously visited workspace can reopen when the server is unreachable. Manual entry and download work from the cached shell, with a new draft after reload.
+- Event creation uses a server-acknowledged transaction. Event controls pause when the browser reports it is offline.
+
 ## 2026-11-19 — P3 organizer adaptation
 
 - Added agenda options, venue fact checks, and optional Firebase AI Logic proposals using approved requests. Organizers choose and review an exact agenda before publishing it.

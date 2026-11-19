@@ -7,7 +7,7 @@
 | QN-003 | Research limitation | P0 | Resolved | Full shared conversation read and integrated into plan v1.1 and CHECKPOINTS.md | P1-T01 |
 | QN-004 | Validation | P0 | Open | Interview two organizers and three participants; record whether private forms already solve the problem | Current P1 task |
 | QN-005 | Deferred feature | P4 | Deferred | Evaluate opt-in local draft persistence with shared-device deletion controls | P4 |
-| QN-006 | Deferred feature | P4 | Deferred | Add cached app shell and test offline reload separately from offline inference | P4 |
+| QN-006 | Offline reliability | P4 | Verified | Production shell reload, blank draft, offline download, and server-acknowledged event creation checked | P4 accessibility and recovery regression |
 | QN-007 | Deferred idea | Post-MVP | Deferred | Native mobile platform only after reliable web submission | None |
 | QN-008 | Tool setup | P1-T08 | Resolved | Three selected workspace skills installed and listed as enabled by Codex. Kept the reviewed native controls and recorded versions in DESIGN.md | P1-T07 |
 | QN-009 | Planned enforcement | P4-T01 | Planned | Add plan-state validation and CI evidence checks after Git setup; docs alone are not enforcement | P4 |

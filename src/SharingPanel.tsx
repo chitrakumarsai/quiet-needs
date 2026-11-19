@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useSyncExternalStore } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
 import type { ApprovedCard } from './domain.ts';
@@ -16,6 +16,15 @@ type Props = {
   onLoadCard: (card: SharedCard) => void;
 };
 
+function subscribeConnection(onChange: () => void) {
+  window.addEventListener('online', onChange);
+  window.addEventListener('offline', onChange);
+  return () => {
+    window.removeEventListener('online', onChange);
+    window.removeEventListener('offline', onChange);
+  };
+}
+
 function errorText(error: unknown) {
   if (error instanceof Error && error.message === 'CARD_CHANGED') {
     return 'The shared card changed. Refresh event access and review the current version before replacing it.';
@@ -28,6 +37,7 @@ function errorText(error: unknown) {
 }
 
 export default function SharingPanel(props: Props) {
+  const online = useSyncExternalStore(subscribeConnection, () => navigator.onLine);
   const [uid, setUid] = useState<string | null | undefined>(undefined);
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
@@ -52,6 +62,7 @@ export default function SharingPanel(props: Props) {
   }
 
   async function authenticate(action: () => Promise<unknown>) {
+    if (!navigator.onLine) return;
     setBusy(true);
     setStatus('');
     try { await action(); }
@@ -61,12 +72,13 @@ export default function SharingPanel(props: Props) {
 
   return <section className="panel approval" aria-labelledby="sharing-title">
     <h2 id="sharing-title">Event sharing</h2>
-    {uid === undefined && <p role="status">{sharingConfigured() ? 'Checking sign-in…' : 'Event sharing needs Firebase configuration.'}</p>}
-    {uid === null && <>
+    <div role="status">{!online && <p>Connect to use event sharing. You can still prepare and download a card.</p>}</div>
+    {online && uid === undefined && <p role="status">{sharingConfigured() ? 'Checking sign-in…' : 'Event sharing needs Firebase configuration.'}</p>}
+    {online && uid === null && <>
       <p>Sign in to create an event or request access to one.</p>
       <button disabled={busy} onClick={() => void authenticate(signIn)}>{sharingEmulator ? 'Start demo session' : 'Sign in with Google'}</button>
     </>}
-    {uid && <>
+    {online && uid && <>
       <div className="actions"><button disabled={busy} onClick={() => void authenticate(endSession)}>Sign out</button></div>
       <Workspace key={uid + ':' + eventId} {...props} uid={uid} eventId={eventId} openEvent={openEvent}/>
     </>}
@@ -141,7 +153,7 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
   }, [db, eventId, loadedEvent, onContextChange]);
 
   async function perform(action: () => Promise<void>, message: string) {
-    if (busy) return;
+    if (busy || !navigator.onLine) return;
     setBusy(true);
     setStatus('Working…');
     try {

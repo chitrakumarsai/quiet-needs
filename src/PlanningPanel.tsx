@@ -40,6 +40,7 @@ export function OrganizerPlanner({ event, eventId, uid, cards, refresh }:
   const plan = (() => { try { return publicAgenda(choices, event); } catch { return null; } })();
 
   async function perform(action: () => Promise<void>, message: string) {
+    if (!navigator.onLine) return;
     setBusy(true);
     setStatus('Working…');
     try { await action(); setStatus(message); }
@@ -199,7 +200,7 @@ export function ParticipantPlan({ event, eventId, uid, card }:
     plan.planRevision === event.planRevision ? plan : null;
 
   async function submit(value: ConfirmationStatus) {
-    if (!current || !card || busy) return;
+    if (!current || !card || busy || !navigator.onLine) return;
     setBusy(true);
     setStatus('');
     try {

@@ -47,6 +47,13 @@ Cloud payload contains approved active requests and organizer-supplied facts and
 - Passed: 21 automated tests, emulator rules, TypeScript/build, production privacy scan, and dependency audit. Full browser request interception, independent organizer trials, and live hosted integration remain pending.
 
 
+## P4 offline shell — November 19, 2026
+
+- Safari loaded the production preview once. With the preview process stopped and no listener on the origin port, a normal reload reopened the workspace and cleared the prior draft. A fictional event URL opened the shell. A fresh preview, approval, and download worked while the server remained stopped. The downloaded JSON matched the expected approved request.
+- The worker test checks allowlisted assets, versioned cache deletion, offline navigation fallback, and bypassing event/API requests, writes, and the evaluator.
+- The Firestore test calls the actual event creation function. It confirms the event with the emulator and checks that a dropped connection yields an unavailable error.
+- Browser verification covered the unreachable app origin. Browser/OS offline indicator behavior and hosted cache headers remain unverified.
+
 ## Recorded run — November 15, 2026
 
 - Node 22.14.0: domain tests 6/6, typecheck/build pass; npm audit zero findings.

@@ -138,3 +138,9 @@ function App() {
 }
 
 createRoot(document.getElementById('root')!).render(<App/>);
+
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  void navigator.serviceWorker.register('/sw.js').catch(() => {
+    // The manual workspace remains available online if the browser rejects offline setup.
+  });
+}

@@ -5,11 +5,11 @@ Updated: November 19, 2026 IST
 - Completed phase: **P1 — Private vertical slice**, in the approved manual-entry scope.
 - Completed phase: **P2 — Approved sharing**, verified in the local Firebase demo.
 - Completed phase: **P3 — Organizer adaptation**, verified with a genuine synthetic cloud proposal and local publication and confirmation.
-- Next implementation phase: **P4 — Reliability and UX**.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-049.
+- Active implementation phase: **P4 — Reliability and UX**. QN-006 is verified.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-050.
 - P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, automated tests and npm audit pass. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
-- P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. Offline reload remains unimplemented.
+- P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. P4 offline reload covers manual entry in the production app.
 - Participant flow: readable approved snapshot and exact JSON disclosure, local export, native clear confirmation, focus restoration. QN-012 resolved. Keyboard approval/preview/disclosure/download and cancel/confirm clear checks passed. Download matches approved snapshot byte for byte and excludes private canary/questions.
 - Privacy evidence: synthetic setup, generation, failure, retry, socket, browser storage and export checks recorded in TEST_PLAN.md. No outgoing canary or origin storage match observed in those runs.
 - Model evaluation before November 18: 122 actual runs across three 30-case prompt iterations and targeted 2-case/full 30-case system-message comparisons. Full batches passed source/schema 30/30. Agent semantic review R1: 20 pass/6 revision/4 fail; R2: 28/1/1; R3: 27/1/2. Actual outputs and review notes retained in evaluation/. System target 2/2 passed; full system run 27 semantic pass/2 revision/1 fail. **QN-014 quality gate open**.
@@ -21,7 +21,13 @@ Updated: November 19, 2026 IST
 
 ## Exact next action
 
-Start P4 with QN-006. Verify a cached app shell can reload offline while event actions require server acknowledgement. QN-014 remains open for automatic extraction promotion.
+Continue P4 with the accessibility and recovery regression for the participant and organizer workflows. Independent organizer trials, privacy and security regression, and retention choices remain open. QN-014 remains open for automatic extraction promotion.
+
+## P4 evidence
+
+- Passed QN-006: Safari reloaded the cached production app with the preview server stopped. The draft was empty on reload. An event link opened the same shell, and a fresh approved download matched the expected synthetic JSON.
+- Passed: 22 automated tests, Firestore rules and connectivity checks, and the production build and privacy scan.
+- Unverified: browser behavior with the OS reporting offline, broader accessibility and request interception, and hosted cache headers.
 
 ## P3 gate
 

@@ -3,7 +3,7 @@ import {
   connectAuthEmulator, GoogleAuthProvider, initializeAuth, inMemoryPersistence, signInAnonymously, signInWithPopup, signOut,
 } from 'firebase/auth';
 import {
-  addDoc, collection, connectFirestoreEmulator, doc, getDocFromServer, getDocsFromServer,
+  collection, connectFirestoreEmulator, doc, getDocFromServer, getDocsFromServer,
   initializeFirestore, memoryLocalCache, query, runTransaction, serverTimestamp, where,
 } from 'firebase/firestore';
 import type { DocumentSnapshot, Firestore, Transaction } from 'firebase/firestore';
@@ -32,7 +32,8 @@ export type SharedCard = {
 };
 
 export const emulatorProject = 'demo-quietneeds';
-export const sharingEmulator = import.meta.env.DEV && import.meta.env.VITE_SHARING_EMULATORS === 'true';
+export const sharingEmulator = typeof window !== 'undefined' &&
+  import.meta.env.DEV && import.meta.env.VITE_SHARING_EMULATORS === 'true';
 let services: ReturnType<typeof createServices> | undefined;
 
 export function sharingConfigured(): boolean {
@@ -95,9 +96,12 @@ export async function createEvent(db: Firestore, uid: string, rawTitle: string, 
   const title = rawTitle.trim();
   if (!title || title.length > 120) throw new Error('INVALID_TITLE');
   new Intl.DateTimeFormat(undefined, { timeZone });
-  const event = await addDoc(collection(db, 'events'), {
-    organizerUid: uid, title, timeZone, agenda: [], venueFacts: [], agendaRevision: 1, inputRevision: 0,
-    currentPlanId: null, planRevision: 0, status: 'open', createdAt: serverTimestamp(),
+  const event = doc(collection(db, 'events'));
+  await runTransaction(db, async transaction => {
+    transaction.set(event, {
+      organizerUid: uid, title, timeZone, agenda: [], venueFacts: [], agendaRevision: 1, inputRevision: 0,
+      currentPlanId: null, planRevision: 0, status: 'open', createdAt: serverTimestamp(),
+    });
   });
   return event.id;
 }
