@@ -9,13 +9,15 @@ import {
 import type { DocumentSnapshot, Firestore, Transaction } from 'firebase/firestore';
 import { makeApprovedCard } from './domain.ts';
 import type { ApprovedCard, Requirement } from './domain.ts';
+import type { PlanningEvent } from './planning.ts';
 
-export type Event = {
+export type Event = PlanningEvent & {
   organizerUid: string;
   title: string;
   timeZone: string;
   status: 'open' | 'closed';
-  inputRevision: number;
+  currentPlanId: string | null;
+  planRevision: number;
 };
 
 type SharedRequirement = Requirement & { id: string };

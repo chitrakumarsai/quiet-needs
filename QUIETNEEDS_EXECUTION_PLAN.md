@@ -158,7 +158,7 @@ Phase IDs are permanent. Do not create P1.1.1-style nested subphases. Use task I
 | P0 — Baseline | Record scope, constraints, architecture, interview questions | Plan and exclusions agreed; interviews scheduled or evidence gap recorded | Baseline written; user validation pending |
 | P1 — Private vertical slice | Build manual entry, exact preview, approval, and local export | Production excludes inference. Build, tests, and browser approval/export checks pass. P1-T10 review recorded | Complete for the approved manual-entry scope |
 | P2 — Approved sharing | Auth, event creation, enrollment, Firestore, permissions, revisions, withdrawal | Two isolated user sessions demonstrate approved event-scoped sharing. Emulator rules tests pass | Complete in local demo |
-| P3 — Organizer adaptation | Cloud AI, schema validation, deterministic checks, evidence references, plan review, participant confirmation | Genuine cloud run uses approved content only; conflicts and unknowns handled | Not started |
+| P3 — Organizer adaptation | Cloud AI, schema validation, deterministic checks, evidence references, plan review, participant confirmation | Genuine cloud run uses approved content only; conflicts and unknowns handled | Complete in synthetic cloud and local demo checks |
 | P4 — Reliability and UX | Offline shell, accessibility, recovery, responsive layouts, retention choices, evaluation | User trials and privacy/security regression checks pass | Not started |
 | P5 — Submission | Hosted demo, public licensed repository, clean setup, video, Devpost description | Fresh-session judge walkthrough and submission checklist pass | Not started |
 

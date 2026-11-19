@@ -1,5 +1,11 @@
 # Change log
 
+## 2026-11-19 — P3 organizer adaptation
+
+- Added agenda options, venue fact checks, and optional Firebase AI Logic proposals using approved requests. Organizers choose and review an exact agenda before publishing it.
+- Added participant confirmation and organizer feedback for each current plan revision. Card or agenda changes retire the prior plan.
+- Verified a genuine synthetic cloud proposal and two-session local publication, confirmation, and withdrawal. The demo supports three agenda slots and three venue facts.
+
 ## 2026-11-18 — P2 approved event sharing
 
 - Added sign-in, event creation, organizer-approved enrollment, revisioned card sharing, withdrawal, and membership revocation. Validated the access rules and ran the workflow with two synthetic accounts in Chrome.

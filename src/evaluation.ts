@@ -5,6 +5,7 @@ import type { Draft } from './domain.ts';
 import { appendSelectedDraft, buildPrivatePrompt, checkExtractedDraft, draftResponseSchema, parseDraft } from './domain.ts';
 import { draftExplicitRequests } from './explicitRequests.ts';
 import { renderReviewExercise } from './reviewExercise.ts';
+import { renderPlannerCloudSmoke } from './plannerCloudSmoke.ts';
 import { checkRequestCoverage, parseRequestEvidence, preservesConfirmedPassage, requestEvidenceSchema, requestSourceIdSchema, requestSourcePassages, resolveRequestSourceIds } from './requestCoverage.ts';
 import { getApps } from 'firebase/app';
 import { getAI, getGenerativeModel, GoogleAIBackend, InferenceMode, InferenceSource } from 'firebase/ai';
@@ -16,6 +17,8 @@ const params = new URLSearchParams(location.search);
 const mode = params.get('experiment');
 if (!import.meta.env.DEV) {
   root.textContent = 'Synthetic evaluation is available only in development.';
+} else if (mode === 'planner-cloud-smoke') {
+  renderPlannerCloudSmoke(root);
 } else if (mode === 'request-review' || mode === 'request-comparison' || mode === 'authored-review' || mode === 'authored-comparison') {
   renderReviewExercise(root, mode);
 } else if (mode === 'participant-review' || mode === 'guided-review') {

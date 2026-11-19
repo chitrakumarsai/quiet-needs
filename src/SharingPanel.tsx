@@ -6,7 +6,8 @@ import {
   admit, changeSharedCard, createEvent, endSession, eventIdPattern, getSharing,
   listOwnedEvents, readEventAccess, requestToJoin, revoke, sharingConfigured, sharingEmulator, signIn,
 } from './sharing.ts';
-import type { EventAccess, SharedCard } from './sharing.ts';
+import type { Event, EventAccess, SharedCard } from './sharing.ts';
+import { OrganizerPlanner, ParticipantPlan } from './PlanningPanel.tsx';
 
 type Props = {
   approved: ApprovedCard | null;
@@ -113,6 +114,32 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
     });
   }, [db, eventId, uid, access?.role, onContextChange]);
 
+  const loadedEvent = access?.role === 'organizer' || access?.role === 'participant' ? access.event : null;
+  const isEventParticipant = access?.role === 'participant';
+  useEffect(() => {
+    if (!eventId || !isEventParticipant) return;
+    const refreshOnReturn = () => {
+      if (document.visibilityState === 'visible') setReload(value => value + 1);
+    };
+    document.addEventListener('visibilitychange', refreshOnReturn);
+    return () => document.removeEventListener('visibilitychange', refreshOnReturn);
+  }, [eventId, isEventParticipant]);
+
+  useEffect(() => {
+    if (!eventId || !loadedEvent) return;
+    return onSnapshot(doc(db, 'events', eventId), { includeMetadataChanges: true }, snapshot => {
+      if (snapshot.metadata.fromCache) return;
+      const latest = snapshot.data() as Event | undefined;
+      if (!latest || latest.inputRevision !== loadedEvent.inputRevision || latest.planRevision !== loadedEvent.planRevision) {
+        setAccess(null);
+        setReload(value => value + 1);
+      }
+    }, () => {
+      setAccess(null);
+      onContextChange();
+    });
+  }, [db, eventId, loadedEvent, onContextChange]);
+
   async function perform(action: () => Promise<void>, message: string) {
     if (busy) return;
     setBusy(true);
@@ -193,6 +220,8 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
             setStatus('Event link copied.');
           } catch { setStatus('Select the event link and copy it manually.'); }
         }}>Copy event link</button>
+        <OrganizerPlanner key={`${access.event.inputRevision}:${access.event.planRevision}`} event={access.event} eventId={eventId} uid={uid} cards={access.cards}
+          refresh={() => setReload(value => value + 1)}/>
         <h4>Join requests</h4>
         {access.pending.length === 0 ? <p>No requests waiting.</p> : <ul>{access.pending.map(id => <li key={id}>
           <code>{id}</code> <button disabled={busy} onClick={() => void perform(() => admit(db, eventId, id), 'Participant admitted.')}>Admit {id}</button>
@@ -237,6 +266,7 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
           </button>
         </section>}
         {!approved && <p>Preview and approve your card above to share it with the organizer.</p>}
+        <ParticipantPlan event={access.event} eventId={eventId} uid={uid} card={access.card}/>
       </>}
     </>}
     <p role="status">{status}</p>

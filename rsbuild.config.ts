@@ -6,7 +6,7 @@ export default defineConfig(({ command, envMode }) => {
   const keys = ['VITE_FIREBASE_API_KEY', 'VITE_FIREBASE_AUTH_DOMAIN', 'VITE_FIREBASE_PROJECT_ID',
     'VITE_FIREBASE_APP_ID', 'VITE_RECAPTCHA_SITE_KEY'];
   const sharingEnabled = rawPublicVars.VITE_SHARING_ENABLED === 'true';
-  keys.push('VITE_SHARING_ENABLED', 'VITE_SHARING_EMULATORS');
+  keys.push('VITE_SHARING_ENABLED', 'VITE_SHARING_EMULATORS', 'VITE_PLANNER_CLOUD_ENABLED', 'VITE_PLANNER_MODEL');
   if (development) keys.push('VITE_APPCHECK_DEBUG', 'VITE_APPCHECK_DEBUG_TOKEN');
 
   return {

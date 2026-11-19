@@ -40,12 +40,58 @@ service cloud.firestore {
         && (items.size() < 8 || validRequirement(items[7]));
     }
 
+
+    function planPath(eventId, planId) { return /databases/$(database)/documents/events/$(eventId)/publishedPlans/$(planId); }
+    function validSlot(slot) {
+      return slot is map && exact(slot,['id','start','end','title','alternate','factId'])
+        && slot.id is string && slot.id.matches('^S[0-9]{2}$')
+        && slot.start is string && slot.start.matches('^([01][0-9]|2[0-3]):[0-5][0-9]$')
+        && slot.end is string && slot.end.matches('^([01][0-9]|2[0-3]):[0-5][0-9]$')
+        && bounded(slot.title,120)
+        && ((slot.alternate == '' && slot.factId == '') ||
+          (bounded(slot.alternate,120) && slot.factId is string && slot.factId.matches('^A[0-9]{2}$')));
+    }
+    function validFact(fact) {
+      return fact is map && exact(fact,['id','statement','status'])
+        && fact.id is string && fact.id.matches('^A[0-9]{2}$')
+        && bounded(fact.statement,240) && fact.status in ['verified','unknown'];
+    }
+    function verifiedFact(facts, id, index) {
+      return facts.size() > index && facts[index].id == id && facts[index].status == 'verified';
+    }
+    function supports(facts, id) {
+      return verifiedFact(facts,id,0)
+        || verifiedFact(facts,id,1)
+        || verifiedFact(facts,id,2);
+    }
+    function publicSlot(item, slot, facts) {
+      return item is map && exact(item,['id','start','end','title'])
+        && item.id == slot.id && item.start == slot.start && item.end == slot.end
+        && (item.title == slot.title || (slot.alternate != '' && item.title == slot.alternate && supports(facts,slot.factId)));
+    }
+    function validAgenda(agenda) {
+      return agenda is list && agenda.size() <= 3
+        && (agenda.size() <= 0 || validSlot(agenda[0]))
+        && (agenda.size() <= 1 || validSlot(agenda[1]))
+        && (agenda.size() <= 2 || validSlot(agenda[2]));
+    }
+    function validFacts(facts) {
+      return facts is list && facts.size() <= 3
+        && (facts.size() <= 0 || validFact(facts[0]))
+        && (facts.size() <= 1 || validFact(facts[1]))
+        && (facts.size() <= 2 || validFact(facts[2]));
+    }
+    function publishedAgenda(agenda, source) {
+      return agenda is list && agenda.size() > 0 && agenda.size() <= 3 && agenda.size() == source.agenda.size()
+        && publicSlot(agenda[0],source.agenda[0],source.venueFacts)
+        && (agenda.size() <= 1 || publicSlot(agenda[1],source.agenda[1],source.venueFacts))
+        && (agenda.size() <= 2 || publicSlot(agenda[2],source.agenda[2],source.venueFacts));
+    }
+
     match /events/{eventId} {
       function basicEvent(data) {
         return exact(data, ['organizerUid','title','timeZone','agenda','venueFacts','agendaRevision','inputRevision','currentPlanId','planRevision','status','createdAt'])
           && bounded(data.title,120) && bounded(data.timeZone,80)
-          && data.agenda == [] && data.venueFacts == []
-          && data.agendaRevision == 1 && data.planRevision == 0 && data.currentPlanId == null
           && data.status in ['open','closed'];
       }
       function participantInvalidation() {
@@ -55,13 +101,85 @@ service cloud.firestore {
       }
       allow get: if signedIn() && (resource.data.organizerUid == request.auth.uid || active(eventId,request.auth.uid));
       allow list: if signedIn() && resource.data.organizerUid == request.auth.uid;
+      function organizerInputChange() {
+        let before = resource.data;
+        let after = request.resource.data;
+        let fields = after.diff(before).affectedKeys();
+        return own(before.organizerUid) && basicEvent(after)
+          && fields.hasOnly(['title','timeZone','status','inputRevision','currentPlanId','agenda','venueFacts','agendaRevision'])
+          && validAgenda(after.agenda) && validFacts(after.venueFacts)
+          && (fields.hasAny(['agenda','venueFacts','timeZone']) ? after.agendaRevision == before.agendaRevision + 1
+              : after.agendaRevision in [before.agendaRevision, before.agendaRevision + 1]);
+      }
+      function organizerPublication() {
+        let after = request.resource.data;
+        return own(resource.data.organizerUid)
+          && after.diff(resource.data).affectedKeys().hasOnly(['currentPlanId','planRevision'])
+          && after.currentPlanId is string && after.currentPlanId.matches('^[A-Za-z0-9]{20}$')
+          && after.planRevision == resource.data.planRevision + 1
+          && !exists(planPath(eventId,after.currentPlanId)) && existsAfter(planPath(eventId,after.currentPlanId))
+          && getAfter(planPath(eventId,after.currentPlanId)).data.inputRevision == resource.data.inputRevision
+          && getAfter(planPath(eventId,after.currentPlanId)).data.planRevision == after.planRevision;
+      }
       allow create: if signedIn() && own(request.resource.data.organizerUid) && basicEvent(request.resource.data)
-        && request.resource.data.inputRevision == 0 && request.resource.data.createdAt == request.time;
-      allow update: if signedIn() && request.resource.data.inputRevision == resource.data.inputRevision + 1
+        && request.resource.data.agenda == [] && request.resource.data.venueFacts == []
+        && request.resource.data.agendaRevision == 1 && request.resource.data.planRevision == 0
+        && request.resource.data.currentPlanId == null && request.resource.data.inputRevision == 0
+        && request.resource.data.createdAt == request.time;
+      allow update: if signedIn() && (organizerPublication() || (
+        request.resource.data.inputRevision == resource.data.inputRevision + 1
         && request.resource.data.currentPlanId == null
-        && ((resource.data.organizerUid == request.auth.uid && basicEvent(request.resource.data)
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['title','timeZone','status','inputRevision','currentPlanId']))
-          || participantInvalidation());
+        && (organizerInputChange() || participantInvalidation())));
+
+      match /proposals/{proposalId} {
+        allow get, list: if organizer(eventId) && resource.data.inputRevision == get(eventPath(eventId)).data.inputRevision;
+        allow create: if organizer(eventId)
+          && exact(request.resource.data,['inputRevision','agendaRevision','referenceMap','proposal','modelMetadata','status'])
+          && request.resource.data.inputRevision == get(eventPath(eventId)).data.inputRevision
+          && request.resource.data.agendaRevision == get(eventPath(eventId)).data.agendaRevision
+          && request.resource.data.referenceMap is map && request.resource.data.referenceMap.size() <= 200
+          && request.resource.data.proposal is map && exact(request.resource.data.proposal,['proposedAgenda','changes','conflicts','unknowns'])
+          && request.resource.data.modelMetadata is map && exact(request.resource.data.modelMetadata,['source','model'])
+          && request.resource.data.modelMetadata.source == 'IN_CLOUD' && bounded(request.resource.data.modelMetadata.model,80)
+          && request.resource.data.status == 'draft';
+        allow delete: if organizer(eventId);
+      }
+
+      match /publishedPlans/{planId} {
+        function publication() {
+          let before = get(eventPath(eventId)).data;
+          let after = getAfter(eventPath(eventId)).data;
+          let plan = request.resource.data;
+          return exact(plan,['inputRevision','planRevision','agenda','publishedAt'])
+            && plan.inputRevision == before.inputRevision && after.inputRevision == before.inputRevision
+            && after.currentPlanId == planId && before.currentPlanId != planId
+            && plan.planRevision == before.planRevision + 1 && after.planRevision == plan.planRevision
+            && plan.publishedAt == request.time && publishedAgenda(plan.agenda,before);
+        }
+        allow get: if signedIn() && (organizer(eventId) || active(eventId,request.auth.uid))
+          && get(eventPath(eventId)).data.currentPlanId == planId
+          && get(eventPath(eventId)).data.inputRevision == resource.data.inputRevision
+          && get(eventPath(eventId)).data.planRevision == resource.data.planRevision;
+        allow create: if organizer(eventId) && publication();
+        allow delete: if organizer(eventId) && get(eventPath(eventId)).data.currentPlanId != planId;
+      }
+
+      match /confirmations/{uid} {
+        function current(data) {
+          let e = get(eventPath(eventId)).data;
+          let card = get(cardPath(eventId,uid)).data;
+          return e.currentPlanId != null && data.planId == e.currentPlanId
+            && data.planRevision == e.planRevision && data.inputRevision == e.inputRevision
+            && card.status == 'approved' && data.cardRevision == card.revision;
+        }
+        allow get: if (own(uid) && active(eventId,uid) &&
+          (!exists(/databases/$(database)/documents/events/$(eventId)/confirmations/$(uid)) || current(resource.data))) ||
+          (organizer(eventId) && current(resource.data));
+        allow create, update: if own(uid) && active(eventId,uid) && current(request.resource.data)
+          && exact(request.resource.data,['cardRevision','planId','planRevision','inputRevision','status','comment','updatedAt'])
+          && request.resource.data.status in ['met','unmet','unknown']
+          && request.resource.data.comment == '' && request.resource.data.updatedAt == request.time;
+      }
 
       match /joinRequests/{uid} {
         allow get: if own(uid) || organizer(eventId);

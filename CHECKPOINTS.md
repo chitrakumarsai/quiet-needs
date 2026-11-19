@@ -352,3 +352,10 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - QN-017/P2, owner implementation. Implement account identity, organizer-approved enrollment, and revisioned approval and withdrawal. Verify access rules and two isolated sessions before closing P2.
 - Passed rules tests and two-tab Chrome checks for organizer approval, exact card share, replacement, withdrawal, revocation, and approval reset after acknowledgement. The local P2 implementation gate passed. Hosted configuration and Google sign-in remain unverified.
 - Exact return: review P2 against P1 and use the auth/event/card contract for P3 organizer planning. Hosted sign-in still needs isolated project enablement and verification.
+
+## CP-049 — Implement P3 organizer adaptation
+
+- QN-018/P3, owner implementation. Build an allowlisted planning input, verified agenda options, organizer proposal review, revisioned publication, and participant confirmation. Verify the live cloud boundary separately from the emulator.
+- Chrome returned a genuine structured cloud proposal for a fictional event. It tied a seated alternate to a verified fact, reported the conflicting standing-only request, and left step-free access unknown. The withdrawn marker was absent from the cloud input.
+- Safari verified sharing, organizer-approved publication, participant confirmation, organizer feedback, and stale status after withdrawal across two demo sessions. The rules suite also denied the previous plan and confirmation when replaced with the same input revision.
+- Exact return: P4, QN-006. Verify offline shell reload and explicit server acknowledgement for event writes. Independent trials and hosted provider verification remain pending.

@@ -18,8 +18,8 @@ Codex CLI develops the code. It is not the runtime model and must use synthetic 
 | Device-only Firebase adapter | Source implemented; actual SDK/device run unverified | P1 |
 | Authentication and event membership | Implemented and verified in two isolated local demo sessions | P2 |
 | Approved sharing and withdrawal | Browser and Firestore emulator checks passed | P2 |
-| Organizer cloud generation | Not implemented | P3 |
-| Revised plan and participant confirmation | Not implemented | P3 |
+| Organizer cloud generation | Approved-content proposal verified with a fictional event and SDK source `IN_CLOUD` | P3 |
+| Revised plan and participant confirmation | Browser round trip and Firestore emulator revision checks passed | P3 |
 | Offline reload, full accessibility and security regression | Not implemented | P4 |
 | Hosting and judge access | Not deployed | P5 |
 
@@ -71,7 +71,7 @@ Target: one organizer and up to 25 participants per demo event; at most 8 requir
 | events/{eventId}/joinRequests/{uid} | requestedAt, status; participant requests admission, organizer decides |
 | events/{eventId}/members/{uid} | active, joinedAt; only event organizer creates/changes membership |
 | events/{eventId}/cards/{uid} | schemaVersion, ownerUid, revision, status, requirements, consentVersion, approvedAt, updatedAt, operationId; participant owns content |
-| events/{eventId}/proposals/{proposalId} | inputRevision, agendaRevision, referenceMap, proposedAgenda, changes, unknowns, modelMetadata, status; organizer-only |
+| events/{eventId}/proposals/{proposalId} | inputRevision, agendaRevision, referenceMap, proposal with activity choices and evidence references, modelMetadata, status; organizer-only |
 | events/{eventId}/publishedPlans/{planId} | inputRevision, planRevision, agenda, publishedAt; participants see agenda only |
 | events/{eventId}/confirmations/{uid} | cardRevision, planId, planRevision, inputRevision, status, comment, updatedAt; participant owns confirmation |
 
@@ -168,7 +168,7 @@ type PlanningInput = {
 
 Assign per-request references such as R01; keep the mapping to card/revision in the organizer-only proposal record. Exclude auth UIDs, account names, original notes, and private questions from model input. Practical text may itself be sensitive; minimization is not anonymization.
 
-Output must contain proposedAgenda, changes with valid requirementRefs/factRefs, unresolved conflicts, and unknowns. Validate bounded arrays, string lengths, reference membership, unique agenda IDs, and known time/budget values. Reject invented IDs, unexpected fields, tool calls, executable content, or an oversized response. Escape text in UI; do not render model HTML.
+The model returns activity choices, change evidence, conflicts, and unknowns. The app validates references and constructs the public agenda using organizer-supplied titles and times. Each alternate requires a verified fact. The demo caps the saved agenda and venue facts at three entries each to stay within the tested rules budget. Event-level agenda options and venue facts are readable by admitted participants, and the proposal and its evidence mapping are organizer-only. The model can identify a cost-related request, but the current agenda schema has no numeric cost field.
 
 Render a proposal for human review; never publish automatically. Validate the published agenda separately to exclude requirement text, owner identifiers, and organizer-only rationale. A revised agenda can still suggest someone's needs, so participants must understand group-visible changes.
 
@@ -231,7 +231,7 @@ Review date: November 15, 2026. Method: source-to-design comparison and scenario
 | AI output includes private reasons in an approved request | Human review and exact sharing preview; schema is not anonymization | Model evaluation and consent UX tests |
 | Direct-client AI bypasses app-level cost controls | Document limitation; provider quotas and synthetic bounded demo; backend remains future decision | Quota error behavior; production review before real use |
 
-P1-T10 design review is complete. P2 tests executed the implemented sharing, enrollment, and revision rules in the emulator. P3 proposals, publishing, and confirmations still require their own rules and concurrency checks. Live Google sign-in and hosted rules deployment remain unverified.
+P1-T10 design review is complete. P2 tests exercised sharing, enrollment, and revisions in the emulator. P3 tests exercised proposal visibility, atomic publication, stale reads, and confirmation against the current plan and card. Live Google sign-in and hosted rules deployment remain unverified.
 
 ## 15. Reference sources
 
