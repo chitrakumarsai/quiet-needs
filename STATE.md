@@ -22,7 +22,7 @@ Updated: November 19, 2026 IST
 
 ## Exact next action
 
-Continue P4 with independent organizer trials using the fictional brief in TEST_PLAN.md. Retention choices, full screen-reader coverage, and IndexedDB record inspection remain open. QN-014 remains open for automatic extraction promotion.
+Send the standalone HTML organizer trial described in TEST_PLAN.md to two independent reviewers and collect their JSON results. Retention choices, full screen-reader coverage, IndexedDB record inspection, and hosted trial evidence remain open. QN-014 remains open for automatic extraction promotion.
 
 ## P4 evidence
 
