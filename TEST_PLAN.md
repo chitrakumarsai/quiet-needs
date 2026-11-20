@@ -14,7 +14,17 @@ Use fictional data and record the preview build, browser, role, and outcome for 
 
 ### Hosted sharing result
 
-The user reported that all seven hosted sharing steps passed on the preview updated by PR #13. The run covered the invite link and visible event code, two Google sign-ins, automatic request and admission updates, card sharing, replacement and withdrawal, and same-tab reload with an empty editor. This is participant-reported evidence. Hosted organizer publication and feedback remain pending.
+The user reported that all seven hosted sharing steps passed on the preview updated by PR #13. The run covered the invite link and visible event code, two Google sign-ins, automatic request and admission updates, card sharing, replacement and withdrawal, and same-tab reload with an empty editor. This is participant-reported evidence.
+
+### November 20 publication, attestation, and storage results
+
+- Passed on Firebase Hosting in Chrome. A fictional event saved one unknown venue fact. The first tab stayed on “Working…” after the server had saved the agenda. A fresh signed-in tab opened the saved agenda. The exact preview flagged the unknown fact, and reopening the editor cleared approval. Revision 1 published. A scoped Firestore read confirmed that the published record held agenda and revision metadata and that each slot held only its ID, start, end, and title. The organizer saw an empty feedback panel labeled for revision 1.
+- Passed in an isolated Firestore emulator with the application repository functions and two fictional identities. The participant's unmet response appeared for revision 1. Card replacement made revision 1 stale and rejected an old response. Revision 2 started without feedback and accepted a new response. Withdrawal invalidated revision 2. Operator cleanup removed the fictional event and six descendants, and a second read found them absent.
+- Failed with the previous provider. Both regular and incognito Chrome on the exact preview origin returned HTTP 400 for the v3 exchange. Configuration readback confirmed an Enterprise registration for the score-based key, with domain checks enabled and the preview allowed.
+- Passed after switching the organizer provider to Enterprise. A temporary hosted check exercised the app's generation function with a fixed synthetic fixture and debug mode off. The Enterprise exchange and AI call returned HTTP 200, the AI request carried an App Check header, and the SDK returned `IN_CLOUD`. The outgoing body contained only current agenda options, venue facts, revision metadata, time zone, schema version, and three approved requests. Requirement fields were category, reference, and request text. No withdrawn-text or participant-identity marker appeared.
+- Passed on an isolated loopback origin with the production build and a signed-out Chrome tab. A fictional marker remained absent from local/session storage, one IndexedDB record, and six cached responses after preview and approval. With the server stopped, regular reload reopened the controlled app shell with a blank draft.
+- Passed hosted cleanup. Verified the dedicated rehearsal event `lzIUhDcuMKF2Sqz1glHs` in `quietneeds-web` had only one published plan and no participant records. Recursively removed that exact event. Readback returned HTTP 404 for the event and no child collections.
+- Pending. Hosted participant feedback with a second Google identity, the signed-in organizer cloud workflow including manual recovery after an error, signed-in hosted storage, OS-reported offline behavior, and the full screen-reader walkthrough.
 
 ### Demo cleanup procedure
 
