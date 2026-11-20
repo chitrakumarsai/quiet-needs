@@ -1,6 +1,6 @@
 import { getApps, initializeApp } from 'firebase/app';
 import type { FirebaseApp } from 'firebase/app';
-import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'firebase/app-check';
 import { getAI, getGenerativeModel, GoogleAIBackend, InferenceMode, InferenceSource, Schema } from 'firebase/ai';
 import { validateProposal } from './planning.ts';
 import type { PlanningInput } from './planning.ts';
@@ -24,7 +24,7 @@ function setupCheck(app: FirebaseApp) {
     (self as unknown as { FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string }).FIREBASE_APPCHECK_DEBUG_TOKEN =
       import.meta.env.VITE_APPCHECK_DEBUG_TOKEN?.trim() || true;
   }
-  initializeAppCheck(app, { provider: new ReCaptchaV3Provider(import.meta.env.VITE_RECAPTCHA_SITE_KEY), isTokenAutoRefreshEnabled: true });
+  initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(import.meta.env.VITE_RECAPTCHA_SITE_KEY), isTokenAutoRefreshEnabled: true });
   initialized.add(app);
 }
 

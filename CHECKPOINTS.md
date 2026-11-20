@@ -418,3 +418,12 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 
 - QN-017 and QN-022/P4, owner implementation. The user reported that all seven steps of the updated hosted run passed, covering sign-in, event link and code, live requests and admission, sharing, replacement and withdrawal, and same-tab reload.
 - Exact return: QN-021, verify hosted manual publication and revision-bound participant feedback using the combined P4 checklist in TEST_PLAN.md.
+
+## CP-060 — Verify P4 hosted publication and privacy
+
+- QN-021/P4, owner implementation. Verify organizer approval and published fields using a dedicated synthetic event, then check App Check on the preview origin and look for private draft text in browser storage.
+- Hosted Chrome published revision 1 and showed the unverified fact before approval. An isolated emulator run verified both feedback revisions, stale-response rejection, withdrawal, and removal of the fixture and its six child documents.
+- The v3 exchange returned HTTP 400. The preview project is registered for Enterprise. After the provider change, the Enterprise exchange and the synthetic cloud request both returned HTTP 200, and the SDK returned `IN_CLOUD` with no withdrawn or identity markers in the request.
+- The loopback production storage audit found zero matches in web storage, one IndexedDB record, and six cached response bodies. Reload with the server stopped repopulated the shell with an empty editor.
+- Restored the normal hosted preview with the verified Enterprise provider and cloud planning enabled. Removed the disposable hosted publication fixture and confirmed it has no remaining child collections.
+- Exact return: verify participant feedback against the hosted agenda revision, then complete the remaining P4 checklist in TEST_PLAN.md.

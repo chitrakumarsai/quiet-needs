@@ -6,7 +6,7 @@ Updated: November 20, 2026 IST
 - Completed phase: **P2 — Approved sharing**, verified in the local Firebase demo.
 - Completed phase: **P3 — Organizer adaptation**, verified with a genuine synthetic cloud proposal and local publication and confirmation.
 - Active implementation phase: **P4 — Reliability and UX**. The offline shell, focused accessibility and recovery, and synthetic cross-role trace are verified.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-059.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-060.
 - P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, automated tests and npm audit pass. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. P4 offline reload covers manual entry in the production app.
@@ -22,7 +22,7 @@ Updated: November 20, 2026 IST
 
 ## Exact next action
 
-Continue the combined P4 acceptance checklist in TEST_PLAN.md. Next verify manual organizer publication and revision-bound participant feedback on the hosted preview. Browser attestation and hosted cloud proposals, accessibility and storage checks, OS-level offline behavior, and the cleanup rehearsal remain pending. QN-014 remains open for automatic extraction promotion.
+Continue the combined P4 acceptance checklist in TEST_PLAN.md. Next verify the hosted feedback round trip with two Google identities, including feedback isolation when a replacement request makes the old agenda stale. The signed-in cloud planning round trip and manual recovery after a cloud error, hosted signed-in storage, and the full screen-reader and OS-level offline checks remain pending. QN-014 remains open for automatic extraction promotion.
 
 ## P4 evidence
 
@@ -33,8 +33,10 @@ Continue the combined P4 acceptance checklist in TEST_PLAN.md. Next verify manua
 - Passed QN-022: Chrome emulator sessions verified both invite formats, live join requests, admission and revocation, and live card sharing, replacement and withdrawal. The user reported a pass for the hosted invitation, admission, sharing, replacement, withdrawal, and same-tab reload checks.
 - Passed layout and keyboard spot checks for QN-019: populated participant and organizer views fit at 390, 768, and 1440 CSS pixels. Chrome keyboard review reached approved download. The populated organizer view also fit at 390 CSS pixels with Chrome at 200% zoom.
 - Two independent organizers completed the offline exercise in 128 and 137 seconds. Both identified the conflict and unknown and found feedback for revision 1. Both raised the question of publishing with unresolved requests.
-- Unverified: hosted publication and feedback, a full screen-reader walkthrough, IndexedDB record contents, and browser behavior with the OS reporting offline.
-- Hosted setup: Standard, free-tier-eligible Firestore in `us-east1`. The production shell and service worker returned HTTP 200 with `Cache-Control: no-cache`. After reproducing the Google sign-in error in Chrome, adding Firebase's browser popup resolver let a fresh tab open Google's account chooser. Browser attestation still needs verification before enabling cloud proposals. [Temporary Hosting preview](https://quietneeds-web--p4-trial-plfqr34b.web.app)
+- QN-021 partial pass: Hosted Chrome showed an unverified venue fact at approval, cleared approval on reopening the editor, and published revision 1. The published payload contained the agenda and revision metadata. The feedback panel started empty and named revision 1. The two-role feedback, replacement, withdrawal, and cleanup checks passed in an isolated emulator rehearsal.
+- QN-020 storage pass: A signed-out production build on a fresh loopback origin showed no fictional private marker in web storage, IndexedDB records, or Cache Storage response bodies. Chrome reopened the cached shell with a blank editor after the local server stopped.
+- Hosted AI: The original reCAPTCHA v3 exchange returned HTTP 400. With the provider corrected to match the project's Enterprise registration, Chrome received HTTP 200 for App Check and AI generation on the preview origin. Firebase identified the response as `IN_CLOUD`. The probe used three fictional approved requests and excluded withdrawn text and participant identifiers. [Temporary Hosting preview](https://quietneeds-web--p4-trial-plfqr34b.web.app)
+- Passed hosted cleanup: removed the dedicated rehearsal event and its single published plan, then verified Firestore returned 404 and listed no child collections.
 
 ## P3 gate
 
