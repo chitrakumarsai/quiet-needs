@@ -88,7 +88,7 @@ Store timestamps using server timestamps. Event time zone is an explicit IANA zo
 
 ## 6. Enrollment and authorization
 
-Use a standard Firebase sign-in provider for the demo. A shared event URL identifies an event but grants no membership. A signed-in person can submit a minimal join request for an event accepting requests; the organizer explicitly admits the user. Do not show event details or member records to pending users. Organizer shares the link manually; the application sends no invitations in the MVP.
+Use a standard Firebase sign-in provider for the demo. Firebase Auth uses tab-session persistence so a reload can restore sign-in. Private drafts and Firestore records remain memory-only in the browser. An invite link and its event code identify the same event. A signed-in person can submit a minimal join request for an event accepting requests; the organizer explicitly admits the user. A pending participant listens only to their own membership document. The organizer receives pending requests through an event-scoped query. Both views use server-confirmed updates. The organizer shares the invite manually.
 
 | Operation | Nonmember | Active participant | Event organizer |
 | --- | --- | --- | --- |

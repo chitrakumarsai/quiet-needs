@@ -6,7 +6,7 @@ Updated: November 20, 2026 IST
 - Completed phase: **P2 — Approved sharing**, verified in the local Firebase demo.
 - Completed phase: **P3 — Organizer adaptation**, verified with a genuine synthetic cloud proposal and local publication and confirmation.
 - Active implementation phase: **P4 — Reliability and UX**. The offline shell, focused accessibility and recovery, and synthetic cross-role trace are verified.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-057.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-058.
 - P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, automated tests and npm audit pass. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. P4 offline reload covers manual entry in the production app.
@@ -17,7 +17,7 @@ Updated: November 20, 2026 IST
 - Architecture design review P1-T10 complete. P2 emulator rules and two-session sharing checks passed.
 - QN-015 SDK-memory correction: after local AI preparation, clear now reloads the document to end its SDK context. Browser verified blank note/draft/consent and disabled inference after restart; no secure-erasure guarantee. Manual-only clear retains focus recovery.
 - CLI 0.169.0 available. Ponytail 5.3.3 installed/enabled. Ponytail review applied; report in evaluation/SOURCE_REVIEW.md. Hook trust/restart not verified and not changed.
-- Authentication and database sharing verified in local emulators. The demo project's live Firestore rules are deployed and deny a signed-out events read. Hosted Google OAuth startup is verified. A completed sign-in and signed-in sharing remain unverified.
+- Authentication and database sharing verified in local emulators. The demo project's live Firestore rules are deployed and deny a signed-out events read. The hosted trial reached sign-in, event creation and admission and surfaced repeated refreshes. Hosted sharing acceptance on the updated flow is pending.
 - GitHub PRs #1–#5 merged into `main` after CI and their recorded phase or task checks.
 
 ## Exact next action
@@ -30,6 +30,7 @@ Run the combined P4 acceptance checklist in TEST_PLAN.md. QN-021 is implemented,
 - Passed: 22 automated tests, Firestore rules and connectivity checks, and the production build and privacy scan.
 - Passed QN-019 first pass: Safari confirmed focus in new and remaining request fields, new venue and activity fields, invalid time-zone recovery, and agenda retry after an invalid time range. Event views now ignore optimistic snapshots when tracking authoritative membership and revision changes.
 - Passed QN-020: the local-only marker stayed out of captured participant requests. Approved share and replacement went to the Firestore emulator and withdrawal cleared request text. A separate live cloud fixture sent only the allowed fields and the approved fictional request.
+- Passed QN-022 in the demo: Chrome verified both invite formats, live join requests, admission and revocation, and live card sharing, replacement and withdrawal. Reload retained sign-in in the same tab and cleared the local draft. The updated two-account hosted run is pending.
 - Passed layout and keyboard spot checks for QN-019: populated participant and organizer views fit at 390, 768, and 1440 CSS pixels. Chrome keyboard review reached approved download. The populated organizer view also fit at 390 CSS pixels with Chrome at 200% zoom.
 - Two independent organizers completed the offline exercise in 128 and 137 seconds. Both identified the conflict and unknown and found feedback for revision 1. Both raised the question of publishing with unresolved requests.
 - Unverified: a full screen-reader walkthrough, IndexedDB record contents, browser behavior with the OS reporting offline, and the signed-in hosted trial.

@@ -9,7 +9,7 @@ import {
   collection, connectFirestoreEmulator, doc, getDocFromServer, getDocsFromServer, getFirestore,
   runTransaction, serverTimestamp, setDoc, terminate, updateDoc, writeBatch,
 } from 'firebase/firestore';
-import { createEvent } from '../src/sharing.ts';
+import { createEvent, eventIdPattern, watchJoinRequests } from '../src/sharing.ts';
 
 const projectId = 'demo-quietneeds';
 const eventId = 'abcdefghijklmnopqrst';
@@ -45,6 +45,7 @@ test('event isolation, enrollment, approved revisions, publication, confirmation
     const anonymous = environment.unauthenticatedContext().firestore();
     await setDoc(event(admin), newEvent(owner));
     const created = await createEvent(admin, owner, 'Fictional event via the app', 'UTC');
+    assert.match(created, eventIdPattern);
     assert.equal((await getDocFromServer(event(admin, created))).data().organizerUid, owner);
     await setDoc(event(other, otherEvent), newEvent(outsider));
     await assertFails(setDoc(event(member, '12345678901234567890'), newEvent(owner)));
@@ -53,7 +54,21 @@ test('event isolation, enrollment, approved revisions, publication, confirmation
     await assertFails(getDocFromServer(event(admin, otherEvent)));
     await assertFails(setDoc(nested(member, 'joinRequests', outsider), { requestedAt: serverTimestamp(), status: 'pending' }));
     await assertFails(setDoc(nested(anonymous, 'joinRequests'), { requestedAt: serverTimestamp(), status: 'pending' }));
-    await setDoc(nested(member, 'joinRequests'), { status: 'pending', requestedAt: serverTimestamp() });
+    const observedRequest = Promise.withResolvers();
+    const timeout = setTimeout(() => observedRequest.reject(new Error('Join request did not arrive')), 10_000);
+    const unwatch = watchJoinRequests(admin, eventId, ids => {
+      if (ids.length) observedRequest.resolve(ids);
+    }, () => observedRequest.reject(new Error('Join request listener failed')));
+    try {
+      const [ids] = await Promise.all([
+        observedRequest.promise,
+        setDoc(nested(member, 'joinRequests'), { status: 'pending', requestedAt: serverTimestamp() }),
+      ]);
+      assert.deepEqual(ids, [participant]);
+    } finally {
+      clearTimeout(timeout);
+      unwatch();
+    }
     await assertFails(getDocFromServer(event(member)));
     await assertFails(setDoc(nested(member, 'members'), { active: true, joinedAt: serverTimestamp() }));
     await assertFails(setDoc(nested(member, 'cards'), newCard(1)));

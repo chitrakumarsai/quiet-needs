@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useSyncExternalStore } from 'react';
+import React, { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
 import type { ApprovedCard } from './domain.ts';
 import {
   admit, changeSharedCard, createEvent, endSession, eventIdPattern, getSharing,
-  listOwnedEvents, readEventAccess, requestToJoin, revoke, sharingConfigured, sharingEmulator, signIn,
+  listOwnedEvents, readEventAccess, requestToJoin, revoke, sharingConfigured, sharingEmulator, signIn, watchJoinRequests,
 } from './sharing.ts';
 import type { Event, EventAccess, SharedCard } from './sharing.ts';
 import { OrganizerPlanner, ParticipantPlan } from './PlanningPanel.tsx';
@@ -28,14 +28,19 @@ function subscribeConnection(onChange: () => void) {
 const accessDenied = (error: unknown) =>
   error instanceof Error && 'code' in error && error.code === 'permission-denied';
 
+function eventFromLocation() {
+  const id = new URLSearchParams(location.search).get('event') ?? '';
+  return eventIdPattern.test(id) ? id : '';
+}
+
 function errorText(error: unknown) {
   if (error instanceof Error && error.message === 'CARD_CHANGED') {
-    return 'The shared card changed. Refresh event access and review the current version before replacing it.';
+    return 'The shared card changed. Review the current version before replacing it.';
   }
   if (error instanceof Error && error.message === 'INVALID_TITLE') return 'Enter an event title.';
   if (error instanceof RangeError) return 'Enter a time zone such as Europe/London.';
   if (accessDenied(error)) {
-    return 'Access was denied. Refresh event access to check your membership.';
+    return 'Access was denied. Use Check event access to see your current membership.';
   }
   return 'The request could not be confirmed. Check your connection and try again.';
 }
@@ -45,10 +50,8 @@ export default function SharingPanel(props: Props) {
   const [uid, setUid] = useState<string | null | undefined>(undefined);
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
-  const [eventId, setEventId] = useState(() => {
-    const id = new URLSearchParams(location.search).get('event') ?? '';
-    return eventIdPattern.test(id) ? id : '';
-  });
+  const [eventId, setEventId] = useState(eventFromLocation);
+  const heading = useRef<HTMLHeadingElement>(null);
   useEffect(() => sharingConfigured() ? onAuthStateChanged(getSharing().auth, user => {
     setUid(user?.uid ?? null);
   }, () => {
@@ -56,18 +59,23 @@ export default function SharingPanel(props: Props) {
     setStatus('Sign-in could not be loaded.');
   }) : undefined, []);
   useEffect(() => { props.onContextChange(); }, [uid, eventId, props.onContextChange]);
+  useEffect(() => {
+    const onBackOrForward = () => setEventId(eventFromLocation());
+    window.addEventListener('popstate', onBackOrForward);
+    return () => window.removeEventListener('popstate', onBackOrForward);
+  }, []);
 
   function openEvent(id: string) {
     const url = new URL(location.href);
     url.hash = '';
     if (id) url.searchParams.set('event', id);
     else url.searchParams.delete('event');
-    history.replaceState(null, '', url);
+    history.pushState(null, '', url);
     setEventId(id);
+    heading.current?.focus();
   }
 
   async function authenticate(action: () => Promise<unknown>) {
-    if (!navigator.onLine) return;
     setBusy(true);
     setStatus('');
     try { await action(); }
@@ -76,16 +84,16 @@ export default function SharingPanel(props: Props) {
   }
 
   return <section className="panel approval" aria-labelledby="sharing-title">
-    <h2 id="sharing-title">Event sharing</h2>
+    <h2 id="sharing-title" tabIndex={-1} ref={heading}>Event sharing</h2>
     <div role="status">{!online && <p>Connect to use event sharing. You can still prepare and download a card.</p>}</div>
     {online && uid === undefined && <p role="status">{sharingConfigured() ? 'Checking sign-in…' : 'Event sharing needs Firebase configuration.'}</p>}
     {online && uid === null && <>
-      <p>Sign in to create an event or request access to one.</p>
+      <p>{eventId ? 'Sign in to open this event.' : 'Sign in to create or join an event.'}</p>
       <button disabled={busy} onClick={() => void authenticate(signIn)}>{sharingEmulator ? 'Start demo session' : 'Sign in with Google'}</button>
     </>}
-    {online && uid && <>
+    {uid && <>
       <div className="actions"><button disabled={busy} onClick={() => void authenticate(endSession)}>Sign out</button></div>
-      <Workspace key={uid + ':' + eventId} {...props} uid={uid} eventId={eventId} openEvent={openEvent}/>
+      {online && <Workspace key={uid + ':' + eventId} {...props} uid={uid} eventId={eventId} openEvent={openEvent}/>}
     </>}
     {status && <p role="status">{status}</p>}
   </section>;
@@ -96,7 +104,8 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
   const { db } = getSharing();
   const [access, setAccess] = useState<EventAccess | null>(null);
   const [events, setEvents] = useState<{ id: string; title: string }[]>([]);
-  const [eventInput, setEventInput] = useState(eventId);
+  const [eventInput, setEventInput] = useState('');
+  const [codeError, setCodeError] = useState('');
   const [title, setTitle] = useState('');
   const [timeZone, setTimeZone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC');
   const [status, setStatus] = useState('');
@@ -104,44 +113,57 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
   const [withdraw, setWithdraw] = useState(false);
   const [revokeUid, setRevokeUid] = useState('');
   const [reload, setReload] = useState(0);
+  const [watchRetry, setWatchRetry] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [pending, setPending] = useState<string[] | null>(null);
+  const [requestError, setRequestError] = useState(false);
+  const accessRole = access?.role;
+  const organizer = accessRole === 'organizer';
 
   useEffect(() => {
     let current = true;
-    setStatus(eventId ? 'Checking event access…' : 'Loading your events…');
+    setLoading(true);
     const load = eventId ? readEventAccess(db, eventId, uid).then(value => {
       if (current) setAccess(value);
     }) : listOwnedEvents(db, uid).then(value => { if (current) setEvents(value); });
-    load.then(() => { if (current) setStatus(''); }).catch(error => {
+    load.catch(error => {
       if (current) { setAccess(null); setEvents([]); setStatus(errorText(error)); }
+    }).finally(() => {
+      if (current) setLoading(false);
     });
     return () => { current = false; };
   }, [db, eventId, uid, reload]);
 
   useEffect(() => {
-    if (!eventId || access?.role !== 'participant') return;
+    if (!eventId || !accessRole || organizer || accessRole === 'revoked') return;
     return onSnapshot(doc(db, 'events', eventId, 'members', uid), { includeMetadataChanges: true }, snapshot => {
-      if (!snapshot.metadata.fromCache && !snapshot.metadata.hasPendingWrites && snapshot.data()?.active !== true) {
+      if (snapshot.metadata.fromCache || snapshot.metadata.hasPendingWrites) return;
+      if (snapshot.data()?.active === true && accessRole !== 'participant') {
+        setStatus('');
+        setReload(value => value + 1);
+      } else if (snapshot.data()?.active !== true && (snapshot.exists() || accessRole === 'participant')) {
         setAccess({ role: 'revoked' });
+        setReload(value => value + 1);
         onContextChange();
       }
     }, () => {
       setAccess(null);
       onContextChange();
-      setStatus('Event access could not be confirmed. Refresh to continue.');
+      setStatus('Live access updates stopped. Use Check event access to reconnect.');
     });
-  }, [db, eventId, uid, access?.role, onContextChange]);
+  }, [db, eventId, uid, accessRole, organizer, onContextChange]);
+
+  useEffect(() => {
+    if (!organizer) return;
+    setPending(null);
+    setRequestError(false);
+    return watchJoinRequests(db, eventId, setPending, () => {
+      setPending(null);
+      setRequestError(true);
+    });
+  }, [db, eventId, organizer, watchRetry]);
 
   const loadedEvent = access?.role === 'organizer' || access?.role === 'participant' ? access.event : null;
-  const isEventParticipant = access?.role === 'participant';
-  useEffect(() => {
-    if (!eventId || !isEventParticipant) return;
-    const refreshOnReturn = () => {
-      if (document.visibilityState === 'visible') setReload(value => value + 1);
-    };
-    document.addEventListener('visibilitychange', refreshOnReturn);
-    return () => document.removeEventListener('visibilitychange', refreshOnReturn);
-  }, [eventId, isEventParticipant]);
-
   useEffect(() => {
     if (!eventId || !loadedEvent) return;
     return onSnapshot(doc(db, 'events', eventId), { includeMetadataChanges: true }, snapshot => {
@@ -151,11 +173,17 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
         setAccess(null);
         setReload(value => value + 1);
       }
-    }, () => {
+    }, error => {
       setAccess(null);
       onContextChange();
+      if (accessRole === 'participant' && accessDenied(error)) {
+        // Revocation can deny the event listener before the membership update arrives.
+        setReload(value => value + 1);
+      } else {
+        setStatus('Live access updates stopped. Use Check event access to reconnect.');
+      }
     });
-  }, [db, eventId, loadedEvent, onContextChange]);
+  }, [db, eventId, loadedEvent, accessRole, onContextChange]);
 
   async function perform(action: () => Promise<void>, message: string) {
     if (busy || !navigator.onLine) return;
@@ -163,10 +191,7 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
     setStatus('Working…');
     try {
       await action();
-      if (eventId) {
-        try { setAccess(await readEventAccess(db, eventId, uid)); }
-        catch { setAccess(null); setStatus(message + ' Refresh event access to view the current state.'); return; }
-      }
+      if (eventId) setReload(value => value + 1);
       setStatus(message);
     } catch (error) {
       setStatus(errorText(error));
@@ -175,6 +200,7 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
         onContextChange();
       } else if (error instanceof Error && error.message === 'CARD_CHANGED') {
         setAccess(null);
+        setReload(value => value + 1);
       }
     } finally {
       setBusy(false);
@@ -194,19 +220,23 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
     setWithdraw(false);
   }
 
+  async function copyInvite(value: string, label: string) {
+    try {
+      await navigator.clipboard.writeText(value);
+      setStatus(label + ' copied.');
+    } catch { setStatus('Select the ' + label.toLowerCase() + ' and copy it manually.'); }
+  }
+
+  const inviteLink = new URL('/', location.origin);
+  if (eventId) inviteLink.searchParams.set('event', eventId);
+
   return <>
     {!eventId && <>
-      <form onSubmit={event => {
-        event.preventDefault();
-        if (!eventIdPattern.test(eventInput.trim())) { setStatus('Enter the event code from your organizer.'); return; }
-        openEvent(eventInput.trim());
-      }}>
-        <label htmlFor="event-code">Event code</label>
-        <input id="event-code" name="event-code" autoComplete="off" autoCapitalize="none" spellCheck={false}
-          value={eventInput} onChange={event => setEventInput(event.target.value)} maxLength={20}/>
-        <button type="submit">Open event</button>
-      </form>
+      {events.length > 0 && <><h3>Your events</h3><ul>{events.map(event => <li key={event.id}>
+        <button onClick={() => openEvent(event.id)}>{event.title}</button>
+      </li>)}</ul></>}
       <h3>Create an event</h3>
+      <p>Hosting an event? Create it to get an invite link and event code.</p>
       <form onSubmit={event => {
         event.preventDefault();
         void perform(async () => { openEvent(await createEvent(db, uid, title, timeZone)); }, 'Event created.');
@@ -219,39 +249,61 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
           required maxLength={80} value={timeZone} onChange={event => setTimeZone(event.target.value)}/>
         <div className="actions"><button disabled={busy}>Create event</button></div>
       </form>
-      {events.length > 0 && <><h3>Your events</h3><ul>{events.map(event => <li key={event.id}>
-        <button onClick={() => openEvent(event.id)}>{event.title}</button>
-      </li>)}</ul></>}
+      <h3>Join an event</h3>
+      <p id="event-code-help">Open your organizer’s invite link or paste the event code below.</p>
+      <form onSubmit={event => {
+        event.preventDefault();
+        const code = eventInput.trim();
+        if (!eventIdPattern.test(code)) { setCodeError('Enter the 20-character event code from your organizer.'); return; }
+        openEvent(code);
+      }}>
+        <label htmlFor="event-code">Event code from your organizer</label>
+        <input id="event-code" name="event-code" autoComplete="off" autoCapitalize="none" spellCheck={false}
+          aria-invalid={!!codeError} aria-describedby={codeError ? 'event-code-help event-code-error' : 'event-code-help'}
+          value={eventInput} onChange={event => { setEventInput(event.target.value); setCodeError(''); }}/>
+        {codeError && <p id="event-code-error" role="alert">{codeError}</p>}
+        <button type="submit">Open event</button>
+      </form>
     </>}
     {eventId && <>
       <div className="actions">
         <button disabled={busy} onClick={() => openEvent('')}>Back to events</button>
-        <button disabled={busy} onClick={() => setReload(value => value + 1)}>Refresh event access</button>
+        <button disabled={busy || loading} onClick={() => {
+          setStatus('');
+          if (requestError) setWatchRetry(value => value + 1);
+          setReload(value => value + 1);
+        }}>Check event access</button>
       </div>
       {access?.role === 'request' && <>
         <p>Ask the organizer to approve your access. Your card stays in this tab.</p>
         <button disabled={busy} onClick={() => void perform(() => requestToJoin(db, eventId, uid), 'Join request submitted.')}>Request to join</button>
       </>}
-      {access?.role === 'pending' && <p>Your request is awaiting organizer approval. Your request code is <code>{uid}</code>.</p>}
-      {access?.role === 'revoked' && <p>Your access to this event has ended.</p>}
+      <div role="status" aria-atomic="true">
+        {accessRole === 'pending' && <p>Waiting for organizer approval. This page will update automatically.</p>}
+        {accessRole === 'participant' && <p>You have access to this event.</p>}
+        {accessRole === 'revoked' && <p>Your access to this event has ended.</p>}
+        {!access && loading && <p>Checking event access…</p>}
+      </div>
+      {accessRole === 'pending' && <p>Your approval reference is <code translate="no">{uid}</code>. If your organizer asks for it, share it so they can identify your request.</p>}
       {access?.role === 'organizer' && <>
         <h3>{access.event.title}</h3>
-        <p>Share this event link with your participants. Each person still needs your approval.</p>
-        <label htmlFor="invite-link">Event link</label>
-        <input id="invite-link" name="invite-link" type="url" value={location.href} readOnly onFocus={event => event.currentTarget.select()}/>
-        <button onClick={async () => {
-          try {
-            await navigator.clipboard.writeText(location.href);
-            setStatus('Event link copied.');
-          } catch { setStatus('Select the event link and copy it manually.'); }
-        }}>Copy event link</button>
-        <OrganizerPlanner key={`${access.event.inputRevision}:${access.event.planRevision}`} event={access.event} eventId={eventId} uid={uid} cards={access.cards}
-          refresh={() => setReload(value => value + 1)}/>
+        <p>Share the invite link or event code with participants. They’ll appear under Join requests after asking to join.</p>
+        <label htmlFor="invite-link">Invite link</label>
+        <input id="invite-link" name="invite-link" type="url" value={inviteLink.href} readOnly onFocus={event => event.currentTarget.select()}/>
+        <button onClick={() => void copyInvite(inviteLink.href, 'Invite link')}>Copy invite link</button>
+        <label htmlFor="invite-code">Event code</label>
+        <input id="invite-code" name="invite-code" value={eventId} readOnly onFocus={event => event.currentTarget.select()}/>
+        <button onClick={() => void copyInvite(eventId, 'Event code')}>Copy event code</button>
         <h4>Join requests</h4>
-        {access.pending.length === 0 ? <p>No requests waiting.</p> : <ul>{access.pending.map(id => <li key={id}>
-          <code translate="no">{id}</code> <button disabled={busy} aria-label={`Admit participant ${id}`}
+        <p role="status" aria-atomic="true">{requestError ? 'Live join requests stopped. Use Check event access to reconnect.'
+          : pending === null ? 'Checking join requests…'
+          : pending.length === 0 ? 'No requests waiting.' : `${pending.length} ${pending.length === 1 ? 'request' : 'requests'} waiting.`}</p>
+        {!!pending?.length && <ul>{pending.map(id => <li key={id}>
+          Approval reference <code translate="no">{id}</code> <button disabled={busy} aria-label={`Admit participant ${id}`}
             onClick={() => void perform(() => admit(db, eventId, id), 'Participant admitted.')}>Admit participant</button>
         </li>)}</ul>}
+        <OrganizerPlanner key={`${access.event.inputRevision}:${access.event.planRevision}`} event={access.event} eventId={eventId} uid={uid} cards={access.cards}
+          refresh={() => setReload(value => value + 1)}/>
         <h4>Participants</h4>
         {access.members.length === 0 ? <p>No active participants.</p> : <ul>{access.members.map(id => <li key={id}>
           <code>{id}</code> {revokeUid === id ? <>
@@ -295,6 +347,7 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
         <ParticipantPlan event={access.event} eventId={eventId} uid={uid} card={access.card}/>
       </>}
     </>}
+    {!eventId && loading && <p role="status">Loading your events…</p>}
     <p role="status">{status}</p>
   </>;
 }
