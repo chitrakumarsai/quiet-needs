@@ -400,3 +400,9 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - QN-021/P4, owner implementation. Finish the publish and feedback fields, confirm hosted configuration prerequisites, and consolidate the P4 acceptance checks.
 - Placed unresolved proposal references and unverified venue facts beside organizer approval. Clarified whole-card feedback for each published revision. Added the exact preview domain to the reCAPTCHA allowlist while preserving the existing domain checks.
 - Exact return: run the combined P4 checklist in TEST_PLAN.md. Browser attestation and hosted signed-in acceptance are pending. Cloud proposals stay off in the manual preview until attestation is verified.
+
+## CP-057 — Restore hosted Google sign-in
+
+- QN-017/P4, owner implementation. Reproduced the hosted sign-in error in Chrome. The in-memory Firebase Auth instance needed the browser popup resolver supplied to the Google sign-in call.
+- Passed 22 automated tests and the production privacy build. The hosted service worker matched the rebuilt version. A fresh Chrome tab opened Google's account chooser from the preview.
+- Exact return: complete sign-in with two separate Google identities and resume the combined P4 checklist in TEST_PLAN.md.

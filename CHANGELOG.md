@@ -2,6 +2,7 @@
 
 ## 2026-11-20 — P4 acceptance preparation
 
+- Fixed the hosted Google sign-in button by supplying Firebase's browser popup resolver. Verified that the updated preview opens Google's account chooser in Chrome.
 - Put open requests and unverified venue facts next to publish approval. Clarified whole-card feedback and documented a combined hosted, privacy, accessibility, and cleanup test run.
 
 ## 2026-11-19 — Hosted trial preview

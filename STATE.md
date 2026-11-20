@@ -6,7 +6,7 @@ Updated: November 20, 2026 IST
 - Completed phase: **P2 — Approved sharing**, verified in the local Firebase demo.
 - Completed phase: **P3 — Organizer adaptation**, verified with a genuine synthetic cloud proposal and local publication and confirmation.
 - Active implementation phase: **P4 — Reliability and UX**. The offline shell, focused accessibility and recovery, and synthetic cross-role trace are verified.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-056.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-057.
 - P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, automated tests and npm audit pass. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. P4 offline reload covers manual entry in the production app.
@@ -33,7 +33,7 @@ Run the combined P4 acceptance checklist in TEST_PLAN.md. QN-021 is implemented,
 - Passed layout and keyboard spot checks for QN-019: populated participant and organizer views fit at 390, 768, and 1440 CSS pixels. Chrome keyboard review reached approved download. The populated organizer view also fit at 390 CSS pixels with Chrome at 200% zoom.
 - Two independent organizers completed the offline exercise in 128 and 137 seconds. Both identified the conflict and unknown and found feedback for revision 1. Both raised the question of publishing with unresolved requests.
 - Unverified: a full screen-reader walkthrough, IndexedDB record contents, browser behavior with the OS reporting offline, and the signed-in hosted trial.
-- Hosted setup: Standard, free-tier-eligible Firestore in `us-east1`. The [temporary Hosting preview](https://quietneeds-web--p4-trial-plfqr34b.web.app) serves the organizer changes and expires November 27, 2026. The production shell and service worker returned HTTP 200 with `Cache-Control: no-cache`. Google OAuth startup succeeded for the preview domain. Browser attestation still needs verification before enabling cloud proposals.
+- Hosted setup: Standard, free-tier-eligible Firestore in `us-east1`. The production shell and service worker returned HTTP 200 with `Cache-Control: no-cache`. After reproducing the Google sign-in error in Chrome, adding Firebase's browser popup resolver let a fresh tab open Google's account chooser. Browser attestation still needs verification before enabling cloud proposals. [Temporary Hosting preview](https://quietneeds-web--p4-trial-plfqr34b.web.app)
 
 ## P3 gate
 
