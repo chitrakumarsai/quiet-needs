@@ -1,5 +1,21 @@
 # Verification plan
 
+## Combined P4 acceptance run
+
+Use fictional data and record the preview build, browser, role, and outcome for each check. Run these together once the preview candidate is ready.
+
+| Check | Evidence to collect |
+| --- | --- |
+| Hosted sign-in and sharing | Two separate Google identities complete sign-in. The organizer creates an event and admits the participant. The participant approves, shares, replaces, and withdraws a fictional request. Confirm the organizer sees only the current approved request. |
+| Organizer publish and feedback | Use a conflicting request and an unverified venue fact. Check that open items are visible at approval, agenda changes revoke approval, the public agenda excludes organizer notes, and a response describes the participant’s whole card for the current revision. Verify replacement or withdrawal makes the old plan stale. |
+| Hosted App Check and cloud proposal | Use a clean browser with production attestation on the exact preview origin. With a fictional fixture, verify App Check accepts the request, Firebase reports `IN_CLOUD`, and the payload contains only current approved requests and event facts. Check manual planning after a cloud error. |
+| Offline, storage, and accessibility | Check OS-reported offline, warm reload, blank draft, and online-only event writes. Check IndexedDB record contents, local/session storage, and Cache Storage for fictional private markers. Run keyboard and screen-reader walkthroughs with focus and live-status announcements. |
+| Demo cleanup | Record exact fictional event IDs, withdraw shared cards, and verify an authorized project operator can remove a designated fixture and its descendants. Log what was removed and verify it is absent. |
+
+### Demo cleanup procedure
+
+Use fictional records only. The project operator records the fixture event IDs at creation, withdraws cards when the test ends, and schedules manual cleanup within seven days of the test ending. Once authorized to remove the fixture, verify the project and exact event ID, then remove that event recursively so its cards, members, proposals, plans, and confirmations are removed with it. Verify the event and its descendants are absent. Hosting preview expiration and database cleanup are separate operations. [Firestore deletion documentation](https://firebase.google.com/docs/firestore/manage-data/delete-data)
+
 ## Automated checks
 
 Run `npm test` using Node 22.14+; it requires no downloaded packages. These tests verify approval gating, export field allowlisting, immutable approved snapshots, malformed response rejection, clarification-only handling, prompt data delimiting, and a static device-only adapter guard.

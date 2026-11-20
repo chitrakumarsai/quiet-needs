@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-11-20 — P4 acceptance preparation
+
+- Put open requests and unverified venue facts next to publish approval. Clarified whole-card feedback and documented a combined hosted, privacy, accessibility, and cleanup test run.
+
 ## 2026-11-19 — Hosted trial preview
 
 - Configured Google sign-in and deployed a seven-day Hosting preview for manual organizer planning. Verified OAuth startup, the hosted shell, and service worker cache headers.

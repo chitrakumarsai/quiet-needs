@@ -195,6 +195,8 @@ Raw notes: memory only. Explicit clear removes page state; after AI preparation 
 
 The MVP has no reliable server cleanup job. Therefore do not promise automatic seven-day deletion; display manual cleanup status and use synthetic hosted-demo records. Automated retention/deletion and provider data-handling review are production prerequisites. Cloud requests already sent, downloaded files, prior views, and provider retention cannot be reversed by deleting Firestore documents.
 
+For the hosted trial, the Firebase project operator owns the manual cleanup of recorded fictional event IDs after the trial. The procedure and verification are in [TEST_PLAN.md](TEST_PLAN.md#demo-cleanup-procedure).
+
 A source change immediately makes dependent proposals and published confirmations stale by inputRevision. Deny reads of stale proposal/plan payloads; clear them from live UI state and show a content-free stale notice. Organizer proposal queries must filter to the current inputRevision; participants fetch only currentPlanId after reading the authorized event. Organizer deletion of stale proposal documents remains allowed without reading their content. Use document IDs/metadata tracked locally or a separate non-sensitive cleanup manifest if needed; do not loosen payload read rules to implement cleanup. Organizer cleanup removes derived text physically. Denial of future reads does not erase material already cached in someone's browser; no revocation guarantee is made.
 
 ## 12. Deployment and operations

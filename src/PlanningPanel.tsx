@@ -45,6 +45,10 @@ export function OrganizerPlanner({ event, eventId, uid, cards, refresh }:
   }, [agenda.length, facts.length]);
 
   const plan = (() => { try { return publicAgenda(choices, event); } catch { return null; } })();
+  const unverifiedFacts = event.venueFacts.filter(fact => fact.status === 'unknown');
+  const conflicts = suggestion?.input.requirements.filter(item => suggestion.proposal.conflicts.includes(item.ref)) ?? [];
+  const unknowns = suggestion?.input.requirements.filter(item => suggestion.proposal.unknowns.includes(item.ref)) ?? [];
+  const needsFollowUp = cards.length > 0 || conflicts.length > 0 || unknowns.length > 0 || unverifiedFacts.length > 0;
 
   async function perform(action: () => Promise<void>, message: string) {
     if (!navigator.onLine) return;
@@ -163,8 +167,6 @@ export function OrganizerPlanner({ event, eventId, uid, cards, refresh }:
         {suggestion.proposal.changes.map(item => <p key={item.slotId}>
           {item.slotId} addresses {item.requirementRefs.join(', ')} using {item.factRefs.join(', ')}.
         </p>)}
-        <p>Conflicting requests: {suggestion.proposal.conflicts.join(', ') || 'None reported'}.</p>
-        <p>Requests needing more information: {suggestion.proposal.unknowns.join(', ') || 'None reported'}.</p>
         <details>
           <summary>Approved requests and venue facts</summary>
           <ul>
@@ -176,7 +178,26 @@ export function OrganizerPlanner({ event, eventId, uid, cards, refresh }:
       {plan && <>
         <h4>Exact agenda participants will see</h4>
         <ol>{plan.map(slot => <li key={slot.id}>{slot.start}–{slot.end} {slot.title}</li>)}</ol>
-        <label className="check"><input type="checkbox" checked={confirm} disabled={busy} onChange={e => setConfirm(e.target.checked)}/>
+        {needsFollowUp &&
+          <section className="notice" aria-labelledby="publish-follow-up">
+            <h4 id="publish-follow-up">Follow up before publishing</h4>
+            {conflicts.length > 0 && <>
+              <h5>Conflicting requests flagged in the proposal</h5>
+              <ul>{conflicts.map(item => <li key={item.ref}>{item.ref} · {item.request}</li>)}</ul>
+            </>}
+            {unknowns.length > 0 && <>
+              <h5>Requests the proposal flagged for more information</h5>
+              <ul>{unknowns.map(item => <li key={item.ref}>{item.ref} · {item.request}</li>)}</ul>
+            </>}
+            {unverifiedFacts.length > 0 && <>
+              <h5>Unverified venue facts</h5>
+              <ul>{unverifiedFacts.map(fact => <li key={fact.id}>{fact.statement}</li>)}</ul>
+            </>}
+            {cards.length > 0 && <p>Check the <a href="#approved-cards">approved cards</a> against this exact agenda.</p>}
+            <p id="publish-follow-up-instructions">Follow up on anything still open before you approve, or let affected participants know what is still pending.</p>
+          </section>}
+        <label className="check"><input type="checkbox" checked={confirm} disabled={busy}
+          aria-describedby={needsFollowUp ? 'publish-follow-up-instructions' : undefined} onChange={e => setConfirm(e.target.checked)}/>
           I reviewed this agenda and approve it for active participants.
         </label>
         <button className="primary" disabled={busy || !confirm} onClick={() => void perform(async () => {
@@ -188,6 +209,7 @@ export function OrganizerPlanner({ event, eventId, uid, cards, refresh }:
     </>}
     {event.currentPlanId && <>
       <h4>Participant feedback</h4>
+      <p>Each response covers one participant’s whole shared card for agenda revision {event.planRevision}. Follow up with that participant for details about individual requests.</p>
       <button disabled={busy} onClick={() => void perform(async () => {
         setFeedback(await loadPlanFeedback(db, eventId, event, cards));
       }, 'Feedback refreshed.')}>Refresh participant feedback</button>
@@ -235,7 +257,7 @@ export function ParticipantPlan({ event, eventId, uid, card }:
       <p>Revision {current.planRevision} · {event.timeZone}</p>
       <ol>{current.agenda.map(slot => <li key={slot.id}>{slot.start}–{slot.end} {slot.title}</li>)}</ol>
       {card?.status === 'approved' && <>
-        <p>Does this agenda meet the requests on your shared card?</p>
+        <p>Does this agenda meet the requests on your shared card? Your response covers your whole card for this agenda revision.</p>
         <div className="actions">{(['met', 'unmet', 'unknown'] as const).map(value =>
           <button key={value} disabled={busy} aria-pressed={current.confirmation === value} onClick={() => void submit(value)}>
             {responseLabel[value]}

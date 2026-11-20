@@ -262,7 +262,7 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
             <button disabled={busy} onClick={() => setRevokeUid('')}>Cancel</button>
           </> : <button disabled={busy} onClick={() => setRevokeUid(id)}>Remove access</button>}
         </li>)}</ul>}
-        <h4>Approved cards</h4>
+        <h4 id="approved-cards" tabIndex={-1}>Approved cards</h4>
         {access.cards.length === 0 && <p>No cards have been shared.</p>}
         {access.cards.map(card => <div key={card.ownerUid}>
           <p>Participant <code>{card.ownerUid}</code> · revision {card.revision}</p>
