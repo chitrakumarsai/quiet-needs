@@ -2,6 +2,7 @@
 
 ## 2026-11-20 — P4 acceptance preparation
 
+- Refined the participation editor, review surface, and create/join forms. Added workspace jump links and moved keyboard focus to the exact card when previewing.
 - Matched organizer App Check to the project's reCAPTCHA Enterprise registration. Verified hosted production attestation and a fictional cloud proposal, manual publication, local feedback revision isolation, and a browser-storage audit.
 - Recorded the user-reported pass for the updated two-account hosted invitation and sharing flow.
 - Separated event creation from joining, added copyable invite links and event codes, and moved join requests above agenda planning. Join requests and membership update automatically. Firebase sign-in survives a reload in the same tab.

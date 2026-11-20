@@ -34,6 +34,8 @@ These are candidate tokens, not verified contrast results. Validate normal text,
 - Keep complex organizer controls out of participant screens.
 - Avoid a large landing-page hero in the working interface; devote space to the task.
 
+The workspace refresh uses a compact wordmark and jump links, a serif task title, and a paper-like review surface beside the white request editor. An evergreen accent signals actions and focus, and a thin rule groups the event workspace. Creating and joining sit side by side on wide screens and stack in task order on narrow screens. The actual request editor and approved card provide the visual focus.
+
 ## Screen contracts
 
 | Screen | Primary action | Necessary UX states |

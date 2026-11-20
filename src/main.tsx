@@ -16,6 +16,7 @@ function App() {
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState('');
   const firstRequest = useRef<HTMLTextAreaElement>(null);
+  const previewHeading = useRef<HTMLHeadingElement>(null);
   const nextRequestFocus = useRef<number | null>(null);
   const clearDialog = useRef<HTMLDialogElement>(null);
   const clearButton = useRef<HTMLButtonElement>(null);
@@ -29,6 +30,9 @@ function App() {
     document.getElementById(`request-${nextRequestFocus.current}`)?.focus();
     nextRequestFocus.current = null;
   }, [draft.requirements.length]);
+  useEffect(() => {
+    if (preview) previewHeading.current?.focus();
+  }, [preview]);
 
   const clearApproval = useCallback(() => {
     setConsent(false);
@@ -74,14 +78,20 @@ function App() {
       event.preventDefault();
       firstRequest.current?.focus();
     }}>Skip to requests</a>
-    <header><a className="brand" href="/"><span aria-hidden="true">◌ </span>QuietNeeds</a></header>
-    <section className="intro">
-      <h1>Prepare your participation card.</h1>
-      <p>Describe what would help you take part. Include any conditions, places, times, or amounts you want the organizer to know.</p>
+    <header className="workspace-header">
+      <a className="brand" href="/"><span className="brand-mark" aria-hidden="true">Q</span>QuietNeeds</a>
+      {SharingPanel && <nav aria-label="Workspace">
+        <a href="#card-title">Participation card</a>
+        <a href="#sharing-title">Event sharing</a>
+      </nav>}
+    </header>
+    <section className="intro" aria-labelledby="card-title">
+      <h1 id="card-title" tabIndex={-1}>Your participation card</h1>
+      <p>Describe what would help you take part. Include any conditions, places, times, or costs the organizer needs to know.</p>
     </section>
-    <aside className="notice">Your draft stays in this tab until you close or refresh it. You can download an approved copy and choose where to share it.</aside>
-    <div className="grid">
-      <section className="panel">
+    <p className="draft-note">Your draft stays in this tab until you close or reload it.</p>
+    <div className="grid card-workspace">
+      <section className="panel request-panel">
         <h2>Write your requests</h2>
         <p className="hint">Use one practical request per field. Share only the details needed to act on it.</p>
         {draft.requirements.map((requirement, index) => <div className="request" key={index}>
@@ -108,13 +118,12 @@ function App() {
           }}>Clear session</button>
         </div>
       </section>
-      <section className="panel">
+      <section className="panel review-panel">
         <h2>Review and approve</h2>
-        <p className="hint">Check the wording and details on the card before you approve it for download.</p>
-        <button className="primary" disabled={!canPreview} onClick={showPreview}>Preview card</button>
-        <p role="status">{status}</p>
-        {preview && <section className="export-preview" aria-labelledby="preview-title">
-          <h3 id="preview-title">Card preview</h3>
+        <p className="hint">Preview the exact wording before approving your card.</p>
+        <p className="review-status" role="status">{status}</p>
+        {preview ? <section className="export-preview card-paper" aria-labelledby="preview-title">
+          <h3 id="preview-title" ref={previewHeading} tabIndex={-1}>Card preview</h3>
           <ol>{preview.requirements.map((requirement, index) => <li key={index}><p>{requirement.request}</p></li>)}</ol>
           <details><summary>Exact JSON file</summary><pre>{JSON.stringify(preview, null, 2)}</pre></details>
           <label className="check">
@@ -122,7 +131,10 @@ function App() {
             I approve this exact card for download.
           </label>
           <button className="primary" disabled={!consent} onClick={exportCard}>Download approved card</button>
-        </section>}
+        </section> : <div className="card-paper card-paper-empty">
+          <p>{canPreview ? 'Your requests are ready to preview.' : 'Write a request to preview your card.'}</p>
+          <button className="primary" disabled={!canPreview} onClick={showPreview}>Preview card</button>
+        </div>}
       </section>
     </div>
     {SharingPanel && <Suspense fallback={<p role="status">Loading event sharing…</p>}>
