@@ -2,6 +2,7 @@
 
 ## 2026-11-20 — P4 acceptance preparation
 
+- Recorded the user-reported pass for the updated two-account hosted invitation and sharing flow.
 - Separated event creation from joining, added copyable invite links and event codes, and moved join requests above agenda planning. Join requests and membership update automatically. Firebase sign-in survives a reload in the same tab.
 - Fixed the hosted Google sign-in button by supplying Firebase's browser popup resolver. Verified that the updated preview opens Google's account chooser in Chrome.
 - Put open requests and unverified venue facts next to publish approval. Clarified whole-card feedback and documented a combined hosted, privacy, accessibility, and cleanup test run.
