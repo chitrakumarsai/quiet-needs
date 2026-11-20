@@ -16,7 +16,7 @@ Codex CLI develops the code. It is not the runtime model and must use synthetic 
 | --- | --- | --- |
 | Participant editor, manual card, preview, JSON export | Source implemented; domain tests passed previously; browser build unverified | P1 |
 | Device-only Firebase adapter | Source implemented; actual SDK/device run unverified | P1 |
-| Authentication and event membership | Implemented and verified in two isolated local demo sessions | P2 |
+| Authentication and event membership | Verified in two local demo sessions. The user also reported a pass for the updated two-account hosted sharing trial. | P2 |
 | Approved sharing and withdrawal | Browser and Firestore emulator checks passed | P2 |
 | Organizer cloud generation | Approved-content proposal verified with a fictional event and SDK source `IN_CLOUD` | P3 |
 | Revised plan and participant confirmation | Browser round trip and Firestore emulator revision checks passed | P3 |

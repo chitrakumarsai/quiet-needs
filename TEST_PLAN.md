@@ -12,6 +12,10 @@ Use fictional data and record the preview build, browser, role, and outcome for 
 | Offline, storage, and accessibility | Check OS-reported offline, warm reload, blank draft, and online-only event writes. Check IndexedDB record contents, local/session storage, and Cache Storage for fictional private markers. Run keyboard and screen-reader walkthroughs with focus and live-status announcements. |
 | Demo cleanup | Record exact fictional event IDs, withdraw shared cards, and verify an authorized project operator can remove a designated fixture and its descendants. Log what was removed and verify it is absent. |
 
+### Hosted sharing result
+
+The user reported that all seven hosted sharing steps passed on the preview updated by PR #13. The run covered the invite link and visible event code, two Google sign-ins, automatic request and admission updates, card sharing, replacement and withdrawal, and same-tab reload with an empty editor. This is participant-reported evidence. Hosted organizer publication and feedback remain pending.
+
 ### Demo cleanup procedure
 
 Use fictional records only. The project operator records the fixture event IDs at creation, withdraws cards when the test ends, and schedules manual cleanup within seven days of the test ending. Once authorized to remove the fixture, verify the project and exact event ID, then remove that event recursively so its cards, members, proposals, plans, and confirmations are removed with it. Verify the event and its descendants are absent. Hosting preview expiration and database cleanup are separate operations. [Firestore deletion documentation](https://firebase.google.com/docs/firestore/manage-data/delete-data)

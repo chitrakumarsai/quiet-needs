@@ -413,3 +413,8 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - Considered a role chooser and two labeled sections. Chose the sections so testers can find either task without an extra click. Show the existing event code alongside the link and use server-confirmed access updates.
 - Chrome with two emulator identities verified invite by code and link, live request and approval, share/replace/withdraw, revocation, Back/Forward, reload with sign-in and a blank draft, and sign-out.
 - Exact return: verify two-role enrollment, session reload, and sharing in the combined P4 checklist.
+
+## CP-059 — Record the hosted sharing result
+
+- QN-017 and QN-022/P4, owner implementation. The user reported that all seven steps of the updated hosted run passed, covering sign-in, event link and code, live requests and admission, sharing, replacement and withdrawal, and same-tab reload.
+- Exact return: QN-021, verify hosted manual publication and revision-bound participant feedback using the combined P4 checklist in TEST_PLAN.md.

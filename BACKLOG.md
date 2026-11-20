@@ -21,12 +21,12 @@
 | QN-015 | SDK memory | P1-T06 | Correction verified | Clear after AI preparation reloads page to end SDK context; manual-only clear stays in page. Browser restart verified; no secure memory-erasure promise | Full privacy audit |
 
 | QN-016 | Dependency audit | P1-T02 | Resolved | Rsbuild 1.7.6 removes the affected dependency chain. npm audit reports zero findings and both GitHub participant checks passed on 9f68d2b | P1-T07 |
-| QN-017 | Approved sharing | P2 | Hosted setup verified | Emulator sharing passed, signed-out reads are denied, and OAuth starts on the preview. Verify sign-in and sharing with two distinct hosted accounts | P4 hosted trial |
+| QN-017 | Approved sharing | P2 | Hosted trial passed | User reported sign-in and sharing passed with two hosted accounts. Continue with hosted organizer publication and feedback | P4 acceptance |
 | QN-018 | Organizer adaptation | P3 | Verified | Synthetic cloud output and local planning passed. Hosted integration and real participant feedback remain pending | P4 reliability and UX |
 | QN-019 | Accessibility and recovery | P4 | Focused pass verified | Populated layouts, a 200% zoom check, and keyboard card review passed. Run the full screen-reader walkthrough | P4 reliability and UX |
 | QN-020 | Browser privacy regression | P4 | Synthetic trace verified | Review IndexedDB record contents and repeat in isolated hosting before using real records | P4 retention and user trials |
 | QN-021 | Organizer publication review | P4 | Implemented | Verify fallback review, flagged requests at approval, and whole-card feedback in the combined P4 run | P4 acceptance |
-| QN-022 | Event enrollment usability | P4 | Verified in emulator | Repeat live requests and admission in the hosted preview with two Google identities | P4 hosted trial |
+| QN-022 | Event enrollment usability | P4 | Hosted trial passed | User reported live requests, admission, and same-tab reload passed on the updated preview | P4 acceptance |
 
 ## Issue template
 
