@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import {
-  connectAuthEmulator, GoogleAuthProvider, initializeAuth, inMemoryPersistence, signInAnonymously, signInWithPopup, signOut,
+  browserPopupRedirectResolver, connectAuthEmulator, GoogleAuthProvider, initializeAuth, inMemoryPersistence,
+  signInAnonymously, signInWithPopup, signOut,
 } from 'firebase/auth';
 import {
   collection, connectFirestoreEmulator, doc, getDocFromServer, getDocsFromServer,
@@ -65,7 +66,7 @@ export function getSharing() {
 
 export function signIn() {
   const { auth } = getSharing();
-  return sharingEmulator ? signInAnonymously(auth) : signInWithPopup(auth, new GoogleAuthProvider());
+  return sharingEmulator ? signInAnonymously(auth) : signInWithPopup(auth, new GoogleAuthProvider(), browserPopupRedirectResolver);
 }
 
 export function endSession() {
