@@ -63,6 +63,7 @@ In P1 the primary action is an approved local export, not “Send to organizer.�
 12. When the browser is offline, explain that event sharing needs a connection. Keep entry, review, and download available without changing their controls. Make the offline message available to screen readers.
 13. Move focus into newly added request and agenda fields. Keep event codes and long requests within the screen width. Explain when a retry is needed and show the last confirmed shared revision during a temporary write failure.
 14. Place proposal conflicts, requests needing more information, and unverified venue facts beside publish approval. Keep them in organizer view. Describe feedback as one participant’s whole-card response for the published revision.
+15. Separate creating an event from opening an organizer's invite. Show the generated event code and link together and put join requests before agenda planning. Announce new requests and access changes in place.
 
 ## Component strategy
 

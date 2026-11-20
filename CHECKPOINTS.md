@@ -406,3 +406,10 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - QN-017/P4, owner implementation. Reproduced the hosted sign-in error in Chrome. The in-memory Firebase Auth instance needed the browser popup resolver supplied to the Google sign-in call.
 - Passed 22 automated tests and the production privacy build. The hosted service worker matched the rebuilt version. A fresh Chrome tab opened Google's account chooser from the preview.
 - Exact return: complete sign-in with two separate Google identities and resume the combined P4 checklist in TEST_PLAN.md.
+
+## CP-058 — Remove reloads from hosted event enrollment
+
+- QN-022/P4, owner implementation. The hosted trial surfaced an unlabeled choice between starting an event and joining one, an invite without a visible code, and repeated sign-ins while checking for access updates.
+- Considered a role chooser and two labeled sections. Chose the sections so testers can find either task without an extra click. Show the existing event code alongside the link and use server-confirmed access updates.
+- Chrome with two emulator identities verified invite by code and link, live request and approval, share/replace/withdraw, revocation, Back/Forward, reload with sign-in and a blank draft, and sign-out.
+- Exact return: verify two-role enrollment, session reload, and sharing in the combined P4 checklist.

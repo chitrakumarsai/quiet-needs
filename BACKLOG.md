@@ -26,6 +26,7 @@
 | QN-019 | Accessibility and recovery | P4 | Focused pass verified | Populated layouts, a 200% zoom check, and keyboard card review passed. Run the full screen-reader walkthrough | P4 reliability and UX |
 | QN-020 | Browser privacy regression | P4 | Synthetic trace verified | Review IndexedDB record contents and repeat in isolated hosting before using real records | P4 retention and user trials |
 | QN-021 | Organizer publication review | P4 | Implemented | Verify fallback review, flagged requests at approval, and whole-card feedback in the combined P4 run | P4 acceptance |
+| QN-022 | Event enrollment usability | P4 | Verified in emulator | Repeat live requests and admission in the hosted preview with two Google identities | P4 hosted trial |
 
 ## Issue template
 

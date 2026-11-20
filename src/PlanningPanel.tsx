@@ -233,7 +233,7 @@ export function ParticipantPlan({ event, eventId, uid, card }:
     setStatus('');
     readCurrentPlan(db, eventId, event, uid).then(value => {
       if (active) setPlan(value);
-    }).catch(() => { if (active) setStatus('The current plan could not be loaded. Refresh event access.'); });
+    }).catch(() => { if (active) setStatus('The current plan could not be loaded. Use Check event access to try again.'); });
     return () => { active = false; };
   }, [db, event, eventId, uid]);
   const current = plan?.id === event.currentPlanId && plan.inputRevision === event.inputRevision &&

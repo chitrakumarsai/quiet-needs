@@ -1,11 +1,11 @@
 import { initializeApp } from 'firebase/app';
 import {
-  browserPopupRedirectResolver, connectAuthEmulator, GoogleAuthProvider, initializeAuth, inMemoryPersistence,
+  browserPopupRedirectResolver, browserSessionPersistence, connectAuthEmulator, GoogleAuthProvider, initializeAuth,
   signInAnonymously, signInWithPopup, signOut,
 } from 'firebase/auth';
 import {
   collection, connectFirestoreEmulator, doc, getDocFromServer, getDocsFromServer,
-  initializeFirestore, memoryLocalCache, query, runTransaction, serverTimestamp, where,
+  initializeFirestore, memoryLocalCache, onSnapshot, query, runTransaction, serverTimestamp, where,
 } from 'firebase/firestore';
 import type { DocumentSnapshot, Firestore, Transaction } from 'firebase/firestore';
 import { makeApprovedCard } from './domain.ts';
@@ -50,7 +50,7 @@ function createServices() {
     projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
     appId: import.meta.env.VITE_FIREBASE_APP_ID,
   }, 'quietneeds-sharing');
-  const auth = initializeAuth(app, { persistence: inMemoryPersistence });
+  const auth = initializeAuth(app, { persistence: browserSessionPersistence });
   const db = initializeFirestore(app, { localCache: memoryLocalCache() });
   if (sharingEmulator) {
     connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
@@ -82,7 +82,16 @@ const joinRef = (db: Firestore, eventId: string, uid: string) => doc(eventRef(db
 export type EventAccess =
   | { role: 'request' | 'pending' | 'revoked' }
   | { role: 'participant'; event: Event; card: SharedCard | null }
-  | { role: 'organizer'; event: Event; pending: string[]; members: string[]; cards: SharedCard[] };
+  | { role: 'organizer'; event: Event; members: string[]; cards: SharedCard[] };
+
+export function watchJoinRequests(db: Firestore, eventId: string, onChange: (ids: string[]) => void, onError: () => void) {
+  const pending = query(collection(eventRef(db, eventId), 'joinRequests'), where('status', '==', 'pending'));
+  return onSnapshot(pending, { includeMetadataChanges: true }, snapshot => {
+    if (!snapshot.metadata.fromCache && !snapshot.metadata.hasPendingWrites) {
+      onChange(snapshot.docs.map(item => item.id));
+    }
+  }, onError);
+}
 
 function dataOrNull<T>(snapshot: DocumentSnapshot): T | null {
   return snapshot.exists() ? snapshot.data() as T : null;
@@ -118,12 +127,11 @@ export async function readEventAccess(db: Firestore, eventId: string, uid: strin
   }
   try {
     const event = await getDocFromServer(reference);
-    const [pending, members, cards] = await Promise.all([
-      getDocsFromServer(query(collection(reference, 'joinRequests'), where('status', '==', 'pending'))),
+    const [members, cards] = await Promise.all([
       getDocsFromServer(query(collection(reference, 'members'), where('active', '==', true))),
       getDocsFromServer(query(collection(reference, 'cards'), where('status', '==', 'approved'))),
     ]);
-    return { role: 'organizer', event: event.data() as Event, pending: pending.docs.map(item => item.id),
+    return { role: 'organizer', event: event.data() as Event,
       members: members.docs.map(item => item.id), cards: cards.docs.map(item => item.data() as SharedCard) };
   } catch (error) {
     if (!(error instanceof Error) || !('code' in error) || error.code !== 'permission-denied') throw error;
