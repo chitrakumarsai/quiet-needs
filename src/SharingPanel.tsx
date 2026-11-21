@@ -8,6 +8,7 @@ import {
 } from './sharing.ts';
 import type { Event, EventAccess, SharedCard } from './sharing.ts';
 import { OrganizerPlanner, ParticipantPlan } from './PlanningPanel.tsx';
+import { OperationStatus } from './OperationStatus.tsx';
 
 type Props = {
   approved: ApprovedCard | null;
@@ -75,10 +76,10 @@ export default function SharingPanel(props: Props) {
     heading.current?.focus();
   }
 
-  async function authenticate(action: () => Promise<unknown>) {
+  async function authenticate(action: () => Promise<unknown>, pending: string) {
     setBusy(true);
-    setStatus('');
-    try { await action(); }
+    setStatus(pending);
+    try { await action(); setStatus(''); }
     catch { setStatus('Sign-in could not be completed. Try again.'); }
     finally { setBusy(false); }
   }
@@ -86,16 +87,17 @@ export default function SharingPanel(props: Props) {
   return <section className="panel approval" aria-labelledby="sharing-title">
     <h2 id="sharing-title" tabIndex={-1} ref={heading}>Event sharing</h2>
     <div role="status">{!online && <p>Connect to use event sharing. You can still prepare and download a card.</p>}</div>
-    {online && uid === undefined && <p role="status">{sharingConfigured() ? 'Checking sign-in…' : 'Event sharing needs Firebase configuration.'}</p>}
+    {online && uid === undefined && <OperationStatus busy={sharingConfigured()}
+      message={sharingConfigured() ? 'Checking sign-in…' : 'Event sharing needs Firebase configuration.'}/>}
     {online && uid === null && <>
       <p>{eventId ? 'Sign in to open this event.' : 'Sign in to create or join an event.'}</p>
-      <button disabled={busy} onClick={() => void authenticate(signIn)}>{sharingEmulator ? 'Start demo session' : 'Sign in with Google'}</button>
+      <button className="primary" disabled={busy} onClick={() => void authenticate(signIn, 'Signing in…')}>{sharingEmulator ? 'Start demo session' : 'Sign in with Google'}</button>
     </>}
     {uid && <>
-      <div className="actions"><button disabled={busy} onClick={() => void authenticate(endSession)}>Sign out</button></div>
+      <div className="actions"><button disabled={busy} onClick={() => void authenticate(endSession, 'Signing out…')}>Sign out</button></div>
       {online && <Workspace key={uid + ':' + eventId} {...props} uid={uid} eventId={eventId} openEvent={openEvent}/>}
     </>}
-    {status && <p role="status">{status}</p>}
+    <OperationStatus busy={busy} message={status}/>
   </section>;
 }
 
@@ -253,7 +255,11 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
         <form aria-labelledby="join-event-title" onSubmit={event => {
           event.preventDefault();
           const code = eventInput.trim();
-          if (!eventIdPattern.test(code)) { setCodeError('Enter the 20-character event code from your organizer.'); return; }
+          if (!eventIdPattern.test(code)) {
+            setCodeError('Enter the 20-character event code from your organizer.');
+            (event.currentTarget.elements.namedItem('event-code') as HTMLInputElement | null)?.focus();
+            return;
+          }
           openEvent(code);
         }}>
           <h3 id="join-event-title">Join an event</h3>
@@ -350,6 +356,6 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
       </>}
     </>}
     {!eventId && loading && <p role="status">Loading your events…</p>}
-    <p role="status">{status}</p>
+    <OperationStatus busy={busy} message={status}/>
   </>;
 }

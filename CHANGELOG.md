@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-11-21 — Workspace design comparison
+
+- Added three live design directions with their own type, color, layout, and SVG treatments. Improved loading, pressed, validation, and completion feedback across the shared workflow.
+
 ## 2026-11-20 — P4 acceptance preparation
 
 - Refined the participation editor, review surface, and create/join forms. Added workspace jump links and moved keyboard focus to the exact card when previewing.

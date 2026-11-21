@@ -2,7 +2,10 @@ import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from 
 import { createRoot } from 'react-dom/client';
 import { makeApprovedCard, makeCardPreview } from './domain.ts';
 import type { ApprovedCard, Draft } from './domain.ts';
+import { CardArtwork, DirectionPicker, directionFromLocation } from './DesignPreview.tsx';
 import './style.css';
+
+if (import.meta.env.DEV) void import('./design-preview.css');
 
 const sharingAvailable = import.meta.env.VITE_SHARING_ENABLED === 'true' ||
   (import.meta.env.DEV && import.meta.env.VITE_SHARING_EMULATORS === 'true');
@@ -11,6 +14,7 @@ const SharingPanel = sharingAvailable ? lazy(() => import('./SharingPanel.tsx'))
 const emptyDraft = (): Draft => ({ requirements: [{ category: 'other', request: '' }], questions: [] });
 
 function App() {
+  const [direction, setDirection] = useState(import.meta.env.DEV ? directionFromLocation : () => 'c' as const);
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [preview, setPreview] = useState<ApprovedCard | null>(null);
   const [consent, setConsent] = useState(false);
@@ -33,14 +37,20 @@ function App() {
   useEffect(() => {
     if (preview) previewHeading.current?.focus();
   }, [preview]);
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    const syncDirection = () => setDirection(directionFromLocation());
+    window.addEventListener('popstate', syncDirection);
+    return () => window.removeEventListener('popstate', syncDirection);
+  }, []);
 
   const clearApproval = useCallback(() => {
     setConsent(false);
     setPreview(null);
+    setStatus('');
     if (copiedSharedCard.current) {
       copiedSharedCard.current = false;
       setDraft(emptyDraft());
-      setStatus('');
     }
   }, []);
 
@@ -55,7 +65,7 @@ function App() {
     try {
       setPreview(makeCardPreview(draft));
       setConsent(false);
-      setStatus('Preview ready. Review the card before approving.');
+      setStatus('');
     } catch {
       setStatus('Check that every request contains valid text.');
     }
@@ -70,26 +80,38 @@ function App() {
     link.href = url;
     link.download = 'quietneeds-approved-card.json';
     link.click();
+    setStatus('Download requested. Check your browser’s downloads.');
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
-  return <main>
+  function selectDirection(next: typeof direction) {
+    const url = new URL(location.href);
+    url.searchParams.set('design', next);
+    history.replaceState(history.state, '', url);
+    setDirection(next);
+  }
+
+  return <main className="workspace" data-design={import.meta.env.DEV ? direction : undefined}>
     <a className="skip-link" href="#request-0" onClick={event => {
       event.preventDefault();
       firstRequest.current?.focus();
     }}>Skip to requests</a>
     <header className="workspace-header">
-      <a className="brand" href="/"><span className="brand-mark" aria-hidden="true">Q</span>QuietNeeds</a>
+      <a className="brand" href="#card-title" translate="no"><span className="brand-mark" aria-hidden="true">Q</span>QuietNeeds</a>
       {SharingPanel && <nav aria-label="Workspace">
         <a href="#card-title">Participation card</a>
         <a href="#sharing-title">Event sharing</a>
       </nav>}
     </header>
+    {import.meta.env.DEV && <DirectionPicker direction={direction} onSelect={selectDirection}/>}
     <section className="intro" aria-labelledby="card-title">
-      <h1 id="card-title" tabIndex={-1}>Your participation card</h1>
-      <p>Describe what would help you take part. Include any conditions, places, times, or costs the organizer needs to know.</p>
+      <div className="intro-copy">
+        <h1 id="card-title" tabIndex={-1}>Your participation card</h1>
+        <p>Describe what would help you take part. Include any conditions, places, times, or costs the organizer needs to know.</p>
+        <p className="draft-note">Your draft stays in this tab until you close or reload it.</p>
+      </div>
+      {import.meta.env.DEV && direction === 'b' && <CardArtwork direction="b"/>}
     </section>
-    <p className="draft-note">Your draft stays in this tab until you close or reload it.</p>
     <div className="grid card-workspace">
       <section className="panel request-panel">
         <h2>Write your requests</h2>
@@ -127,19 +149,28 @@ function App() {
           <ol>{preview.requirements.map((requirement, index) => <li key={index}><p>{requirement.request}</p></li>)}</ol>
           <details><summary>Exact JSON file</summary><pre>{JSON.stringify(preview, null, 2)}</pre></details>
           <label className="check">
-            <input type="checkbox" checked={consent} onChange={event => setConsent(event.target.checked)}/>
+            <input type="checkbox" checked={consent} onChange={event => {
+              const approved = event.target.checked;
+              setConsent(approved);
+              setStatus(approved ? 'Card approved for download.' : 'Card approval removed.');
+            }}/>
             I approve this exact card for download.
           </label>
           <button className="primary" disabled={!consent} onClick={exportCard}>Download approved card</button>
         </section> : <div className="card-paper card-paper-empty">
           <p>{canPreview ? 'Your requests are ready to preview.' : 'Write a request to preview your card.'}</p>
           <button className="primary" disabled={!canPreview} onClick={showPreview}>Preview card</button>
+          {import.meta.env.DEV && direction !== 'b' && !canPreview && <CardArtwork direction={direction}/>}
         </div>}
       </section>
     </div>
-    {SharingPanel && <Suspense fallback={<p role="status">Loading event sharing…</p>}>
+    {SharingPanel && <Suspense fallback={<section className="panel approval sharing-loading" aria-labelledby="sharing-title">
+      <h2 id="sharing-title" tabIndex={-1}>Event sharing</h2>
+      <p role="status">Loading event sharing…</p>
+      <div className="loading-skeleton" aria-hidden="true"><span/><span/></div>
+    </section>}>
       <SharingPanel approved={consent ? preview : null} onContextChange={clearApproval}
-        onShareAcknowledged={() => { setConsent(false); setPreview(null); }}
+        onShareAcknowledged={() => { setConsent(false); setPreview(null); setStatus(''); }}
         onLoadCard={card => {
           copiedSharedCard.current = true;
           changeDraft({ requirements: card.requirements.map(({ category, request }) => ({ category, request })), questions: [] });

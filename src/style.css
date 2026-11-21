@@ -352,3 +352,59 @@ button.destructive:not(:disabled):hover {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* A small set of shared transitions keeps the underlying workflows identical. */
+.workspace {
+  --motion-time: 160ms;
+  --motion-ease: cubic-bezier(.2, .75, .3, 1);
+}
+
+.workspace .intro .draft-note { margin: 12px 0 20px; }
+.workspace button {
+  touch-action: manipulation;
+  transition: transform var(--motion-time) var(--motion-ease), background-color 120ms ease, border-color 120ms ease;
+}
+.workspace button:not(:disabled):active { transform: translateY(1px); }
+.workspace .card-paper[aria-labelledby] { animation: workspace-reveal var(--motion-time) var(--motion-ease) both; }
+.workspace .check:has(:checked) { color: var(--primary); }
+.workspace dialog { overscroll-behavior: contain; }
+.workspace dialog[open] { animation: workspace-reveal var(--motion-time) var(--motion-ease) both; }
+.workspace dialog[open]::backdrop { animation: workspace-fade var(--motion-time) ease both; }
+
+.operation-status:not(:empty) {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  color: var(--muted);
+}
+.operation-status:empty { margin: 0; }
+
+.progress-ring {
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: 50%;
+  animation: workspace-spin 800ms linear infinite;
+}
+.sharing-loading { min-block-size: 168px; }
+.loading-skeleton {
+  display: grid;
+  gap: 8px;
+  max-width: 220px;
+}
+.loading-skeleton span {
+  height: 10px;
+  border-radius: 3px;
+  background: var(--accent);
+  animation: workspace-fade 900ms ease-in-out 4 alternate;
+}
+.loading-skeleton span:last-child { width: 64%; }
+
+@keyframes workspace-reveal {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes workspace-fade { from { opacity: .45; } to { opacity: 1; } }
+@keyframes workspace-spin { to { transform: rotate(1turn); } }
