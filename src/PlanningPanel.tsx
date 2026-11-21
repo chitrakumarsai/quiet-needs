@@ -6,6 +6,7 @@ import { confirmPlan, loadPlanFeedback, loadPlanningSnapshot, publishPlan, readC
 import type { ConfirmationStatus } from './planRepository.ts';
 import { getSharing } from './sharing.ts';
 import type { Event, SharedCard } from './sharing.ts';
+import { OperationStatus } from './OperationStatus.tsx';
 
 const defaults = (event: Event): Choice[] => event.agenda.map(slot => ({ slotId: slot.id, option: 'original' }));
 const nextId = (prefix: string, items: { id: string }[]) => {
@@ -50,10 +51,10 @@ export function OrganizerPlanner({ event, eventId, uid, cards, refresh }:
   const unknowns = suggestion?.input.requirements.filter(item => suggestion.proposal.unknowns.includes(item.ref)) ?? [];
   const needsFollowUp = cards.length > 0 || conflicts.length > 0 || unknowns.length > 0 || unverifiedFacts.length > 0;
 
-  async function perform(action: () => Promise<void>, message: string) {
+  async function perform(action: () => Promise<void>, message: string, pending = 'Working…') {
     if (!navigator.onLine) return;
     setBusy(true);
-    setStatus('Working…');
+    setStatus(pending);
     try { await action(); setStatus(message); }
     catch (error) { setStatus(failure(error)); }
     finally { setBusy(false); }
@@ -124,7 +125,7 @@ export function OrganizerPlanner({ event, eventId, uid, cards, refresh }:
         await updateAgenda(db, eventId, event, agenda, facts);
         setEditing(false);
         refresh();
-      }, 'Agenda saved.')}>Save agenda and venue facts</button>
+      }, 'Agenda saved.', 'Saving agenda and venue facts…')}>Save agenda and venue facts</button>
     </fieldset>
     {!editing && event.agenda.length > 0 && <>
       <h4>Choose activities to publish</h4>
@@ -160,7 +161,7 @@ export function OrganizerPlanner({ event, eventId, uid, cards, refresh }:
           setChoices(result.proposal.proposedAgenda);
           setConfirm(false);
           setSnapshot(null);
-        }, 'Cloud proposal ready for organizer review.')}>Generate cloud proposal</button>
+        }, 'Cloud proposal ready for organizer review.', 'Generating the cloud proposal…')}>Generate cloud proposal</button>
       </section>}
       {suggestion && <section className="panel">
         <h4>Cloud proposal reasoning</h4>
@@ -204,7 +205,7 @@ export function OrganizerPlanner({ event, eventId, uid, cards, refresh }:
           await publishPlan(db, eventId, event, choices);
           setConfirm(false);
           refresh();
-        }, 'Agenda published.')}>Publish agenda</button>
+        }, 'Agenda published.', 'Publishing the agenda…')}>Publish agenda</button>
       </>}
     </>}
     {event.currentPlanId && <>
@@ -217,7 +218,7 @@ export function OrganizerPlanner({ event, eventId, uid, cards, refresh }:
         Participant <code>{row.uid}</code> · {responseLabel[row.status]}
       </li>)}</ul> : <p>No responses for this revision.</p>)}
     </>}
-    <p role="status">{status}</p>
+    <OperationStatus busy={busy} message={status}/>
   </section>;
 }
 
@@ -242,7 +243,7 @@ export function ParticipantPlan({ event, eventId, uid, card }:
   async function submit(value: ConfirmationStatus) {
     if (!current || !card || busy || !navigator.onLine) return;
     setBusy(true);
-    setStatus('');
+    setStatus('Recording your response…');
     try {
       await confirmPlan(db, eventId, uid, current, card, value);
       setPlan({ ...current, confirmation: value });
@@ -267,6 +268,6 @@ export function ParticipantPlan({ event, eventId, uid, card }:
       </>}
     </> : !status && <p>{event.currentPlanId ? 'Loading the published agenda…' : event.planRevision
       ? 'An earlier agenda is out of date. The organizer can publish a new one.' : 'The organizer has not published an agenda.'}</p>}
-    <p role="status">{status}</p>
+    <OperationStatus busy={busy} message={status}/>
   </section>;
 }

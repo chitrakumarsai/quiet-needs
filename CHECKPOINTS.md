@@ -427,3 +427,15 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - The loopback production storage audit found zero matches in web storage, one IndexedDB record, and six cached response bodies. Reload with the server stopped repopulated the shell with an empty editor.
 - Restored the normal hosted preview with the verified Enterprise provider and cloud planning enabled. Removed the disposable hosted publication fixture and confirmed it has no remaining child collections.
 - Exact return: verify participant feedback against the hosted agenda revision, then complete the remaining P4 checklist in TEST_PLAN.md.
+
+## CP-061 — Refine the participant and event workspaces
+
+- QN-019/P4, owner implementation. Compared a staged editor with a compact paired editor and review. Chose the paired workspace to keep exact review visible on wide screens and preserve the established task sequence on mobile. Apply UI UX Pro Max and Taste Skill to the live controls, spacing, and type.
+- Chrome verified 390/768/1440 layout without horizontal overflow, preview focus, keyboard approval, consent invalidation, dialog cancel focus restoration, and invalid join-code feedback. Twenty-two tests and the production privacy build passed. The three pasted prompts were unavailable as text during the first pass.
+- Exact return: review the refreshed workspace at desktop and mobile widths, then resume hosted participant feedback and remaining P4 acceptance in TEST_PLAN.md.
+
+## CP-062 — Compare three live design directions
+
+- QN-019/P4, owner implementation. Use the same participant and organizer UI for independent minimalist, experimental, and hybrid previews. Prioritize the edit-to-approval path, focus, loading feedback, event entry, and meaningful card art.
+- Chrome verified nine viewport and theme combinations, keyboard approval across themes, mobile invalid-code focus, and the two-role emulator flow through publication and feedback. Key contrast checks, 22 tests, and the privacy build passed. The comparison controls are present only in development.
+- Exact return: present the three previews for selection, then apply the chosen direction and resume P4 acceptance.

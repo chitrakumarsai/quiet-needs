@@ -34,6 +34,8 @@ These are candidate tokens, not verified contrast results. Validate normal text,
 - Keep complex organizer controls out of participant screens.
 - Avoid a large landing-page hero in the working interface; devote space to the task.
 
+The workspace refresh uses a compact wordmark and jump links, a serif task title, and a paper-like review surface beside the white request editor. An evergreen accent signals actions and focus, and a thin rule groups the event workspace. Creating and joining sit side by side on wide screens and stack in task order on narrow screens. The actual request editor and approved card provide the visual focus.
+
 ## Screen contracts
 
 | Screen | Primary action | Necessary UX states |
@@ -113,3 +115,30 @@ This brief is part of execution-plan v1.1. Use P1-T08/P1-T09 for the participant
 ## Recovering an omitted request
 
 Once local AI is ready, the private explanation supports keyboard and pointer selection and an Add from selection action. Guidance asks participants to include any conditions in the selection. The action keeps the existing card in place and updates status through the existing live region. Before approving, participants check that the card includes each intended request and preserves who it applies to, amounts, timing, and conditions.
+
+## P4 design comparison
+
+All three previews use the same editor, exact card approval, and Firebase emulator workflows. The comparison control and direction-specific treatments are for development review. Select a direction before applying its treatment to the hosted app.
+
+| Direction | Palette and typography | Layout, graphics, and motion | Strength and tradeoff |
+| --- | --- | --- | --- |
+| A · Refined minimalism | White, ink, and oxblood. System sans with tightly set headings and 8/16/24/40 px spacing. | A split editorial sheet, separated by a fine rule. A restrained line illustration in the review empty state. Short focus, press, and reveal feedback. | The fastest to scan. The quiet palette puts more weight on spacing and typography. |
+| B · Experimental premium | Midnight indigo with acid-lime actions and lavender type accents. Compact system sans with a large geometric title and 12/20/28/40 px spacing. | Wide dark stage with an original SVG showing a request moving through review to the participation card. Layered dark review surface with crisp outlines. A slightly longer one-time preview reveal. | The strongest visual identity. Dark surfaces and brighter accents draw more visual attention. |
+| C · Balanced hybrid | Linen, moss, and evergreen. Georgia headlines, system sans controls, and 8/16/24/32 px spacing. | Paired editor and paper preview with an original illustration of two sheets meeting. Warm depth with short, directional feedback. | Keeps the workflow approachable while giving it a recognizable identity. Its softer surfaces are visually quieter than B. |
+
+### Launch review priorities
+
+| Priority | Finding | Change |
+| --- | --- | --- |
+| 1 | The path from entry to approval is easy to overlook on narrow screens. | Make the next action prominent and use the same reading order at every width. |
+| 2 | Opening a preview removes its trigger and requires careful focus handling. | Preserve heading focus and make the exact card and next available action visually clear. |
+| 3 | A plain loading line provides little context and can shift the sharing section as it mounts. | Reserve a panel at the anchor and use a labeled loading skeleton. |
+| 4 | Event creation, joining, and sign-in compete for equal visual weight. | Give separate forms a consistent hierarchy and use action-specific pending feedback. |
+| 5 | The review empty state is a generic box. | Use an original graphic that describes the card handoff in each direction. |
+| 6 | The title, controls, and panels rely on similar positioning in every screen. | Give each direction a distinct typographic and layout system. |
+| 7 | Hover and pressed controls feel similar. | Add brief press feedback without changing layout or covering focus. |
+| 8 | The clear dialog appears abruptly. | Add a short entrance and preserve native dismissal and focus restoration. |
+| 9 | Clicking Open event with an invalid code can leave focus on the submit button. | Move focus to the invalid field and keep the inline error associated with it. |
+| 10 | Review and download completion rely on changes in button availability alone. | Announce download initiation and retain a distinct checked control state. |
+
+The application has no chart or drag workflow. The previews use the real forms, lists, dialogs, and statuses for interaction testing.

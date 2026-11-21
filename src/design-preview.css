@@ -1,0 +1,119 @@
+/* These three treatments load only in the development comparison. */
+:root:has(.workspace[data-design="a"]) { background: #fdfdfa; }
+:root:has(.workspace[data-design="b"]) { color-scheme: dark; background: #111325; }
+
+.workspace[data-design] { color: var(--text); }
+.direction-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-inline-size: 0;
+  margin: 16px 0 0;
+  padding: 4px 0 0;
+  border: 0;
+}
+.direction-picker legend { padding: 0; font-size: .84rem; color: var(--muted); font-weight: 650; }
+
+.card-art {
+  display: block;
+  width: min(100%, 220px);
+  height: auto;
+  margin: 12px 0 0;
+  color: var(--primary);
+}
+
+/* A · Typography, editorial rules, and a single ink accent. */
+.workspace[data-design="a"] {
+  --canvas: #fdfdfa;
+  --text: #232320;
+  --muted: #535049;
+  --primary: #872f3b;
+  --primary-hover: #69232d;
+  --surface: #fdfdfa;
+  --paper: #fff;
+  --accent: #f3efea;
+  --border: #cbc4bc;
+  --control-border: #746d64;
+  --radius: 4px;
+  --motion-time: 120ms;
+  max-width: 1040px;
+}
+
+[data-design="a"] .brand-mark { color: var(--primary); background: transparent; border: 1px solid currentColor; border-radius: 50%; }
+[data-design="a"] h1 { font: 660 clamp(2rem, 5vw, 3.65rem)/1.04 ui-sans-serif, system-ui, sans-serif; }
+[data-design="a"] .intro { padding-top: clamp(24px, 4vw, 44px); }
+[data-design="a"] .card-workspace { padding: 24px 0; border-block: 1px solid var(--border); }
+[data-design="a"] .card-workspace > .panel { border: 0; border-radius: 0; background: transparent; box-shadow: none; padding: 0; }
+[data-design="a"] .card-workspace > .review-panel { padding-inline-start: 20px; border-inline-start: 1px solid var(--border); }
+[data-design="a"] .card-paper { padding-inline: 0; border-width: 1px 0 0; border-radius: 0; background: transparent; }
+[data-design="a"] .card-art { width: min(100%, 158px); }
+
+/* B · A dark stage with the workflow drawn as stacked, offset sheets. */
+.workspace[data-design="b"] {
+  --canvas: #111325;
+  --surface: #1c2038;
+  --paper: #151932;
+  --text: #f4f3ff;
+  --muted: #c1c2df;
+  --primary: #d1f889;
+  --primary-hover: #e2ffad;
+  --accent: #252b4e;
+  --border: #424a71;
+  --control-border: #858cba;
+  --warning: #393029;
+  --danger: #ff9b9d;
+  --radius: 12px;
+  --motion-time: 220ms;
+}
+
+[data-design="b"] .brand-mark,
+[data-design="b"] button.primary,
+[data-design="b"] button[aria-pressed="true"],
+[data-design="b"] button.destructive { color: #151932; }
+[data-design="b"] .brand-mark { font-family: ui-sans-serif, system-ui, sans-serif; font-weight: 800; }
+[data-design="b"] .workspace-header nav a:hover { color: var(--primary); }
+[data-design="b"] .intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, .6fr);
+  gap: clamp(12px, 4vw, 48px);
+  align-items: center;
+  padding: clamp(20px, 4vw, 40px) clamp(16px, 3vw, 32px);
+  margin: 20px 0;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: radial-gradient(ellipse at 82% 42%, #2a2f59, #171b33 58%);
+}
+[data-design="b"] .intro h1 { font: 780 clamp(2rem, 6vw, 4.25rem)/1.01 ui-sans-serif, system-ui, sans-serif; }
+[data-design="b"] .intro .draft-note { margin-bottom: 0; }
+[data-design="b"] .intro .card-art { width: 100%; margin: 0; }
+[data-design="b"] .card-workspace { grid-template-columns: minmax(0, 1.22fr) minmax(0, .78fr); }
+[data-design="b"] .review-panel { box-shadow: 0 16px 30px #08091855; }
+[data-design="b"] button:disabled { color: #c1c2df; background: #292f4a; border-color: #50597d; }
+
+/* C · Warm editorial type and a paper card beside the drafting space. */
+.workspace[data-design="c"] { --canvas: #f6f5ef; }
+[data-design="c"] .card-art { margin-inline: auto; }
+[data-design="c"] .card-paper-empty { background: #fffefa; }
+[data-design="c"] .review-panel { box-shadow: inset 0 1px 0 #fff9; }
+
+@media (max-width: 730px) {
+  [data-design="a"] .card-workspace > .review-panel { border-inline-start: 0; padding-inline-start: 0; }
+  [data-design="a"] .card-workspace > .request-panel { border-block-end: 1px solid var(--border); padding-block-end: 20px; }
+  [data-design="b"] .intro, [data-design="b"] .card-workspace { grid-template-columns: minmax(0, 1fr); }
+  [data-design="b"] .intro .card-art { width: min(100%, 200px); justify-self: start; }
+}
+
+@media (max-width: 480px) {
+  .direction-picker {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+  }
+  .direction-picker button {
+    min-height: 52px;
+    padding-inline: 5px;
+    font-size: .8rem;
+    text-wrap: balance;
+  }
+}
