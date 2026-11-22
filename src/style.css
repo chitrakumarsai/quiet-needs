@@ -236,7 +236,10 @@ button:disabled {
   outline-offset: 3px;
 }
 
-.review-panel { background: var(--accent); }
+.review-panel {
+  background: var(--accent);
+  box-shadow: inset 0 1px 0 #fff9;
+}
 .review-status { margin: 0; color: var(--muted); font-size: .9rem; }
 .review-status:not(:empty) { margin: 12px 0; }
 
@@ -255,6 +258,14 @@ button:disabled {
 }
 
 .card-paper-empty p { margin: 0 0 12px; color: var(--muted); }
+.card-paper-empty { background: var(--surface); }
+.card-art {
+  display: block;
+  width: min(100%, 220px);
+  height: auto;
+  margin: 12px auto 0;
+  color: var(--primary);
+}
 .export-preview li { margin-block: 8px; overflow-wrap: anywhere; }
 .export-preview li p { margin: 0; white-space: pre-wrap; }
 

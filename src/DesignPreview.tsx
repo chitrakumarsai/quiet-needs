@@ -42,6 +42,10 @@ export function CardArtwork({ direction }: { direction: Direction }) {
     </g>
   </svg>;
 
+  return <BalancedCardArtwork/>;
+}
+
+export function BalancedCardArtwork() {
   return <svg className="card-art" viewBox="0 0 244 106" aria-hidden="true" focusable="false">
     <path d="M24 58c20-45 61-48 102-27s57 17 94-4c16 35-9 66-56 67S58 107 24 58Z" fill="var(--accent)"/>
     <g stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round">

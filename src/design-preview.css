@@ -15,14 +15,6 @@
 }
 .direction-picker legend { padding: 0; font-size: .84rem; color: var(--muted); font-weight: 650; }
 
-.card-art {
-  display: block;
-  width: min(100%, 220px);
-  height: auto;
-  margin: 12px 0 0;
-  color: var(--primary);
-}
-
 /* A · Typography, editorial rules, and a single ink accent. */
 .workspace[data-design="a"] {
   --canvas: #fdfdfa;
@@ -47,7 +39,7 @@
 [data-design="a"] .card-workspace > .panel { border: 0; border-radius: 0; background: transparent; box-shadow: none; padding: 0; }
 [data-design="a"] .card-workspace > .review-panel { padding-inline-start: 20px; border-inline-start: 1px solid var(--border); }
 [data-design="a"] .card-paper { padding-inline: 0; border-width: 1px 0 0; border-radius: 0; background: transparent; }
-[data-design="a"] .card-art { width: min(100%, 158px); }
+[data-design="a"] .card-art { width: min(100%, 158px); margin-inline-start: 0; }
 
 /* B · A dark stage with the workflow drawn as stacked, offset sheets. */
 .workspace[data-design="b"] {
@@ -89,13 +81,8 @@
 [data-design="b"] .intro .card-art { width: 100%; margin: 0; }
 [data-design="b"] .card-workspace { grid-template-columns: minmax(0, 1.22fr) minmax(0, .78fr); }
 [data-design="b"] .review-panel { box-shadow: 0 16px 30px #08091855; }
+[data-design="b"] .card-paper-empty { background: var(--paper); }
 [data-design="b"] button:disabled { color: #c1c2df; background: #292f4a; border-color: #50597d; }
-
-/* C · Warm editorial type and a paper card beside the drafting space. */
-.workspace[data-design="c"] { --canvas: #f6f5ef; }
-[data-design="c"] .card-art { margin-inline: auto; }
-[data-design="c"] .card-paper-empty { background: #fffefa; }
-[data-design="c"] .review-panel { box-shadow: inset 0 1px 0 #fff9; }
 
 @media (max-width: 730px) {
   [data-design="a"] .card-workspace > .review-panel { border-inline-start: 0; padding-inline-start: 0; }

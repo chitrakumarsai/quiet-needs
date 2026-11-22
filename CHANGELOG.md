@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-11-22 — Balanced Hybrid release design
+
+- Adopted the selected Balanced Hybrid workspace for production, including the original card illustration and the paper-like review surface.
+
 ## 2026-11-21 — Workspace design comparison
 
 - Added three live design directions with their own type, color, layout, and SVG treatments. Improved loading, pressed, validation, and completion feedback across the shared workflow.

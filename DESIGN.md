@@ -118,7 +118,7 @@ Once local AI is ready, the private explanation supports keyboard and pointer se
 
 ## P4 design comparison
 
-All three previews use the same editor, exact card approval, and Firebase emulator workflows. The comparison control and direction-specific treatments are for development review. Select a direction before applying its treatment to the hosted app.
+All three previews use the same editor, exact card approval, and Firebase emulator workflows. The user selected C, Balanced Hybrid, for the release. The comparison controls and alternate visual treatments remain available in development.
 
 | Direction | Palette and typography | Layout, graphics, and motion | Strength and tradeoff |
 | --- | --- | --- | --- |

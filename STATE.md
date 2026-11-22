@@ -1,6 +1,6 @@
 # Current state
 
-Updated: November 21, 2026 IST
+Updated: November 22, 2026 IST
 
 - Completed phase: **P1 — Private vertical slice**, in the approved manual-entry scope.
 - Completed phase: **P2 — Approved sharing**, verified in the local Firebase demo.
@@ -26,7 +26,7 @@ Continue the combined P4 acceptance checklist in TEST_PLAN.md. Next verify the h
 
 ## P4 evidence
 
-- Workspace design comparison: A, B, and C run the same app from the development server. Chrome verified all three widths, exact review, approval status, mobile validation focus, and the two-role emulator flow through published agenda feedback. The final hosted visual direction is pending selection.
+- Workspace design comparison: A, B, and C run the same app from the development server. Chrome verified all three widths, exact review, approval status, mobile validation focus, and the two-role emulator flow through published agenda feedback. The user selected C, Balanced Hybrid, for the release.
 - Passed QN-006: Safari reloaded the cached production app with the preview server stopped. The draft was empty on reload. An event link opened the same shell, and a fresh approved download matched the expected synthetic JSON.
 - Passed: 22 automated tests, Firestore rules and connectivity checks, and the production build and privacy scan.
 - Passed QN-019 first pass: Safari confirmed focus in new and remaining request fields, new venue and activity fields, invalid time-zone recovery, and agenda retry after an invalid time range. Event views now ignore optimistic snapshots when tracking authoritative membership and revision changes.

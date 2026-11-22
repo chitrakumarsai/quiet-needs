@@ -2,7 +2,7 @@ import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from 
 import { createRoot } from 'react-dom/client';
 import { makeApprovedCard, makeCardPreview } from './domain.ts';
 import type { ApprovedCard, Draft } from './domain.ts';
-import { CardArtwork, DirectionPicker, directionFromLocation } from './DesignPreview.tsx';
+import { BalancedCardArtwork, CardArtwork, DirectionPicker, directionFromLocation } from './DesignPreview.tsx';
 import './style.css';
 
 if (import.meta.env.DEV) void import('./design-preview.css');
@@ -160,7 +160,9 @@ function App() {
         </section> : <div className="card-paper card-paper-empty">
           <p>{canPreview ? 'Your requests are ready to preview.' : 'Write a request to preview your card.'}</p>
           <button className="primary" disabled={!canPreview} onClick={showPreview}>Preview card</button>
-          {import.meta.env.DEV && direction !== 'b' && !canPreview && <CardArtwork direction={direction}/>}
+          {!canPreview && (import.meta.env.DEV
+            ? direction !== 'b' && <CardArtwork direction={direction}/>
+            : <BalancedCardArtwork/>)}
         </div>}
       </section>
     </div>

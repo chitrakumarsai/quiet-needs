@@ -439,3 +439,4 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - QN-019/P4, owner implementation. Use the same participant and organizer UI for independent minimalist, experimental, and hybrid previews. Prioritize the edit-to-approval path, focus, loading feedback, event entry, and meaningful card art.
 - Chrome verified nine viewport and theme combinations, keyboard approval across themes, mobile invalid-code focus, and the two-role emulator flow through publication and feedback. Key contrast checks, 22 tests, and the privacy build passed. The comparison controls are present only in development.
 - Exact return: present the three previews for selection, then apply the chosen direction and resume P4 acceptance.
+- November 22: the user selected C. Promoted its card illustration and review surface to the production build and kept the comparison controls in development. Return to the hosted feedback round trip after verifying the preview.
