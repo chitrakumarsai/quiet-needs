@@ -8,6 +8,7 @@ import {
 } from './sharing.ts';
 import type { Event, EventAccess, SharedCard } from './sharing.ts';
 import { OrganizerPlanner, ParticipantPlan } from './PlanningPanel.tsx';
+import { OperationStatus } from './OperationStatus.tsx';
 
 type Props = {
   approved: ApprovedCard | null;
@@ -75,10 +76,10 @@ export default function SharingPanel(props: Props) {
     heading.current?.focus();
   }
 
-  async function authenticate(action: () => Promise<unknown>) {
+  async function authenticate(action: () => Promise<unknown>, pending: string) {
     setBusy(true);
-    setStatus('');
-    try { await action(); }
+    setStatus(pending);
+    try { await action(); setStatus(''); }
     catch { setStatus('Sign-in could not be completed. Try again.'); }
     finally { setBusy(false); }
   }
@@ -86,16 +87,17 @@ export default function SharingPanel(props: Props) {
   return <section className="panel approval" aria-labelledby="sharing-title">
     <h2 id="sharing-title" tabIndex={-1} ref={heading}>Event sharing</h2>
     <div role="status">{!online && <p>Connect to use event sharing. You can still prepare and download a card.</p>}</div>
-    {online && uid === undefined && <p role="status">{sharingConfigured() ? 'Checking sign-in…' : 'Event sharing needs Firebase configuration.'}</p>}
+    {online && uid === undefined && <OperationStatus busy={sharingConfigured()}
+      message={sharingConfigured() ? 'Checking sign-in…' : 'Event sharing needs Firebase configuration.'}/>}
     {online && uid === null && <>
       <p>{eventId ? 'Sign in to open this event.' : 'Sign in to create or join an event.'}</p>
-      <button disabled={busy} onClick={() => void authenticate(signIn)}>{sharingEmulator ? 'Start demo session' : 'Sign in with Google'}</button>
+      <button className="primary" disabled={busy} onClick={() => void authenticate(signIn, 'Signing in…')}>{sharingEmulator ? 'Start demo session' : 'Sign in with Google'}</button>
     </>}
     {uid && <>
-      <div className="actions"><button disabled={busy} onClick={() => void authenticate(endSession)}>Sign out</button></div>
+      <div className="actions"><button disabled={busy} onClick={() => void authenticate(endSession, 'Signing out…')}>Sign out</button></div>
       {online && <Workspace key={uid + ':' + eventId} {...props} uid={uid} eventId={eventId} openEvent={openEvent}/>}
     </>}
-    {status && <p role="status">{status}</p>}
+    <OperationStatus busy={busy} message={status}/>
   </section>;
 }
 
@@ -235,35 +237,41 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
       {events.length > 0 && <><h3>Your events</h3><ul>{events.map(event => <li key={event.id}>
         <button onClick={() => openEvent(event.id)}>{event.title}</button>
       </li>)}</ul></>}
-      <h3>Create an event</h3>
-      <p>Hosting an event? Create it to get an invite link and event code.</p>
-      <form onSubmit={event => {
-        event.preventDefault();
-        void perform(async () => { openEvent(await createEvent(db, uid, title, timeZone)); }, 'Event created.');
-      }}>
-        <label htmlFor="event-title">Event title</label>
-        <input id="event-title" name="event-title" autoComplete="off" required maxLength={120}
-          value={title} onChange={event => setTitle(event.target.value)}/>
-        <label htmlFor="event-zone">Time zone</label>
-        <input id="event-zone" name="event-zone" autoComplete="off" autoCapitalize="none" spellCheck={false}
-          required maxLength={80} value={timeZone} onChange={event => setTimeZone(event.target.value)}/>
-        <div className="actions"><button disabled={busy}>Create event</button></div>
-      </form>
-      <h3>Join an event</h3>
-      <p id="event-code-help">Open your organizer’s invite link or paste the event code below.</p>
-      <form onSubmit={event => {
-        event.preventDefault();
-        const code = eventInput.trim();
-        if (!eventIdPattern.test(code)) { setCodeError('Enter the 20-character event code from your organizer.'); return; }
-        openEvent(code);
-      }}>
-        <label htmlFor="event-code">Event code from your organizer</label>
-        <input id="event-code" name="event-code" autoComplete="off" autoCapitalize="none" spellCheck={false}
-          aria-invalid={!!codeError} aria-describedby={codeError ? 'event-code-help event-code-error' : 'event-code-help'}
-          value={eventInput} onChange={event => { setEventInput(event.target.value); setCodeError(''); }}/>
-        {codeError && <p id="event-code-error" role="alert">{codeError}</p>}
-        <button type="submit">Open event</button>
-      </form>
+      <div className="grid event-options">
+        <form aria-labelledby="create-event-title" onSubmit={event => {
+          event.preventDefault();
+          void perform(async () => { openEvent(await createEvent(db, uid, title, timeZone)); }, 'Event created.');
+        }}>
+          <h3 id="create-event-title">Create an event</h3>
+          <p className="hint">Create an event to get an invite link and code to share.</p>
+          <label htmlFor="event-title">Event title</label>
+          <input id="event-title" name="event-title" autoComplete="off" required maxLength={120}
+            value={title} onChange={event => setTitle(event.target.value)}/>
+          <label htmlFor="event-zone">Time zone</label>
+          <input id="event-zone" name="event-zone" autoComplete="off" autoCapitalize="none" spellCheck={false}
+            required maxLength={80} value={timeZone} onChange={event => setTimeZone(event.target.value)}/>
+          <button className="primary" disabled={busy}>Create event</button>
+        </form>
+        <form aria-labelledby="join-event-title" onSubmit={event => {
+          event.preventDefault();
+          const code = eventInput.trim();
+          if (!eventIdPattern.test(code)) {
+            setCodeError('Enter the 20-character event code from your organizer.');
+            (event.currentTarget.elements.namedItem('event-code') as HTMLInputElement | null)?.focus();
+            return;
+          }
+          openEvent(code);
+        }}>
+          <h3 id="join-event-title">Join an event</h3>
+          <p className="hint" id="event-code-help">Open your organizer’s invite link or paste their event code here.</p>
+          <label htmlFor="event-code">Event code from your organizer</label>
+          <input id="event-code" name="event-code" autoComplete="off" autoCapitalize="none" spellCheck={false}
+            aria-invalid={!!codeError} aria-describedby={codeError ? 'event-code-help event-code-error' : 'event-code-help'}
+            value={eventInput} onChange={event => { setEventInput(event.target.value); setCodeError(''); }}/>
+          {codeError && <p id="event-code-error" role="alert">{codeError}</p>}
+          <button type="submit">Open event</button>
+        </form>
+      </div>
     </>}
     {eventId && <>
       <div className="actions">
@@ -348,6 +356,6 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
       </>}
     </>}
     {!eventId && loading && <p role="status">Loading your events…</p>}
-    <p role="status">{status}</p>
+    <OperationStatus busy={busy} message={status}/>
   </>;
 }
