@@ -24,7 +24,18 @@ The user reported that all seven hosted sharing steps passed on the preview upda
 - Passed after switching the organizer provider to Enterprise. A temporary hosted check exercised the app's generation function with a fixed synthetic fixture and debug mode off. The Enterprise exchange and AI call returned HTTP 200, the AI request carried an App Check header, and the SDK returned `IN_CLOUD`. The outgoing body contained only current agenda options, venue facts, revision metadata, time zone, schema version, and three approved requests. Requirement fields were category, reference, and request text. No withdrawn-text or participant-identity marker appeared.
 - Passed on an isolated loopback origin with the production build and a signed-out Chrome tab. A fictional marker remained absent from local/session storage, one IndexedDB record, and six cached responses after preview and approval. With the server stopped, regular reload reopened the controlled app shell with a blank draft.
 - Passed hosted cleanup. Verified the dedicated rehearsal event `lzIUhDcuMKF2Sqz1glHs` in `quietneeds-web` had only one published plan and no participant records. Recursively removed that exact event. Readback returned HTTP 404 for the event and no child collections.
-- Pending. Hosted participant feedback with a second Google identity, the signed-in organizer cloud workflow including manual recovery after an error, signed-in hosted storage, OS-reported offline behavior, and the full screen-reader walkthrough.
+- At that run, hosted participant feedback, signed-in cloud recovery and storage, OS-level offline behavior, and the full screen-reader walkthrough were pending. See the November 23 technical checks for follow-up evidence.
+
+### November 23 technical checks
+
+| Check | Result | Evidence and limits |
+| --- | --- | --- |
+| Cloud-error recovery | Passed in isolation | An instrumented production build used local Auth and Firestore emulators and deliberately rejected the cloud call at the generation boundary. The organizer received the manual recovery message, manually published revision 1, and the admitted participant saw the exact agenda. No live cloud outage was induced. |
+| Signed-in privacy | Passed on the hosted preview | A read-only diagnostic on the preview origin inspected storage while a Google-signed-in session displayed and locally approved an unshared fictional marker. Zero matches across one localStorage entry, one sessionStorage entry, three IndexedDB records, and 30 cached response bodies and request URLs. The diagnostic output contained counts only. The normal preview was restored and the diagnostic URL returned 404. |
+| Offline behavior | Passed in Chrome's tab-isolated offline profile | On a fresh loopback origin with a controlling service worker, the signed-in build reloaded with an empty editor and hid event creation. Drafting and approval worked offline. Downloaded JSON matched the approved fictional card byte for byte. Event creation returned after reconnect. A physical or OS-level network disconnect was not exercised. |
+| Keyboard and screen-reader accessibility | Keyboard verified. Spoken announcements unverified. | Hosted Clear session focused Keep editing, Escape returned focus to Clear session, and invalid invite submission exposed the inline alert and focused the code field. The controlled organizer flow exposed status and publication state in the accessibility tree. VoiceOver was temporarily enabled and restored, but its spoken output and caption surface were unavailable to the automation. |
+
+The hosted two-account organizer cloud and feedback round trip remains open.
 
 ### Demo cleanup procedure
 

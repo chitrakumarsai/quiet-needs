@@ -440,3 +440,8 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - Chrome verified nine viewport and theme combinations, keyboard approval across themes, mobile invalid-code focus, and the two-role emulator flow through publication and feedback. Key contrast checks, 22 tests, and the privacy build passed. The comparison controls are present only in development.
 - Exact return: present the three previews for selection, then apply the chosen direction and resume P4 acceptance.
 - November 22: the user selected C. Promoted its card illustration and review surface to the production build and kept the comparison controls in development. Return to the hosted feedback round trip after verifying the preview.
+
+## CP-063 — Run the independent P4 technical checks
+
+- QN-006, QN-019, QN-020, QN-021/P4, owner implementation. Verified controlled cloud fallback to manual publication, signed-in hosted browser storage, offline export in Chrome, and hosted keyboard focus recovery. All marker and event content was fictional.
+- Exact return: verify the two-role hosted cloud and feedback journey, then collect OS-level offline and spoken screen-reader evidence. TEST_PLAN.md separates demonstrated outcomes from remaining checks.

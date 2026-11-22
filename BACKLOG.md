@@ -23,8 +23,8 @@
 | QN-016 | Dependency audit | P1-T02 | Resolved | Rsbuild 1.7.6 removes the affected dependency chain. npm audit reports zero findings and both GitHub participant checks passed on 9f68d2b | P1-T07 |
 | QN-017 | Approved sharing | P2 | Hosted trial passed | User reported sign-in and sharing passed with two hosted accounts. Continue with hosted organizer publication and feedback | P4 acceptance |
 | QN-018 | Organizer adaptation | P3 | Verified | Synthetic cloud output and local planning passed. Hosted integration and real participant feedback remain pending | P4 reliability and UX |
-| QN-019 | Accessibility and recovery | P4 | Focused pass verified | Populated layouts, a 200% zoom check, and keyboard card review passed. Run the full screen-reader walkthrough | P4 reliability and UX |
-| QN-020 | Browser privacy regression | P4 | Synthetic trace and storage verified | Repeat the storage audit in a hosted signed-in session before using real records | P4 retention and user trials |
+| QN-019 | Accessibility and recovery | P4 | Focused pass verified | Hosted keyboard focus and controlled cloud fallback passed. Verify spoken screen-reader announcements | P4 reliability and UX |
+| QN-020 | Browser privacy regression | P4 | Hosted synthetic storage verified | Signed-in hosted review returned zero private marker matches. Keep scope limited to the tested browser, build, and fictional data | P4 retention and user trials |
 | QN-021 | Organizer publication review | P4 | Hosted publication verified | Verify the hosted two-role feedback round trip. Local revision isolation and hosted synthetic cloud generation passed | P4 acceptance |
 | QN-022 | Event enrollment usability | P4 | Hosted trial passed | User reported live requests, admission, and same-tab reload passed on the updated preview | P4 acceptance |
 
