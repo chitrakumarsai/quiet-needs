@@ -224,3 +224,20 @@ Chrome opened the production build and verified entering two requests, blocking 
 - Rules tests verified isolated events, anonymous and cross-user denial, pending members, unauthorized membership writes, card owner spoofing, extra card and requirement fields, blank and oversized requests, isolated revision changes, operation replay, concurrent revision contention, valid eight-request replacement, withdrawal, and atomic revocation. The test suite executed real transactions against the Firestore emulator.
 - Passed: 19 automated domain/evaluation tests, the emulator rules suite, production TypeScript/build and privacy checks, and npm audit with zero findings.
 - Pending: live Google sign-in and rules deployment to an isolated hosted project. The emulator browser run used synthetic local sign-in.
+
+## Routed landing and workspace — November 23, 2026
+
+Lighthouse 12.8.2 measured mobile lab performance on a local production build. The event pages were audited signed out. Public indexing is limited to the landing page.
+
+| Route | Performance | Accessibility | Best Practices | SEO | LCP | CLS |
+|---|---:|---:|---:|---:|---:|---:|
+| `/` | 100 | 100 | 100 | 100 | 1.05 s | 0 |
+| `/card` | 99 | 100 | 100 | — | 1.96 s | 0.003 |
+| `/events` | 99 | 100 | 100 | — | 1.98 s | 0.003 |
+| `/events/new` | 99 | 100 | 100 | — | 1.98 s | 0.003 |
+| `/join` | 99 | 100 | 100 | — | 1.98 s | 0.003 |
+
+- Passed: rendered desktop, 768 px tablet, and 412 px mobile spot checks. Two local Chrome demo accounts verified event creation, code and QR display, invalid-code focus, paste, live admission, card preview and approval invalidation, sharing, organizer publication, and participant feedback.
+- Passed: direct loads in the production preview and Firebase Hosting emulator, private-route indexing headers, legacy invitation redirect, service-worker navigation fallback, 22 unit tests, two Firestore rules tests, and the production privacy scan. Dependency audit found zero vulnerabilities.
+- Fixed during verification: disabled Rsbuild's catch-all static fallback so deep links serve the workspace. Deferred the event database bundle until sign-in to bring the event entry screens' LCP below 2.5 seconds.
+- Open: hosted sign-in and responsive screen-reader checks for the redesign, authenticated Lighthouse audits, and real-user INP measurement.

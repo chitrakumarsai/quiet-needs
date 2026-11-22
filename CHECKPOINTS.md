@@ -445,3 +445,9 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 
 - QN-006, QN-019, QN-020, QN-021/P4, owner implementation. Verified controlled cloud fallback to manual publication, signed-in hosted browser storage, offline export in Chrome, and hosted keyboard focus recovery. All marker and event content was fictional.
 - Exact return: verify the two-role hosted cloud and feedback journey, then collect OS-level offline and spoken screen-reader evidence. TEST_PLAN.md separates demonstrated outcomes from remaining checks.
+
+## CP-064 — Public landing and routed workspace
+
+- QN-019 and QN-022/P4, owner implementation. Keep the existing identity, membership, event, card, and planner contracts. Introduce a pre-rendered public page and explicit app routes. Verify new deep links, legacy invitations, offline routing, and privacy.
+- Local acceptance: 22 tests, two Firestore rules tests, production privacy scan, and five Lighthouse routes passed. Chrome confirmed consent invalidation, invitation code and QR, live admission, sharing, manual publication, and participant feedback with demo accounts.
+- Exact return: review the routed preview and resume the hosted feedback and remaining P4 checks. Event date, location, description, joined-event indexing, and pre-admission details require a separate data decision.

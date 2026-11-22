@@ -142,3 +142,9 @@ All three previews use the same editor, exact card approval, and Firebase emulat
 | 10 | Review and download completion rely on changes in button availability alone. | Announce download initiation and retain a distinct checked control state. |
 
 The application has no chart or drag workflow. The previews use the real forms, lists, dialogs, and statuses for interaction testing.
+
+## Routed workspace
+
+Use evergreen `#20594b`, linen `#f6f5ef`, paper `#fffefa`, and terracotta `#9a4938`. Georgia display headings pair with system sans. The type scale is 56–80 px display, 40–56 px h1, 28–36 px h2, 20 px h3, 16 px body, and 14 px supporting copy. Use an 8 px spacing grid, 12 px surfaces, 8 px inputs, and 160 ms transitions. A dark palette retains the same hierarchy.
+
+The public page introduces the card, the approval handoff, and the privacy boundary. The app keeps one tab-local card state across Card, Events, Create event, and Join. The event detail uses existing admission, sharing, planning, and feedback controls. Event metadata and membership discovery follow the existing Firebase schema and rules.

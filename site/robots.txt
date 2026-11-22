@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://quietneeds-web.web.app/sitemap.xml

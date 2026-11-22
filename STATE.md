@@ -6,7 +6,7 @@ Updated: November 23, 2026 IST
 - Completed phase: **P2 — Approved sharing**, verified in the local Firebase demo.
 - Completed phase: **P3 — Organizer adaptation**, verified with a genuine synthetic cloud proposal and local publication and confirmation.
 - Active implementation phase: **P4 — Reliability and UX**. The offline shell, focused accessibility and recovery, and synthetic cross-role trace are verified.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-063.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-064.
 - P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, automated tests and npm audit pass. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. P4 offline reload covers manual entry in the production app.
@@ -26,6 +26,7 @@ Continue the combined P4 acceptance checklist in TEST_PLAN.md. Next verify the h
 
 ## P4 evidence
 
+- Routed workspace redesign: pre-rendered public landing, private card and event routes, and shared account controls. Chrome emulator rehearsal passed through invitation, live admission, approved sharing, manual publication, and revision feedback. Local production Lighthouse passed on all five routes. See TEST_PLAN.md for scores and checks still open.
 - Workspace design comparison: A, B, and C run the same app from the development server. Chrome verified all three widths, exact review, approval status, mobile validation focus, and the two-role emulator flow through published agenda feedback. The user selected C, Balanced Hybrid, for the release.
 - Passed QN-006: Safari reloaded the cached production app with the preview server stopped. The draft was empty on reload. An event link opened the same shell, and a fresh approved download matched the expected synthetic JSON.
 - Passed: 22 automated tests, Firestore rules and connectivity checks, and the production build and privacy scan.

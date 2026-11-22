@@ -1,0 +1,33 @@
+import React, { useEffect, useState } from 'react';
+import { Copy } from 'lucide-react';
+
+export function EventInvite({ code, inviteLink, copy }: {
+  code: string;
+  inviteLink: string;
+  copy: (value: string, label: string) => Promise<void>;
+}) {
+  const [qr, setQr] = useState('');
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    let active = true;
+    void import('qrcode').then(module => module.toDataURL(inviteLink, { width: 192, margin: 2 }))
+      .then(image => { if (active) setQr(image); }).catch(() => { if (active) setFailed(true); });
+    return () => { active = false; };
+  }, [inviteLink]);
+  return <section className="invite-panel" aria-labelledby="invite-heading">
+    <div>
+      <h4 id="invite-heading">Invite participants</h4>
+      <p>Share this link or code. Participants still need your approval to join.</p>
+      <label htmlFor="invite-code">Event code</label>
+      <input id="invite-code" name="invite-code" className="invite-code" value={code} readOnly onFocus={event => event.currentTarget.select()}/>
+      <label htmlFor="invite-link">Invite link</label>
+      <input id="invite-link" name="invite-link" type="url" value={inviteLink} readOnly onFocus={event => event.currentTarget.select()}/>
+      <div className="actions">
+        <button onClick={() => void copy(inviteLink, 'Invite link')}><Copy size={17} aria-hidden="true"/> Copy invite link</button>
+        <button onClick={() => void copy(code, 'Event code')}>Copy code</button>
+      </div>
+    </div>
+    {qr ? <img src={qr} alt="QR code for the event invitation link" width="144" height="144"/> :
+      <p className="qr-loading" role="status">{failed ? 'QR code unavailable. Use the invite link.' : 'Preparing QR code…'}</p>}
+  </section>;
+}

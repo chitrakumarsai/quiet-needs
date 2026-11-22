@@ -1,10 +1,14 @@
-import React, { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import React, { useEffect, useRef, useState } from 'react';
+import { ArrowRight, CalendarDays, Copy } from 'lucide-react';
+import { EventInvite } from './EventInvite.tsx';
+import { JoinForm } from './JoinForm.tsx';
+import { eventPath } from './routes.ts';
+import type { WorkspacePage } from './routes.ts';
 import { doc, onSnapshot } from 'firebase/firestore';
 import type { ApprovedCard } from './domain.ts';
 import {
-  admit, changeSharedCard, createEvent, endSession, eventIdPattern, getSharing,
-  listOwnedEvents, readEventAccess, requestToJoin, revoke, sharingConfigured, sharingEmulator, signIn, watchJoinRequests,
+  admit, changeSharedCard, createEvent, getSharing,
+  listOwnedEvents, readEventAccess, requestToJoin, revoke, watchJoinRequests,
 } from './sharing.ts';
 import type { Event, EventAccess, SharedCard } from './sharing.ts';
 import { OrganizerPlanner, ParticipantPlan } from './PlanningPanel.tsx';
@@ -12,27 +16,17 @@ import { OperationStatus } from './OperationStatus.tsx';
 
 type Props = {
   approved: ApprovedCard | null;
+  uid: string;
+  page: WorkspacePage;
+  eventId: string;
+  navigate: (href: string) => void;
   onContextChange: () => void;
   onShareAcknowledged: () => void;
   onLoadCard: (card: SharedCard) => void;
 };
 
-function subscribeConnection(onChange: () => void) {
-  window.addEventListener('online', onChange);
-  window.addEventListener('offline', onChange);
-  return () => {
-    window.removeEventListener('online', onChange);
-    window.removeEventListener('offline', onChange);
-  };
-}
-
 const accessDenied = (error: unknown) =>
   error instanceof Error && 'code' in error && error.code === 'permission-denied';
-
-function eventFromLocation() {
-  const id = new URLSearchParams(location.search).get('event') ?? '';
-  return eventIdPattern.test(id) ? id : '';
-}
 
 function errorText(error: unknown) {
   if (error instanceof Error && error.message === 'CARD_CHANGED') {
@@ -46,70 +40,21 @@ function errorText(error: unknown) {
   return 'The request could not be confirmed. Check your connection and try again.';
 }
 
-export default function SharingPanel(props: Props) {
-  const online = useSyncExternalStore(subscribeConnection, () => navigator.onLine);
-  const [uid, setUid] = useState<string | null | undefined>(undefined);
-  const [status, setStatus] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [eventId, setEventId] = useState(eventFromLocation);
-  const heading = useRef<HTMLHeadingElement>(null);
-  useEffect(() => sharingConfigured() ? onAuthStateChanged(getSharing().auth, user => {
-    setUid(user?.uid ?? null);
-  }, () => {
-    setUid(null);
-    setStatus('Sign-in could not be loaded.');
-  }) : undefined, []);
-  useEffect(() => { props.onContextChange(); }, [uid, eventId, props.onContextChange]);
-  useEffect(() => {
-    const onBackOrForward = () => setEventId(eventFromLocation());
-    window.addEventListener('popstate', onBackOrForward);
-    return () => window.removeEventListener('popstate', onBackOrForward);
-  }, []);
+const currentZone = () => {
+  const zone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+  return zone === 'Asia/Calcutta' ? 'Asia/Kolkata' : zone;
+};
 
-  function openEvent(id: string) {
-    const url = new URL(location.href);
-    url.hash = '';
-    if (id) url.searchParams.set('event', id);
-    else url.searchParams.delete('event');
-    history.pushState(null, '', url);
-    setEventId(id);
-    heading.current?.focus();
-  }
+const timeZones = ['UTC', ...Intl.supportedValuesOf('timeZone').map(zone => zone === 'Asia/Calcutta' ? 'Asia/Kolkata' : zone)]
+  .filter((zone, index, all) => all.indexOf(zone) === index);
 
-  async function authenticate(action: () => Promise<unknown>, pending: string) {
-    setBusy(true);
-    setStatus(pending);
-    try { await action(); setStatus(''); }
-    catch { setStatus('Sign-in could not be completed. Try again.'); }
-    finally { setBusy(false); }
-  }
-
-  return <section className="panel approval" aria-labelledby="sharing-title">
-    <h2 id="sharing-title" tabIndex={-1} ref={heading}>Event sharing</h2>
-    <div role="status">{!online && <p>Connect to use event sharing. You can still prepare and download a card.</p>}</div>
-    {online && uid === undefined && <OperationStatus busy={sharingConfigured()}
-      message={sharingConfigured() ? 'Checking sign-in…' : 'Event sharing needs Firebase configuration.'}/>}
-    {online && uid === null && <>
-      <p>{eventId ? 'Sign in to open this event.' : 'Sign in to create or join an event.'}</p>
-      <button className="primary" disabled={busy} onClick={() => void authenticate(signIn, 'Signing in…')}>{sharingEmulator ? 'Start demo session' : 'Sign in with Google'}</button>
-    </>}
-    {uid && <>
-      <div className="actions"><button disabled={busy} onClick={() => void authenticate(endSession, 'Signing out…')}>Sign out</button></div>
-      {online && <Workspace key={uid + ':' + eventId} {...props} uid={uid} eventId={eventId} openEvent={openEvent}/>}
-    </>}
-    <OperationStatus busy={busy} message={status}/>
-  </section>;
-}
-
-function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShareAcknowledged, onLoadCard }:
-  Props & { uid: string; eventId: string; openEvent: (id: string) => void }) {
+export default function SharingPanel({ uid, eventId, page, navigate, approved, onContextChange, onShareAcknowledged, onLoadCard }: Props) {
+  const openEvent = (code: string) => navigate(eventPath(code));
   const { db } = getSharing();
   const [access, setAccess] = useState<EventAccess | null>(null);
-  const [events, setEvents] = useState<{ id: string; title: string }[]>([]);
-  const [eventInput, setEventInput] = useState('');
-  const [codeError, setCodeError] = useState('');
+  const [events, setEvents] = useState<Awaited<ReturnType<typeof listOwnedEvents>>>([]);
   const [title, setTitle] = useState('');
-  const [timeZone, setTimeZone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC');
+  const [timeZone, setTimeZone] = useState(currentZone);
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
   const [withdraw, setWithdraw] = useState(false);
@@ -127,14 +72,14 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
     setLoading(true);
     const load = eventId ? readEventAccess(db, eventId, uid).then(value => {
       if (current) setAccess(value);
-    }) : listOwnedEvents(db, uid).then(value => { if (current) setEvents(value); });
+    }) : page === '/events' ? listOwnedEvents(db, uid).then(value => { if (current) setEvents(value); }) : Promise.resolve();
     load.catch(error => {
       if (current) { setAccess(null); setEvents([]); setStatus(errorText(error)); }
     }).finally(() => {
       if (current) setLoading(false);
     });
     return () => { current = false; };
-  }, [db, eventId, uid, reload]);
+  }, [db, eventId, uid, page, reload]);
 
   useEffect(() => {
     if (!eventId || !accessRole || organizer || accessRole === 'revoked') return;
@@ -229,53 +174,44 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
     } catch { setStatus('Select the ' + label.toLowerCase() + ' and copy it manually.'); }
   }
 
-  const inviteLink = new URL('/', location.origin);
-  if (eventId) inviteLink.searchParams.set('event', eventId);
+  const inviteLink = new URL(eventPath(eventId), location.origin).href;
 
   return <>
-    {!eventId && <>
-      {events.length > 0 && <><h3>Your events</h3><ul>{events.map(event => <li key={event.id}>
-        <button onClick={() => openEvent(event.id)}>{event.title}</button>
-      </li>)}</ul></>}
-      <div className="grid event-options">
-        <form aria-labelledby="create-event-title" onSubmit={event => {
-          event.preventDefault();
-          void perform(async () => { openEvent(await createEvent(db, uid, title, timeZone)); }, 'Event created.');
-        }}>
-          <h3 id="create-event-title">Create an event</h3>
-          <p className="hint">Create an event to get an invite link and code to share.</p>
-          <label htmlFor="event-title">Event title</label>
-          <input id="event-title" name="event-title" autoComplete="off" required maxLength={120}
-            value={title} onChange={event => setTitle(event.target.value)}/>
-          <label htmlFor="event-zone">Time zone</label>
-          <input id="event-zone" name="event-zone" autoComplete="off" autoCapitalize="none" spellCheck={false}
-            required maxLength={80} value={timeZone} onChange={event => setTimeZone(event.target.value)}/>
-          <button className="primary" disabled={busy}>Create event</button>
-        </form>
-        <form aria-labelledby="join-event-title" onSubmit={event => {
-          event.preventDefault();
-          const code = eventInput.trim();
-          if (!eventIdPattern.test(code)) {
-            setCodeError('Enter the 20-character event code from your organizer.');
-            (event.currentTarget.elements.namedItem('event-code') as HTMLInputElement | null)?.focus();
-            return;
-          }
-          openEvent(code);
-        }}>
-          <h3 id="join-event-title">Join an event</h3>
-          <p className="hint" id="event-code-help">Open your organizer’s invite link or paste their event code here.</p>
-          <label htmlFor="event-code">Event code from your organizer</label>
-          <input id="event-code" name="event-code" autoComplete="off" autoCapitalize="none" spellCheck={false}
-            aria-invalid={!!codeError} aria-describedby={codeError ? 'event-code-help event-code-error' : 'event-code-help'}
-            value={eventInput} onChange={event => { setEventInput(event.target.value); setCodeError(''); }}/>
-          {codeError && <p id="event-code-error" role="alert">{codeError}</p>}
-          <button type="submit">Open event</button>
-        </form>
-      </div>
+    {!eventId && page === '/events' && <>
+      <div className="actions"><a className="button primary" href="/events/new">Create an event</a>
+        <a className="button secondary" href="/join">Join an event</a></div>
+      {!loading && events.length === 0 && <div className="event-empty">
+        <CalendarDays size={36} strokeWidth={1.5} aria-hidden="true"/><h3>No events you organize yet</h3>
+        <p>Create an event to invite participants, or use an event code to join one.</p>
+      </div>}
+      <div className="grid event-grid">{events.map(event => <article className="panel event-tile" key={event.id}>
+        <span className="role-label">Organizer</span><h3>{event.title}</h3><p>{event.timeZone}</p>
+        <div className="actions"><button onClick={() => void copyInvite(new URL(eventPath(event.id), location.origin).href, 'Invite link')}><Copy size={16} aria-hidden="true"/> Copy invite link</button>
+          <button onClick={() => void copyInvite(event.id, 'Event code')}>Copy code</button>
+          <a className="button secondary" href={eventPath(event.id)}>Open <span className="visually-hidden">{event.title}</span><ArrowRight size={16} aria-hidden="true"/></a></div>
+      </article>)}</div>
     </>}
+    {!eventId && page === '/events/new' && <form className="focused-form" onSubmit={event => {
+      event.preventDefault();
+      void perform(async () => {
+        const zone = timeZone.trim() === 'Asia/Calcutta' ? 'Asia/Kolkata' : timeZone.trim();
+        openEvent(await createEvent(db, uid, title, zone));
+      }, 'Event created.');
+    }}>
+      <p className="hint">Create an event to get an invitation to share.</p>
+      <label htmlFor="event-title">Event title</label>
+      <input id="event-title" name="event-title" autoComplete="off" required maxLength={120} value={title} onChange={event => setTitle(event.target.value)}/>
+      <label htmlFor="event-zone">Time zone</label>
+      <input id="event-zone" name="event-zone" list="event-zones" autoComplete="off" autoCapitalize="none" spellCheck={false}
+        required maxLength={80} value={timeZone} onChange={event => setTimeZone(event.target.value)}/>
+      <datalist id="event-zones">{timeZones.map(zone => <option value={zone} key={zone}/>)}</datalist>
+      <div className="actions form-footer"><a className="button secondary" href="/events">Cancel</a>
+        <button className="primary" disabled={busy}>Create event</button></div>
+    </form>}
+    {!eventId && page === '/join' && <JoinForm open={openEvent}/>}
     {eventId && <>
       <div className="actions">
-        <button disabled={busy} onClick={() => openEvent('')}>Back to events</button>
+        <a className="button secondary" href="/events">Back to events</a>
         <button disabled={busy || loading} onClick={() => {
           setStatus('');
           if (requestError) setWatchRetry(value => value + 1);
@@ -295,13 +231,7 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
       {accessRole === 'pending' && <p>Your approval reference is <code translate="no">{uid}</code>. If your organizer asks for it, share it so they can identify your request.</p>}
       {access?.role === 'organizer' && <>
         <h3>{access.event.title}</h3>
-        <p>Share the invite link or event code with participants. They’ll appear under Join requests after asking to join.</p>
-        <label htmlFor="invite-link">Invite link</label>
-        <input id="invite-link" name="invite-link" type="url" value={inviteLink.href} readOnly onFocus={event => event.currentTarget.select()}/>
-        <button onClick={() => void copyInvite(inviteLink.href, 'Invite link')}>Copy invite link</button>
-        <label htmlFor="invite-code">Event code</label>
-        <input id="invite-code" name="invite-code" value={eventId} readOnly onFocus={event => event.currentTarget.select()}/>
-        <button onClick={() => void copyInvite(eventId, 'Event code')}>Copy event code</button>
+        <EventInvite code={eventId} inviteLink={inviteLink} copy={copyInvite}/>
         <h4>Join requests</h4>
         <p role="status" aria-atomic="true">{requestError ? 'Live join requests stopped. Use Check event access to reconnect.'
           : pending === null ? 'Checking join requests…'
@@ -351,11 +281,11 @@ function Workspace({ uid, eventId, openEvent, approved, onContextChange, onShare
             {access.card?.status === 'approved' ? 'Share replacement with organizer' : 'Share with organizer'}
           </button>
         </section>}
-        {!approved && <p>Preview and approve your card above to share it with the organizer.</p>}
+        {!approved && <p><a href={'/card?event=' + eventId}>Prepare and approve your card</a> before sharing it with the organizer.</p>}
         <ParticipantPlan event={access.event} eventId={eventId} uid={uid} card={access.card}/>
       </>}
     </>}
-    {!eventId && loading && <p role="status">Loading your events…</p>}
+    {!eventId && loading && page === '/events' && <OperationStatus busy message="Loading your events…"/>}
     <OperationStatus busy={busy} message={status}/>
   </>;
 }

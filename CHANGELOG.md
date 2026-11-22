@@ -1,5 +1,11 @@
 # Change log
 
+## 2026-11-23 — Routed QuietNeeds workspace
+
+- Added a pre-rendered landing page with original illustrations, privacy and FAQ sections, search metadata, and a social sharing image.
+- Split card writing, event management, creation, and joining into dedicated routes. Moved account and appearance controls to the header.
+- Added a live card preview, keyboard reordering, copy/download after approval, segmented code entry, and an organizer invitation QR code. Existing events and invitation links remain usable.
+
 ## 2026-11-23 — P4 technical verification
 
 - Verified manual publishing after a controlled cloud rejection, signed-in hosted draft storage, tab-isolated offline export, and hosted keyboard focus recovery.

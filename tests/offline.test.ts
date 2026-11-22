@@ -5,10 +5,11 @@ import { runInNewContext } from 'node:vm';
 
 test('the service worker serves only the installed shell and never stores runtime traffic', async () => {
   const origin = 'https://quietneeds.example';
-  const paths = ['/index.html', '/static/js/index.12345678.js', '/static/css/index.12345678.css'];
+  const paths = ['/index.html', '/app.html', '/static/js/index.12345678.js', '/static/css/index.12345678.css'];
   const installed: Request[] = [];
   const deleted: string[] = [];
   const cached = new Response('cached shell');
+  const workspace = new Response('cached workspace');
   type Handler = (event: Record<string, unknown>) => void;
   const listeners: Record<string, Handler> = {};
   let online = true;
@@ -25,8 +26,10 @@ test('the service worker serves only the installed shell and never stores runtim
       caches: {
         open: async () => ({
           addAll: async (requests: Request[]) => { installed.push(...requests); },
-          match: async (request: string | Request) =>
-            paths.includes(typeof request === 'string' ? request : new URL(request.url).pathname) ? cached : undefined,
+          match: async (request: string | Request) => {
+            const path = typeof request === 'string' ? request : new URL(request.url).pathname;
+            return path === '/app.html' ? workspace : paths.includes(path) ? cached : undefined;
+          },
         }),
         keys: async () => ['quietneeds-shell-old', 'quietneeds-shell-test', 'another-app'],
         delete: async (name: string) => { deleted.push(name); },
@@ -55,10 +58,13 @@ test('the service worker serves only the installed shell and never stores runtim
   assert.equal(await request(origin + '/', 'navigate'), network);
   online = false;
   assert.equal(await request(origin + '/?event=fictional', 'navigate'), cached);
-  assert.equal(await request(origin + paths[1]), cached);
+  assert.equal(await request(origin + '/card', 'navigate'), workspace);
+  assert.equal(await request(origin + '/events/new', 'navigate'), workspace);
+  assert.equal(await request(origin + '/join?event=fictional', 'navigate'), workspace);
+  assert.equal(await request(origin + paths[2]), cached);
   assert.equal(request(origin + '/event-data'), undefined);
   assert.equal(request(origin + '/evaluation.html', 'navigate'), undefined);
-  assert.equal(request(origin + paths[1] + '?private=canary'), undefined);
+  assert.equal(request(origin + paths[2] + '?private=canary'), undefined);
   assert.equal(request(origin + '/', 'navigate', 'POST'), undefined);
   assert.equal(request('https://firestore.googleapis.com/listen'), undefined);
 });

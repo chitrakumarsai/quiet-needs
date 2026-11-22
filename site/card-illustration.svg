@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 450">
+  <defs>
+    <pattern id="ruled" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0v20" fill="none" stroke="#20594b" stroke-opacity=".11"/></pattern>
+    <linearGradient id="ground" x2="0" y2="1"><stop stop-color="#e6eee1"/><stop offset="1" stop-color="#f1e6d9"/></linearGradient>
+  </defs>
+  <rect width="540" height="450" rx="24" fill="url(#ground)"/>
+  <rect width="540" height="450" rx="24" fill="url(#ruled)"/>
+  <path d="M42 327c101 51 136 50 235-6 69-39 147-29 217 20M66 115c69-54 138-65 197-35" fill="none" stroke="#9a4938" stroke-width="1.5" stroke-dasharray="2 7"/>
+  <g transform="translate(85 110) rotate(-12 108 128)" fill="none" stroke="#20594b" stroke-width="2">
+    <rect x="8" y="8" width="216" height="256" rx="15" fill="#c5d6c5" stroke="none"/>
+    <rect width="216" height="256" rx="15" fill="#fffefa"/>
+    <path d="M26 43h49m-49 23h104m-104 49h144m-144 19h127m-127 51h144m-144 19h99"/>
+    <circle cx="184" cy="39" r="10" fill="#f1e6d9" stroke="#9a4938"/>
+  </g>
+  <g transform="translate(228 74) rotate(10 108 130)" fill="none" stroke="#20594b" stroke-width="2">
+    <rect x="9" y="9" width="216" height="270" rx="15" fill="#c0d3c0" stroke="none"/>
+    <rect width="216" height="270" rx="15" fill="#fffefa"/>
+    <rect x="24" y="24" width="168" height="50" rx="8" fill="#eaf0e7" stroke="none"/>
+    <path d="M41 44h99m-99 13h66m-83 55h155m-155 19h134m-134 40h155m-155 19h108"/>
+    <circle cx="169" cy="228" r="20" fill="#eaf0e7"/>
+    <path d="m160 228 6 6 13-14" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M452 87h25m-12-12v25M67 254h22m-11-11v22M425 350h20m-10-10v20" stroke="#9a4938" stroke-width="2" stroke-linecap="round"/>
+</svg>
