@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-11-23 — P4 technical verification
+
+- Verified manual publishing after a controlled cloud rejection, signed-in hosted draft storage, tab-isolated offline export, and hosted keyboard focus recovery.
+
 ## 2026-11-22 — Balanced Hybrid release design
 
 - Adopted the selected Balanced Hybrid workspace for production, including the original card illustration and the paper-like review surface.

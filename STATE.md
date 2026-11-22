@@ -1,12 +1,12 @@
 # Current state
 
-Updated: November 22, 2026 IST
+Updated: November 23, 2026 IST
 
 - Completed phase: **P1 — Private vertical slice**, in the approved manual-entry scope.
 - Completed phase: **P2 — Approved sharing**, verified in the local Firebase demo.
 - Completed phase: **P3 — Organizer adaptation**, verified with a genuine synthetic cloud proposal and local publication and confirmation.
 - Active implementation phase: **P4 — Reliability and UX**. The offline shell, focused accessibility and recovery, and synthetic cross-role trace are verified.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-062.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-063.
 - P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, automated tests and npm audit pass. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. P4 offline reload covers manual entry in the production app.
@@ -22,7 +22,7 @@ Updated: November 22, 2026 IST
 
 ## Exact next action
 
-Continue the combined P4 acceptance checklist in TEST_PLAN.md. Next verify the hosted feedback round trip with two Google identities, including feedback isolation when a replacement request makes the old agenda stale. The signed-in cloud planning round trip and manual recovery after a cloud error, hosted signed-in storage, and the full screen-reader and OS-level offline checks remain pending. QN-014 remains open for automatic extraction promotion.
+Continue the combined P4 acceptance checklist in TEST_PLAN.md. Next verify the hosted sharing, cloud planning, and feedback round trip with two Google identities, including feedback isolation after a card replacement. The controlled cloud-error recovery and hosted signed-in storage checks passed. A physical network disconnect and spoken screen-reader walkthrough remain unverified. QN-014 remains open for automatic extraction promotion.
 
 ## P4 evidence
 
@@ -38,6 +38,7 @@ Continue the combined P4 acceptance checklist in TEST_PLAN.md. Next verify the h
 - QN-020 storage pass: A signed-out production build on a fresh loopback origin showed no fictional private marker in web storage, IndexedDB records, or Cache Storage response bodies. Chrome reopened the cached shell with a blank editor after the local server stopped.
 - Hosted AI: The original reCAPTCHA v3 exchange returned HTTP 400. With the provider corrected to match the project's Enterprise registration, Chrome received HTTP 200 for App Check and AI generation on the preview origin. Firebase identified the response as `IN_CLOUD`. The probe used three fictional approved requests and excluded withdrawn text and participant identifiers. [Temporary Hosting preview](https://quietneeds-web--p4-trial-plfqr34b.web.app)
 - Passed hosted cleanup: removed the dedicated rehearsal event and its single published plan, then verified Firestore returned 404 and listed no child collections.
+- November 23 technical checks: a controlled cloud rejection in a loopback build left manual publishing available and the participant received revision 1. The exact hosted origin returned zero private-marker matches during signed-in review. Chrome's offline profile verified a blank-draft warm reload, a byte-matched local export, and event controls returning after reconnect. Keyboard focus checks passed. VoiceOver was toggled and restored, but spoken output could not be observed.
 
 ## P3 gate
 
