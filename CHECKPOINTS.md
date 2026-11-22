@@ -451,3 +451,9 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - QN-019 and QN-022/P4, owner implementation. Keep the existing identity, membership, event, card, and planner contracts. Introduce a pre-rendered public page and explicit app routes. Verify new deep links, legacy invitations, offline routing, and privacy.
 - Local acceptance: 22 tests, two Firestore rules tests, production privacy scan, and five Lighthouse routes passed. Chrome confirmed consent invalidation, invitation code and QR, live admission, sharing, manual publication, and participant feedback with demo accounts.
 - Exact return: review the routed preview and resume the hosted feedback and remaining P4 checks. Event date, location, description, joined-event indexing, and pre-admission details require a separate data decision.
+
+## CP-065 — QuietNeeds motion and reduced-motion controls
+
+- QN-019/P4, owner implementation. Define shared timings and reduced-motion behavior first. Apply them to the landing, card editor, and event flows while preserving approval, draft isolation, and keyboard focus.
+- Chrome verified opt-in illustration playback, pause, reduced-motion preference across pages, stable labels and focus after request edits, new event invitations, and copy toast dismissal. The final Lighthouse run cleared the route targets.
+- Exact return: verify both motion modes and rerun local production Lighthouse, then resume the hosted feedback and remaining P4 checks in TEST_PLAN.md.

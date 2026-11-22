@@ -18,4 +18,6 @@ async function scan(directory) {
   }
 }
 await scan('dist');
+const heroAnimation = await readFile('dist/card-illustration-motion.json');
+if (heroAnimation.length >= 100_000) throw new Error('Hero animation must stay below 100 KB.');
 console.log('Production privacy checks passed. Private extraction and evaluation are development-only.');

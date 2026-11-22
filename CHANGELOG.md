@@ -1,5 +1,10 @@
 # Change log
 
+## 2026-11-23 — Workspace motion and reduced motion
+
+- Unified interaction timings and added a saved Reduce motion setting that also respects the system preference.
+- Added opt-in illustrated playback, request layout transitions, card approval and invitation feedback, and route crossfades.
+
 ## 2026-11-23 — Routed QuietNeeds workspace
 
 - Added a pre-rendered landing page with original illustrations, privacy and FAQ sections, search metadata, and a social sharing image.

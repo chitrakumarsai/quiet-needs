@@ -241,3 +241,10 @@ Lighthouse 12.8.2 measured mobile lab performance on a local production build. T
 - Passed: direct loads in the production preview and Firebase Hosting emulator, private-route indexing headers, legacy invitation redirect, service-worker navigation fallback, 22 unit tests, two Firestore rules tests, and the production privacy scan. Dependency audit found zero vulnerabilities.
 - Fixed during verification: disabled Rsbuild's catch-all static fallback so deep links serve the workspace. Deferred the event database bundle until sign-in to bring the event entry screens' LCP below 2.5 seconds.
 - Open: hosted sign-in and responsive screen-reader checks for the redesign, authenticated Lighthouse audits, and real-user INP measurement.
+
+## Workspace motion — November 23, 2026
+
+- Chrome verified Play and Pause on the hero, the saved Reduce motion setting, preview approval and invalidation, request add/reorder/delete focus, invalid-code recovery, route heading focus, event creation, QR display, clipboard confirmation, and toast expiry.
+- Lighthouse mobile on the local production build scored 100/100/100/100 on the landing and 98/100/100 on each workspace route. LCP was 1.21 s on the landing and 2.42 s on the workspace routes. CLS was 0 and 0.003 respectively. The event routes were audited signed out.
+- The initial automatically loaded Lottie runtime caused a long task in Lighthouse. Loading it from Play instead restored the landing performance score to 100. The animation data is 5,843 bytes, with a separate on-demand runtime. The service worker precaches the static poster.
+- Motion-specific verification still open on browsers that use the AnimatePresence route fallback and for real-user INP.

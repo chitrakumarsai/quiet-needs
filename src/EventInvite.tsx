@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Copy } from 'lucide-react';
+import { Check, Copy } from 'lucide-react';
+
+export function InviteCopyButton({ copy, children }: { copy: () => Promise<boolean>; children: string }) {
+  const [copied, setCopied] = useState(false);
+  return <button type="button" className="invite-copy" data-copied={copied} onClick={async () => setCopied(await copy())}>
+    <span className="copy-icon" aria-hidden="true"><Copy size={17}/><Check size={17}/></span>{children}
+  </button>;
+}
 
 export function EventInvite({ code, inviteLink, copy }: {
   code: string;
   inviteLink: string;
-  copy: (value: string, label: string) => Promise<void>;
+  copy: (value: string, label: string) => Promise<boolean>;
 }) {
   const [qr, setQr] = useState('');
   const [failed, setFailed] = useState(false);
@@ -23,11 +30,15 @@ export function EventInvite({ code, inviteLink, copy }: {
       <label htmlFor="invite-link">Invite link</label>
       <input id="invite-link" name="invite-link" type="url" value={inviteLink} readOnly onFocus={event => event.currentTarget.select()}/>
       <div className="actions">
-        <button onClick={() => void copy(inviteLink, 'Invite link')}><Copy size={17} aria-hidden="true"/> Copy invite link</button>
-        <button onClick={() => void copy(code, 'Event code')}>Copy code</button>
+        <InviteCopyButton copy={() => copy(inviteLink, 'Invite link')}>Copy invite link</InviteCopyButton>
+        <InviteCopyButton copy={() => copy(code, 'Event code')}>Copy code</InviteCopyButton>
       </div>
     </div>
-    {qr ? <img src={qr} alt="QR code for the event invitation link" width="144" height="144"/> :
-      <p className="qr-loading" role="status">{failed ? 'QR code unavailable. Use the invite link.' : 'Preparing QR code…'}</p>}
+    <div className="invite-qr">
+      {qr ? <img src={qr} alt="QR code for the event invitation link" width="144" height="144"/> :
+        <div className={failed ? 'qr-loading' : 'qr-loading qr-placeholder'}>
+          <p role="status">{failed ? 'QR code unavailable. Use the invite link.' : 'Preparing QR code…'}</p>
+        </div>}
+    </div>
   </section>;
 }

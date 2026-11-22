@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowRight, CalendarDays, Copy } from 'lucide-react';
-import { EventInvite } from './EventInvite.tsx';
+import { ArrowRight, CalendarDays } from 'lucide-react';
+import { EventInvite, InviteCopyButton } from './EventInvite.tsx';
 import { JoinForm } from './JoinForm.tsx';
 import { eventPath } from './routes.ts';
 import type { WorkspacePage } from './routes.ts';
@@ -22,6 +22,7 @@ type Props = {
   navigate: (href: string) => void;
   onContextChange: () => void;
   onShareAcknowledged: () => void;
+  onNotify: (message: string) => void;
   onLoadCard: (card: SharedCard) => void;
 };
 
@@ -48,7 +49,7 @@ const currentZone = () => {
 const timeZones = ['UTC', ...Intl.supportedValuesOf('timeZone').map(zone => zone === 'Asia/Calcutta' ? 'Asia/Kolkata' : zone)]
   .filter((zone, index, all) => all.indexOf(zone) === index);
 
-export default function SharingPanel({ uid, eventId, page, navigate, approved, onContextChange, onShareAcknowledged, onLoadCard }: Props) {
+export default function SharingPanel({ uid, eventId, page, navigate, approved, onContextChange, onShareAcknowledged, onLoadCard, onNotify }: Props) {
   const openEvent = (code: string) => navigate(eventPath(code));
   const { db } = getSharing();
   const [access, setAccess] = useState<EventAccess | null>(null);
@@ -140,6 +141,7 @@ export default function SharingPanel({ uid, eventId, page, navigate, approved, o
       await action();
       if (eventId) setReload(value => value + 1);
       setStatus(message);
+      onNotify(message);
     } catch (error) {
       setStatus(errorText(error));
       if (accessDenied(error)) {
@@ -171,7 +173,12 @@ export default function SharingPanel({ uid, eventId, page, navigate, approved, o
     try {
       await navigator.clipboard.writeText(value);
       setStatus(label + ' copied.');
-    } catch { setStatus('Select the ' + label.toLowerCase() + ' and copy it manually.'); }
+      onNotify(label + ' copied.');
+      return true;
+    } catch {
+      setStatus('Select the ' + label.toLowerCase() + ' and copy it manually.');
+      return false;
+    }
   }
 
   const inviteLink = new URL(eventPath(eventId), location.origin).href;
@@ -186,8 +193,8 @@ export default function SharingPanel({ uid, eventId, page, navigate, approved, o
       </div>}
       <div className="grid event-grid">{events.map(event => <article className="panel event-tile" key={event.id}>
         <span className="role-label">Organizer</span><h3>{event.title}</h3><p>{event.timeZone}</p>
-        <div className="actions"><button onClick={() => void copyInvite(new URL(eventPath(event.id), location.origin).href, 'Invite link')}><Copy size={16} aria-hidden="true"/> Copy invite link</button>
-          <button onClick={() => void copyInvite(event.id, 'Event code')}>Copy code</button>
+        <div className="actions"><InviteCopyButton copy={() => copyInvite(new URL(eventPath(event.id), location.origin).href, 'Invite link')}>Copy invite link</InviteCopyButton>
+          <InviteCopyButton copy={() => copyInvite(event.id, 'Event code')}>Copy code</InviteCopyButton>
           <a className="button secondary" href={eventPath(event.id)}>Open <span className="visually-hidden">{event.title}</span><ArrowRight size={16} aria-hidden="true"/></a></div>
       </article>)}</div>
     </>}
@@ -226,8 +233,8 @@ export default function SharingPanel({ uid, eventId, page, navigate, approved, o
         {accessRole === 'pending' && <p>Waiting for organizer approval. This page will update automatically.</p>}
         {accessRole === 'participant' && <p>You have access to this event.</p>}
         {accessRole === 'revoked' && <p>Your access to this event has ended.</p>}
-        {!access && loading && <p>Checking event access…</p>}
       </div>
+      {!access && loading && <OperationStatus busy message="Checking event access…"/>}
       {accessRole === 'pending' && <p>Your approval reference is <code translate="no">{uid}</code>. If your organizer asks for it, share it so they can identify your request.</p>}
       {access?.role === 'organizer' && <>
         <h3>{access.event.title}</h3>
@@ -241,7 +248,7 @@ export default function SharingPanel({ uid, eventId, page, navigate, approved, o
             onClick={() => void perform(() => admit(db, eventId, id), 'Participant admitted.')}>Admit participant</button>
         </li>)}</ul>}
         <OrganizerPlanner key={`${access.event.inputRevision}:${access.event.planRevision}`} event={access.event} eventId={eventId} uid={uid} cards={access.cards}
-          refresh={() => setReload(value => value + 1)}/>
+          refresh={() => setReload(value => value + 1)} onNotify={onNotify}/>
         <h4>Participants</h4>
         {access.members.length === 0 ? <p>No active participants.</p> : <ul>{access.members.map(id => <li key={id}>
           <code>{id}</code> {revokeUid === id ? <>
@@ -282,7 +289,7 @@ export default function SharingPanel({ uid, eventId, page, navigate, approved, o
           </button>
         </section>}
         {!approved && <p><a href={'/card?event=' + eventId}>Prepare and approve your card</a> before sharing it with the organizer.</p>}
-        <ParticipantPlan event={access.event} eventId={eventId} uid={uid} card={access.card}/>
+        <ParticipantPlan event={access.event} eventId={eventId} uid={uid} card={access.card} onNotify={onNotify}/>
       </>}
     </>}
     {!eventId && loading && page === '/events' && <OperationStatus busy message="Loading your events…"/>}

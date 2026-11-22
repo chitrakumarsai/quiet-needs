@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import type { User } from 'firebase/auth';
 import { LogIn, LogOut, Settings, UserRound } from 'lucide-react';
+import { ReducedMotionSetting } from './ReducedMotionSetting.tsx';
 
 type IdentityModule = typeof import('./identity.ts');
 type Theme = 'system' | 'light' | 'dark';
@@ -65,6 +66,7 @@ export function AccountControl({ account, theme, onTheme }: {
         <select id="appearance" value={theme} onChange={event => onTheme(event.target.value as Theme)}>
           <option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option>
         </select>
+        <ReducedMotionSetting/>
         {user && <button disabled={busy} onClick={() => void changeSession()}><LogOut size={16} aria-hidden="true"/> Sign out</button>}
       </div>
     </details>

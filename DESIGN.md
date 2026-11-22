@@ -148,3 +148,9 @@ The application has no chart or drag workflow. The previews use the real forms, 
 Use evergreen `#20594b`, linen `#f6f5ef`, paper `#fffefa`, and terracotta `#9a4938`. Georgia display headings pair with system sans. The type scale is 56–80 px display, 40–56 px h1, 28–36 px h2, 20 px h3, 16 px body, and 14 px supporting copy. Use an 8 px spacing grid, 12 px surfaces, 8 px inputs, and 160 ms transitions. A dark palette retains the same hierarchy.
 
 The public page introduces the card, the approval handoff, and the privacy boundary. The app keeps one tab-local card state across Card, Events, Create event, and Join. The event detail uses existing admission, sharing, planning, and feedback controls. Event metadata and membership discovery follow the existing Firebase schema and rules.
+
+## Motion
+
+The shared motion tokens define a 150 ms response, 250 ms component transition, 400 ms hero entrance, and 200 ms route crossfade. Entrances settle quickly. Layout changes use a spring with stiffness 300 and damping 30. Staggered groups use 60 ms gaps for at most six items. The operating-system preference or the account's Reduce motion toggle disables spatial movement and ambient playback while keeping brief opacity feedback.
+
+The landing illustration starts with a static poster. Its Play control loads a 5.8 KB Lottie animation on demand. Playback stops outside the viewport or when the browser tab is hidden.

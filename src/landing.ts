@@ -1,6 +1,23 @@
 import { eventCodePattern, eventPath } from './routes.ts';
+import { applyMotionPreference, reducedMotion } from './motion-settings.ts';
 import './style.css';
 import './site.css';
+
+applyMotionPreference();
+if ('IntersectionObserver' in window) {
+  const steps = document.querySelectorAll('.how-grid li');
+  const reveal = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      if (!reducedMotion()) entry.target.classList.add('step-reveal');
+      reveal.unobserve(entry.target);
+    }
+  }, { threshold: .25 });
+  steps.forEach(step => reveal.observe(step));
+
+  void import(/* webpackChunkName: "hero-controller" */ './hero-animation.ts')
+    .then(module => module.mountHeroAnimation()).catch(() => { /* Keep the illustration static. */ });
+}
 
 const legacyInvite = new URLSearchParams(location.search).get('event');
 if (legacyInvite && eventCodePattern.test(legacyInvite)) {
