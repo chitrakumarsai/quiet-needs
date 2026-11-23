@@ -74,6 +74,7 @@ Target: one organizer and up to 25 participants per demo event; at most 8 requir
 | events/{eventId}/cards/{uid} | schemaVersion, ownerUid, revision, status, requirements, consentVersion, approvedAt, updatedAt, operationId; participant owns content |
 | events/{eventId}/proposals/{proposalId} | inputRevision, agendaRevision, referenceMap, proposal with activity choices and evidence references, modelMetadata, status; organizer-only |
 | events/{eventId}/publishedPlans/{planId} | inputRevision, planRevision, agenda, publishedAt; participants see agenda only |
+| events/{eventId}/publishedPlans/{planId}/requestOutcomes/{uid} | cardRevision, outcomes, responses; ordered to match the approved card. The organizer publishes outcomes and the participant edits responses. Only the organizer and the matching active participant can read the current record. |
 | events/{eventId}/confirmations/{uid} | cardRevision, planId, planRevision, inputRevision, status, comment, updatedAt; participant owns confirmation |
 
 Private raw notes, model clarification questions, and unapproved drafts are never Firestore entities. Do not enable persistent Firestore disk caching for the MVP; shared records can also contain sensitive information. Clear in-memory event state on sign-out or event switch.
@@ -133,6 +134,8 @@ After an unknown write outcome, read the card and compare operationId before ret
 P3 loads event/input revision, approved active cards, and agenda into a bounded snapshot. Re-read inputRevision before generation if assembling multiple reads and before saving/publishing. If it changed, discard or mark the proposal stale. Publish in a transaction that checks source revisions, creates the immutable published document, and updates event.currentPlanId and event.planRevision together. Rules must validate matching event/plan after-state and deny a mismatched inputRevision. Invalidate currentPlanId on any later input change.
 
 Confirmation writes must match event.currentPlanId, event.planRevision, the current shared card revision, and event.inputRevision. An existing old plan with the same inputRevision is insufficient if a newer plan has replaced it. A met/unmet/unknown confirmation never proves legal accessibility compliance or certifies a venue.
+
+Publication writes the agenda and request outcomes together for up to 25 approved cards. Each outcome is a published agenda index, still checking, or unavailable. Outcome records contain no request text, venue notes, or proposal rationale. Participant feedback applies only to linked agenda outcomes and updates its own response index transactionally. The rules validate current plan and approved card revision on read and response. Older plans retain whole-card confirmation. Recursive demo-event cleanup includes outcome records.
 
 ## 8. Cloud location decision
 

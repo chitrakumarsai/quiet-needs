@@ -1,5 +1,15 @@
 # Change log
 
+## 2026-11-23 — Request outcomes and feedback
+
+- Added organizer decisions beside approved requests and private participant outcomes alongside the published agenda. Participants can respond to individual linked activities, and their responses are tied to the card and agenda revision.
+- Added [ideas-v2.md](ideas-v2.md) with the release idea and a short fictional demo. Existing agendas retain whole-card feedback.
+
+## 2026-11-23 — Live Firebase demo
+
+- Released the approved dark and light design through PR #18. Verified the live routes, Google sign-in startup, mobile command state, and exact approved download.
+- The design gate recorded 28 remaining findings and 11 warnings after the touch-target, dialog-state, and heading fixes. The live release is for fictional event data.
+
 ## 2026-11-23 — Live demo release candidate
 
 - Enlarged the landing page’s mobile touch targets, exposed command-dialog state, and corrected the demo and footer heading hierarchy. The event workspace tells demo users to enter fictional details and requests.

@@ -273,3 +273,12 @@ Lighthouse 12.8.2 measured mobile lab performance on a local production build. T
 ### Live demo release candidate
 
 - Chrome 157 verified 44 px minimum touch targets for the flagged landing controls at narrow widths, command dialog expanded state and Escape focus restoration, both color palettes, and offline reload. The axe run reported zero WCAG-tagged violations on the tested states. The 24 unit tests and two Firestore emulator rules tests passed. npm audit reported zero vulnerabilities.
+- The post-fix Taste Skill gate reported 28 failures and 11 warnings. It cleared the original touch-target, menu-state, and heading-scale findings. Remaining findings cover layout, copy, motion, and the gate’s starter conventions. No waivers were applied.
+- PR #18 merged at `c9c35a3` after both participant checks and GitGuardian passed. The release build passed the production privacy scan with App Check debug mode off. The Firebase Hosting deployment served `/`, `/card`, `/events`, `/events/new`, `/join`, and `/sw.js` with HTTP 200 and `Cache-Control: no-cache`. Workspace routes sent `X-Robots-Tag: noindex, nofollow`, and `/evaluation.html` returned 404.
+- Chrome verified live Google sign-in startup, the mobile command dialog, and exact download of a fictional card. An authenticated two-role run on this live origin, Safari organizer live updates, and spoken screen-reader checks remain open.
+
+### Request outcomes
+
+- Chrome passed a fictional two-role flow with a desktop organizer and a 390 px participant viewport. Changing a request decision revoked publish approval. The participant saw the linked activity and the still-checking request, submitted a keyboard response, and lost the old outcomes after replacing the card. The participant layout fit without horizontal overflow.
+- The Firestore emulator checked the 25-card and eight-request boundaries, private read access, concurrent responses to separate requests, legacy whole-card feedback, and rejection of old or malformed writes. All 24 unit tests, three rules tests, and the production privacy build passed locally.
+- Hosted confirmation, Safari, and spoken screen-reader checks remain open.

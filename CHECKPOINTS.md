@@ -480,4 +480,11 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 ## CP-069 — Verify the approved design for live Hosting
 
 - QN-019 and QN-022/P4, owner implementation. Preserve the approved design, verify fixes for mobile touch targets and command-dialog state, and check the release candidate before promoting it to Firebase Hosting. Keep real-participant retention and data-handling requirements open.
+- Chrome verified the release fixes. PR #18 merged after CI and GitGuardian passed. The live Hosting demo passed route and mobile browser smoke checks. The design gate has 28 open findings and 11 warnings.
 - Exact return: the Safari organizer live-update and spoken screen-reader rows of the P4 acceptance checklist.
+
+## CP-070 — Implement request outcomes
+
+- QN-023/P4, owner implementation. Add organizer decisions and participant responses to the current event workspace. Publish per-card outcomes atomically alongside the agenda, enforce authorization in Firestore, and preserve whole-card feedback for previously published agendas.
+- Local Chrome verified desktop organizer and mobile participant flows. Firestore emulator verified request isolation, stale response denial, concurrent responses and publication at the 25-card boundary.
+- Exact return: verify the two-role request outcome flow, then resume the Safari organizer live-update and spoken screen-reader checks.

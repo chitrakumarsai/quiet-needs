@@ -162,6 +162,48 @@ service cloud.firestore {
           && get(eventPath(eventId)).data.planRevision == resource.data.planRevision;
         allow create: if organizer(eventId) && publication();
         allow delete: if organizer(eventId) && get(eventPath(eventId)).data.currentPlanId != planId;
+
+        match /requestOutcomes/{uid} {
+          function currentCard() {
+            let card = get(cardPath(eventId,uid)).data;
+            return get(eventPath(eventId)).data.currentPlanId == planId
+              && card.status == 'approved' && (resource == null || (
+                resource.data.cardRevision == card.revision && resource.data.outcomes.size() == card.requirements.size()));
+          }
+          function publishOutcomes() {
+            let before = get(eventPath(eventId)).data;
+            let after = getAfter(eventPath(eventId)).data;
+            let data = request.resource.data;
+            return before.currentPlanId != planId && after.currentPlanId == planId
+              && after.planRevision == before.planRevision + 1 && after.inputRevision == before.inputRevision
+              && exact(data,['cardRevision','outcomes','responses'])
+              && data.cardRevision is int && data.cardRevision > 0
+              && data.outcomes is list && data.outcomes.size() > 0 && data.outcomes.size() <= 8
+              && data.outcomes.hasOnly(['checking','unavailable',0,1,2])
+              && (before.agenda.size() > 1 || !data.outcomes.hasAny([1,2]))
+              && (before.agenda.size() > 2 || !data.outcomes.hasAny([2]))
+              && data.responses is list && data.responses.size() == data.outcomes.size() && data.responses.hasOnly(['']);
+          }
+          function validResponse(values, outcomes, index) {
+            return values.size() <= index || values[index] == '' || outcomes[index] is int;
+          }
+          function feedback() {
+            let data = request.resource.data;
+            let values = data.responses;
+            let outcomes = resource.data.outcomes;
+            return data.diff(resource.data).affectedKeys().hasOnly(['responses'])
+              && values is list && values.size() == outcomes.size() && values.hasOnly(['','met','unmet'])
+              && validResponse(values,outcomes,0) && validResponse(values,outcomes,1)
+              && validResponse(values,outcomes,2) && validResponse(values,outcomes,3)
+              && validResponse(values,outcomes,4) && validResponse(values,outcomes,5)
+              && validResponse(values,outcomes,6) && validResponse(values,outcomes,7);
+          }
+          allow get: if ((own(uid) && active(eventId,uid)) || organizer(eventId)) && currentCard();
+          allow create: if organizer(eventId) && publishOutcomes();
+          allow update: if own(uid) && active(eventId,uid) && currentCard()
+            && getAfter(eventPath(eventId)).data.currentPlanId == planId && feedback();
+          allow delete: if organizer(eventId) && get(eventPath(eventId)).data.currentPlanId != planId;
+        }
       }
 
       match /confirmations/{uid} {

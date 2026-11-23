@@ -160,3 +160,14 @@ The landing illustration starts with a static poster. Its Play control loads a 5
 The current P4 design uses graphite layers, an emerald accent, and locally hosted Inter Variable. Dark is the default. Light keeps the same hierarchy with softer neutral surfaces and a darker emerald for text and focus. Subtle decorative borders and stronger control outlines serve different roles. The landing page leads with the participation card and uses fictional, interactive examples to show writing, approving, and joining.
 
 The header shows account entry or the signed-in menu. The command menu searches actions and provides keyboard access to request creation, event creation, joining, and appearance. It keeps draft edits and consent inside the existing workspace. Reduced motion turns off blur, parallax, shine, and spotlight effects. The Latin Inter file and its license ship with the app. System fonts provide coverage for other scripts. [Inter on Google Fonts](https://fonts.google.com/specimen/Inter)
+
+## Request outcomes
+
+Keep the existing event workspace. In the organizer view, put requests requiring a decision above the agenda editor. Each row shows the approved request, a plain-language outcome, and the action or agenda item it affects. Show unresolved venue facts at publication. In the participant view, show what changed and what still needs an answer before the published agenda. Present only outcomes for that participant’s shared card, with feedback tied to the published revision.
+
+| Request | Organizer outcome | Participant view |
+| --- | --- | --- |
+| Seated alternative for the photo walk | Planned for the 10:00 activity | Seated photo exercise at 10:00. Actions: Works for me or Still need help. |
+| Step-free entrance | Checking with the venue | Step-free entrance is still unconfirmed. |
+
+The request-outcomes branch implements this workflow. Older published agendas retain whole-card feedback. The live demo is still on the prior release.
