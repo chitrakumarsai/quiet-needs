@@ -1,0 +1,314 @@
+:root {
+  --motion-fast: 110ms;
+  --motion-popover: 150ms;
+  --motion-base: 200ms;
+  --motion-slow: 220ms;
+  --motion-route: 250ms;
+  --motion-stagger: 80ms;
+  --motion-enter: cubic-bezier(.25, .1, .25, 1);
+  --motion-exit: cubic-bezier(.25, .1, .25, 1);
+  --motion-validation: ease-in-out;
+  --motion-stiffness: 300;
+  --motion-damping: 30;
+  --motion-travel: 12px;
+  --motion-scale: .98;
+  --motion-blur: 8px;
+  --motion-backdrop-blur: 4px;
+  --motion-hero-rise: 8px;
+  --motion-section-rise: 16px;
+  --motion-press: .98;
+  --motion-ambient: running;
+  --toast-lifetime: 4000ms;
+}
+
+:root[data-motion="reduce"] {
+  --motion-travel: 0px;
+  --motion-blur: 0px;
+  --motion-backdrop-blur: 0px;
+  --motion-hero-rise: 0px;
+  --motion-section-rise: 0px;
+  --motion-scale: 1;
+  --motion-press: 1;
+  --motion-ambient: paused;
+  scroll-behavior: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-travel: 0px;
+    --motion-blur: 0px;
+    --motion-backdrop-blur: 0px;
+    --motion-hero-rise: 0px;
+    --motion-section-rise: 0px;
+    --motion-scale: 1;
+    --motion-press: 1;
+    --motion-ambient: paused;
+    scroll-behavior: auto;
+  }
+}
+
+button, .button, .icon-button {
+  transition: transform var(--motion-fast) var(--motion-enter), opacity var(--motion-fast) var(--motion-enter),
+    background-color var(--motion-fast) var(--motion-enter), border-color var(--motion-fast) var(--motion-enter);
+}
+@media (hover: hover) {
+  button:not(:disabled):hover, .button:hover { opacity: .95; }
+}
+button:not(:disabled):active, .button:active { transform: scale(var(--motion-press)); }
+.motion-setting { display: flex; align-items: center; gap: 8px; min-height: 44px; margin: 0; }
+.motion-setting input[type="checkbox"] { width: auto; min-height: 0; margin: 0; }
+.workspace .card-paper[aria-labelledby] { animation: motion-reveal var(--motion-base) var(--motion-enter) both; }
+details[open] > .popover, dialog[open] { animation: motion-popover var(--motion-popover) var(--motion-enter) both; }
+dialog[open]::backdrop { animation: motion-fade var(--motion-popover) var(--motion-enter) both; }
+
+@supports (transition-behavior: allow-discrete) {
+  :is(.account-menu, .card-menu)::details-content {
+    opacity: 0;
+    transition: opacity var(--motion-popover) var(--motion-exit), content-visibility var(--motion-popover) allow-discrete;
+  }
+  :is(.account-menu, .card-menu)[open]::details-content { opacity: 1; }
+  dialog {
+    opacity: 0;
+    transform: scale(var(--motion-scale));
+    transition: opacity var(--motion-popover) var(--motion-exit), transform var(--motion-popover) var(--motion-exit),
+      display var(--motion-popover) allow-discrete, overlay var(--motion-popover) allow-discrete;
+  }
+  dialog[open] { opacity: 1; transform: none; }
+  dialog::backdrop {
+    opacity: 0;
+    transition: opacity var(--motion-popover) var(--motion-exit), display var(--motion-popover) allow-discrete,
+      overlay var(--motion-popover) allow-discrete;
+  }
+  dialog[open]::backdrop { opacity: 1; }
+}
+
+.loading-skeleton span, .status-skeleton, .qr-placeholder {
+  position: relative;
+  overflow: hidden;
+}
+.loading-skeleton span::after, .status-skeleton::after, .qr-placeholder::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--paper), transparent);
+  opacity: .7;
+  transform: translateX(-100%);
+  animation: motion-shimmer var(--motion-slow) var(--motion-enter) 5;
+  animation-play-state: var(--motion-ambient);
+}
+.status-skeleton {
+  display: inline-block;
+  flex: 0 0 32px;
+  height: .6em;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+@keyframes motion-reveal {
+  from { opacity: .01; transform: translateY(var(--motion-travel)); }
+}
+@keyframes motion-popover {
+  from { opacity: .01; transform: scale(var(--motion-scale)); }
+}
+@keyframes motion-fade { from { opacity: .01; } }
+@keyframes motion-shimmer { to { transform: translateX(100%); } }
+
+[data-motion] .hero-copy > *, [data-motion] .product-stage {
+  animation: motion-hero var(--motion-base) var(--motion-enter) both;
+}
+.hero-copy > :nth-child(2) { animation-delay: var(--motion-stagger); }
+.hero-copy > :nth-child(3) { animation-delay: calc(2 * var(--motion-stagger)); }
+[data-motion] .product-stage { animation: motion-step var(--motion-base) var(--motion-enter) calc(3 * var(--motion-stagger)) both; }
+.step-reveal { animation: motion-step var(--motion-base) var(--motion-enter) both; }
+
+.hero-art { position: relative; }
+#hero-animation {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--motion-base) var(--motion-enter);
+}
+#hero-animation.art-ready { opacity: 1; }
+#hero-pause { position: absolute; right: 12px; bottom: 12px; }
+
+@keyframes motion-hero {
+  from { opacity: 0; filter: blur(var(--motion-blur)); transform: translateY(var(--motion-hero-rise)); }
+}
+@keyframes motion-step {
+  from { opacity: .45; transform: translateY(var(--motion-section-rise)); }
+}
+
+.request-panel, .route-stack, .preview-line { position: relative; }
+.preview-line > [aria-hidden="true"] { position: absolute; inset: 0; margin: 0; pointer-events: none; }
+.route-content[aria-hidden="true"] { pointer-events: none; }
+.workspace { view-transition-name: quietneeds-workspace; }
+::view-transition-group(quietneeds-workspace) { animation: none; }
+::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+::view-transition-old(quietneeds-workspace), ::view-transition-new(quietneeds-workspace) {
+  animation-duration: var(--motion-route);
+  mix-blend-mode: normal;
+}
+::view-transition-old(quietneeds-workspace) { animation-timing-function: var(--motion-exit); }
+::view-transition-new(quietneeds-workspace) { animation-timing-function: var(--motion-enter); }
+
+.approval-mark { display: inline-grid; place-items: center; position: relative; flex: 0 0 24px; }
+.approval-mark svg { z-index: 1; overflow: visible; }
+.approval-glow {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: var(--primary);
+  animation: motion-glow 1.6s var(--motion-enter) both;
+  animation-play-state: var(--motion-ambient);
+}
+.check-start, .check-end { animation: motion-check var(--motion-fast) var(--motion-enter) both; }
+.check-start { transform-origin: 5px 12px; }
+.check-end { transform-origin: 10px 17px; animation-delay: var(--motion-stagger); }
+
+.toast {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  right: min(16px, 4vw);
+  bottom: 16px;
+  z-index: 5;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 6px 10px 6px 14px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--control-border);
+  border-radius: 12px;
+  box-shadow: var(--elevation);
+  overflow: hidden;
+  animation: motion-toast var(--motion-base) var(--motion-enter) both;
+}
+.toast > svg { flex-shrink: 0; color: var(--primary); }
+.toast-progress {
+  position: absolute;
+  inset: auto 0 0;
+  height: 3px;
+  background: var(--primary);
+  transform-origin: left;
+  transition: transform var(--motion-base) linear;
+}
+
+:root[data-motion="reduce"] :is(.check-start, .check-end) { animation: none; }
+:root[data-motion="reduce"] .toast-progress { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .check-start, .check-end { animation: none; }
+  .toast-progress { display: none; }
+}
+
+@keyframes motion-check { from { opacity: 0; transform: scale(0); } }
+@keyframes motion-glow {
+  from { opacity: .22; transform: scale(var(--motion-scale)); }
+  to { opacity: 0; }
+}
+@keyframes motion-toast {
+  from { opacity: 0; transform: translate(var(--motion-travel), var(--motion-travel)); }
+}
+
+.request-sheet { transform-origin: top center; }
+.approval-mark { color: var(--primary); }
+.preview-actions button { display: inline-flex; align-items: center; gap: 8px; }
+.preview-actions .primary { min-inline-size: 176px; justify-content: center; }
+
+.invite-code { animation: motion-ticket var(--motion-slow) var(--motion-enter) both; }
+.invite-qr { width: min(144px, 100%); aspect-ratio: 1; }
+.invite-qr img { display: block; animation: motion-fade var(--motion-base) var(--motion-enter) both; }
+.invite-qr .qr-loading {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  text-align: center;
+  border-radius: 8px;
+  background: var(--paper);
+}
+.invite-qr .qr-loading p { margin: 0; font-size: .8rem; }
+.invite-copy { display: inline-flex; align-items: center; gap: 8px; }
+.copy-icon { display: grid; }
+.copy-icon svg {
+  grid-area: 1 / 1;
+  transition: transform var(--motion-fast) var(--motion-enter), opacity var(--motion-fast) var(--motion-enter);
+}
+.invite-copy[data-copied="false"] .copy-icon svg:last-child,
+.invite-copy[data-copied="true"] .copy-icon svg:first-child { transform: scale(var(--motion-scale)); opacity: 0; }
+.invite-copy[data-copied="true"] .copy-icon svg:last-child { color: var(--primary); }
+.code-entry { position: relative; }
+.code-digit-feedback {
+  position: absolute;
+  pointer-events: none;
+  top: 50%;
+  left: calc(13px + var(--digit-index) * (1ch + .08em));
+  width: calc(1ch + .08em);
+  height: 1.35em;
+  font-family: ui-monospace, monospace;
+  border-radius: 3px;
+  background: var(--primary);
+  opacity: 0;
+  transform: translateY(-50%);
+  animation: motion-digit var(--motion-fast) var(--motion-enter);
+}
+.code-error { min-height: 2.8em; margin: 6px 0 0; }
+
+:root[data-motion="reduce"] { --motion-tilt: 0deg; }
+:root[data-motion="reduce"] .code-digit-feedback { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  :root { --motion-tilt: 0deg; }
+  .code-digit-feedback { animation: none; }
+}
+
+@keyframes motion-ticket {
+  from { opacity: .1; transform: perspective(500px) rotateX(var(--motion-tilt, -28deg)); }
+}
+@keyframes motion-digit {
+  from { opacity: .28; transform: translateY(-50%) scale(1.14); }
+}
+
+.event-grid > :nth-child(-n+6) {
+  animation: motion-reveal var(--motion-base) var(--motion-enter) both;
+}
+.event-grid > :nth-child(2) { animation-delay: var(--motion-stagger); }
+.event-grid > :nth-child(3) { animation-delay: calc(2 * var(--motion-stagger)); }
+.event-grid > :nth-child(4) { animation-delay: calc(3 * var(--motion-stagger)); }
+.event-grid > :nth-child(5) { animation-delay: calc(4 * var(--motion-stagger)); }
+.event-grid > :nth-child(6) { animation-delay: calc(5 * var(--motion-stagger)); }
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="reduce"]) :is([data-spotlight], .workspace .panel) {
+    transition: border-color var(--motion-fast) var(--motion-enter);
+  }
+  :root:not([data-motion="reduce"]) :is([data-spotlight], .workspace .panel):hover { border-color: var(--border-strong); }
+  :root:not([data-motion="reduce"]) :is([data-spotlight], .workspace .panel)::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(220px at var(--spot-x, 50%) var(--spot-y, 50%), var(--accent-muted), transparent);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--motion-fast) var(--motion-enter);
+  }
+  :root:not([data-motion="reduce"]) :is([data-spotlight], .workspace .panel):hover::after { opacity: .65; }
+  :root:not([data-motion="reduce"]) :is(button, .button).primary {
+    background-image: linear-gradient(112deg, transparent 41%, rgb(127 160 146 / .24) 50%, transparent 59%);
+    background-size: 240% 100%;
+    background-position: 100% 0;
+  }
+  :root:not([data-motion="reduce"]) :is(button, .button).primary:hover:not(:disabled) { animation: motion-shine var(--motion-slow) var(--motion-enter); }
+}
+
+@keyframes motion-shine { to { background-position: 0 0; } }
+
+:root[data-motion="reduce"] .product-shot { transform: none; }
+:root[data-motion="reduce"] .example-approved,
+:root[data-motion="reduce"] .approval-glow { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .product-shot { transform: none; }
+  .example-approved, .approval-glow { animation: none; }
+}

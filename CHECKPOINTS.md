@@ -445,3 +445,39 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 
 - QN-006, QN-019, QN-020, QN-021/P4, owner implementation. Verified controlled cloud fallback to manual publication, signed-in hosted browser storage, offline export in Chrome, and hosted keyboard focus recovery. All marker and event content was fictional.
 - Exact return: verify the two-role hosted cloud and feedback journey, then collect OS-level offline and spoken screen-reader evidence. TEST_PLAN.md separates demonstrated outcomes from remaining checks.
+
+## CP-064 — Public landing and routed workspace
+
+- QN-019 and QN-022/P4, owner implementation. Keep the existing identity, membership, event, card, and planner contracts. Introduce a pre-rendered public page and explicit app routes. Verify new deep links, legacy invitations, offline routing, and privacy.
+- Local acceptance: 22 tests, two Firestore rules tests, production privacy scan, and five Lighthouse routes passed. Chrome confirmed consent invalidation, invitation code and QR, live admission, sharing, manual publication, and participant feedback with demo accounts.
+- Exact return: review the routed preview and resume the hosted feedback and remaining P4 checks. Event date, location, description, joined-event indexing, and pre-admission details require a separate data decision.
+
+## CP-065 — QuietNeeds motion and reduced-motion controls
+
+- QN-019/P4, owner implementation. Define shared timings and reduced-motion behavior first. Apply them to the landing, card editor, and event flows while preserving approval, draft isolation, and keyboard focus.
+- Chrome verified opt-in illustration playback, pause, reduced-motion preference across pages, stable labels and focus after request edits, new event invitations, and copy toast dismissal. The final Lighthouse run cleared the route targets.
+- Exact return: verify both motion modes and rerun local production Lighthouse, then resume the hosted feedback and remaining P4 checks in TEST_PLAN.md.
+
+## CP-066 — Resume hosted P4 acceptance
+
+- QN-021/P4, owner implementation. Draft PR #18 has passing CI at `73f08cd`. The `p4-trial` channel still serves the earlier single-page workspace. Refresh that preview with the routed candidate and verify the deployed build before testing with two Google identities.
+- Deployed preview version `f04b0dc3ccce181d`. Production privacy checks, 23 tests, direct HTTPS routes, and one Google sign-in in Chrome Incognito passed. The two-role run is waiting for a second authenticated session.
+- Exact return: the organizer publish and feedback row of the combined P4 run in TEST_PLAN.md, including card replacement and feedback isolation across revisions.
+
+## CP-067 — Hosted feedback after card replacement
+
+- QN-021/P4, owner implementation. Safari organized a fictional workshop and Chrome participated. A cloud proposal passed the SDK source check, revision 1 was published, and the organizer received the participant’s unmet response. Chrome showed that the replacement card made the agenda out of date.
+- Safari reloaded with sign-in retained and showed only the replacement request in the new cloud preview. Revision 2 started with no feedback, accepted a new unsure response, and became stale after withdrawal. Safari needed manual recovery to surface two cross-role updates.
+- Operator cleanup removed the fictional fixture and its descendants. The follow-up read returned 404 and listed no child collections.
+- Exact return: reproduce Safari organizer updates with both windows visible and continue the remaining P4 checks in TEST_PLAN.md.
+
+## CP-068 — Apply the dark and light visual system
+
+- QN-019/P4, owner implementation. Apply the requested visual tokens to the routed workspace and landing. Keep the QuietNeeds identity, production manual-card boundary, and existing Firebase contracts. Verify theme contrast, command keyboard behavior, reduced motion, and responsive layouts before returning to hosted acceptance.
+- Chrome passed the keyboard workflow and offline font load. The rendered landing and workspace fit the tested 320–1440 px widths. Lighthouse mobile scored 100 for performance and accessibility on the landing. See TEST_PLAN.md for independent review limits.
+- Exact return: reproduce Safari organizer updates and complete the existing P4 network and spoken screen-reader checks. The visual redesign has local evidence.
+
+## CP-069 — Verify the approved design for live Hosting
+
+- QN-019 and QN-022/P4, owner implementation. Preserve the approved design, verify fixes for mobile touch targets and command-dialog state, and check the release candidate before promoting it to Firebase Hosting. Keep real-participant retention and data-handling requirements open.
+- Exact return: the Safari organizer live-update and spoken screen-reader rows of the P4 acceptance checklist.

@@ -142,3 +142,21 @@ All three previews use the same editor, exact card approval, and Firebase emulat
 | 10 | Review and download completion rely on changes in button availability alone. | Announce download initiation and retain a distinct checked control state. |
 
 The application has no chart or drag workflow. The previews use the real forms, lists, dialogs, and statuses for interaction testing.
+
+## Routed workspace
+
+The first routed release paired evergreen with linen and paper surfaces. The dark and light visual system below supersedes those visual tokens. The workspace continues to use an 8 px spacing grid, 12 px surfaces, and 8 px inputs.
+
+The public page introduces the card, the approval handoff, and the privacy boundary. The app keeps one tab-local card state across Card, Events, Create event, and Join. The event detail uses existing admission, sharing, planning, and feedback controls. Event metadata and membership discovery follow the existing Firebase schema and rules.
+
+## Motion
+
+The shared motion tokens define a 110 ms response, 200 ms component entrance, 150 ms popover entrance, and 250 ms route crossfade. The hero staggers by 80 ms. Layout changes use a spring with stiffness 300 and damping 30. The operating-system preference or the account's Reduce motion toggle disables spatial movement and ambient playback while keeping brief opacity feedback.
+
+The landing illustration starts with a static poster. Its Play control loads a 5.8 KB Lottie animation on demand. Playback stops outside the viewport or when the browser tab is hidden.
+
+## Dark and light visual system
+
+The current P4 design uses graphite layers, an emerald accent, and locally hosted Inter Variable. Dark is the default. Light keeps the same hierarchy with softer neutral surfaces and a darker emerald for text and focus. Subtle decorative borders and stronger control outlines serve different roles. The landing page leads with the participation card and uses fictional, interactive examples to show writing, approving, and joining.
+
+The header shows account entry or the signed-in menu. The command menu searches actions and provides keyboard access to request creation, event creation, joining, and appearance. It keeps draft edits and consent inside the existing workspace. Reduced motion turns off blur, parallax, shine, and spotlight effects. The Latin Inter file and its license ship with the app. System fonts provide coverage for other scripts. [Inter on Google Fonts](https://fonts.google.com/specimen/Inter)

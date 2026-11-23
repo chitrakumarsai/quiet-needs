@@ -1,5 +1,37 @@
 # Change log
 
+## 2026-11-23 — Live demo release candidate
+
+- Enlarged the landing page’s mobile touch targets, exposed command-dialog state, and corrected the demo and footer heading hierarchy. The event workspace tells demo users to enter fictional details and requests.
+- Passed Chrome touch-target, keyboard, contrast, and offline checks, 24 unit tests, two Firestore rules tests, and the dependency audit.
+
+## 2026-11-23 — Dark and light visual system
+
+- Restyled the landing and workspace with graphite and emerald, a matching light palette, local Inter Variable, and updated motion. Added an interactive card example, feature vignettes, and a keyboard-searchable command menu.
+- Verified contrast tokens, responsive layout, keyboard commands, approval invalidation, and offline font loading. All 24 tests and the production privacy build passed.
+- Ran the standalone design checker with Node 22.14.0 and recorded its findings in TEST_PLAN.md.
+- Reran the full Taste Skill gate on Node 22.14.0 and recorded its verdict and findings in TEST_PLAN.md.
+
+## 2026-11-23 — Hosted organizer and participant acceptance
+
+- Verified cloud generation from an approved fictional card, two hosted agenda revisions, feedback isolation after card replacement, and agenda invalidation after withdrawal. Verified fixture cleanup. Safari organizer updates required refresh or reload during the run.
+
+## 2026-11-23 — Routed P4 Hosting preview
+
+- Refreshed the temporary `p4-trial` preview with the routed workspace and reduced-motion controls. Hosted sharing and organizer cloud planning are enabled for fictional test data.
+- Verified 23 unit tests, the production privacy scan, PR #18 CI, direct hosted routes, and one Google sign-in. Two-account hosted acceptance remains open.
+
+## 2026-11-23 — Workspace motion and reduced motion
+
+- Unified interaction timings and added a saved Reduce motion setting that also respects the system preference.
+- Added opt-in illustrated playback, request layout transitions, card approval and invitation feedback, and route crossfades.
+
+## 2026-11-23 — Routed QuietNeeds workspace
+
+- Added a pre-rendered landing page with original illustrations, privacy and FAQ sections, search metadata, and a social sharing image.
+- Split card writing, event management, creation, and joining into dedicated routes. Moved account and appearance controls to the header.
+- Added a live card preview, keyboard reordering, copy/download after approval, segmented code entry, and an organizer invitation QR code. Existing events and invitation links remain usable.
+
 ## 2026-11-23 — P4 technical verification
 
 - Verified manual publishing after a controlled cloud rejection, signed-in hosted draft storage, tab-isolated offline export, and hosted keyboard focus recovery.

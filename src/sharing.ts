@@ -1,8 +1,3 @@
-import { initializeApp } from 'firebase/app';
-import {
-  browserPopupRedirectResolver, browserSessionPersistence, connectAuthEmulator, GoogleAuthProvider, initializeAuth,
-  signInAnonymously, signInWithPopup, signOut,
-} from 'firebase/auth';
 import {
   collection, connectFirestoreEmulator, doc, getDocFromServer, getDocsFromServer,
   initializeFirestore, memoryLocalCache, onSnapshot, query, runTransaction, serverTimestamp, where,
@@ -11,6 +6,10 @@ import type { DocumentSnapshot, Firestore, Transaction } from 'firebase/firestor
 import { makeApprovedCard } from './domain.ts';
 import type { ApprovedCard, Requirement } from './domain.ts';
 import type { PlanningEvent } from './planning.ts';
+import { getIdentity, sharingEmulator } from './identity.ts';
+import { eventCodePattern as eventIdPattern } from './routes.ts';
+export { emulatorProject, sharingEmulator, sharingConfigured, signIn, endSession } from './identity.ts';
+export { eventIdPattern };
 
 export type Event = PlanningEvent & {
   organizerUid: string;
@@ -32,48 +31,19 @@ export type SharedCard = {
   operationId: string;
 };
 
-export const emulatorProject = 'demo-quietneeds';
-export const sharingEmulator = typeof window !== 'undefined' &&
-  import.meta.env.DEV && import.meta.env.VITE_SHARING_EMULATORS === 'true';
 let services: ReturnType<typeof createServices> | undefined;
 
-export function sharingConfigured(): boolean {
-  return sharingEmulator || (import.meta.env.VITE_SHARING_ENABLED === 'true' &&
-    !!import.meta.env.VITE_FIREBASE_PROJECT_ID && !!import.meta.env.VITE_FIREBASE_API_KEY &&
-    !!import.meta.env.VITE_FIREBASE_AUTH_DOMAIN && !!import.meta.env.VITE_FIREBASE_APP_ID);
-}
-
 function createServices() {
-  const app = initializeApp(sharingEmulator ? { projectId: emulatorProject, apiKey: 'demo-key', authDomain: 'localhost' } : {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  }, 'quietneeds-sharing');
-  const auth = initializeAuth(app, { persistence: browserSessionPersistence });
+  const { app, auth } = getIdentity();
   const db = initializeFirestore(app, { localCache: memoryLocalCache() });
-  if (sharingEmulator) {
-    connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
-    connectFirestoreEmulator(db, '127.0.0.1', 8080);
-  }
+  if (sharingEmulator) connectFirestoreEmulator(db, '127.0.0.1', 8080);
   return { auth, db };
 }
 
 export function getSharing() {
-  if (!sharingConfigured()) throw new Error('SHARING_UNAVAILABLE');
   return services ??= createServices();
 }
 
-export function signIn() {
-  const { auth } = getSharing();
-  return sharingEmulator ? signInAnonymously(auth) : signInWithPopup(auth, new GoogleAuthProvider(), browserPopupRedirectResolver);
-}
-
-export function endSession() {
-  return signOut(getSharing().auth);
-}
-
-export const eventIdPattern = /^[A-Za-z0-9]{20}$/;
 const eventRef = (db: Firestore, eventId: string) => doc(db, 'events', eventId);
 const cardRef = (db: Firestore, eventId: string, uid: string) => doc(eventRef(db, eventId), 'cards', uid);
 const memberRef = (db: Firestore, eventId: string, uid: string) => doc(eventRef(db, eventId), 'members', uid);
@@ -99,7 +69,10 @@ function dataOrNull<T>(snapshot: DocumentSnapshot): T | null {
 
 export async function listOwnedEvents(db: Firestore, uid: string) {
   const snapshot = await getDocsFromServer(query(collection(db, 'events'), where('organizerUid', '==', uid)));
-  return snapshot.docs.map(item => ({ id: item.id, title: (item.data() as Event).title }));
+  return snapshot.docs.map(item => {
+    const { title, timeZone } = item.data() as Event;
+    return { id: item.id, title, timeZone };
+  });
 }
 
 export async function createEvent(db: Firestore, uid: string, rawTitle: string, timeZone: string) {

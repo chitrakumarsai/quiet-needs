@@ -35,7 +35,17 @@ The user reported that all seven hosted sharing steps passed on the preview upda
 | Offline behavior | Passed in Chrome's tab-isolated offline profile | On a fresh loopback origin with a controlling service worker, the signed-in build reloaded with an empty editor and hid event creation. Drafting and approval worked offline. Downloaded JSON matched the approved fictional card byte for byte. Event creation returned after reconnect. A physical or OS-level network disconnect was not exercised. |
 | Keyboard and screen-reader accessibility | Keyboard verified. Spoken announcements unverified. | Hosted Clear session focused Keep editing, Escape returned focus to Clear session, and invalid invite submission exposed the inline alert and focused the code field. The controlled organizer flow exposed status and publication state in the accessibility tree. VoiceOver was temporarily enabled and restored, but its spoken output and caption surface were unavailable to the automation. |
 
-The hosted two-account organizer cloud and feedback round trip remains open.
+The hosted two-account organizer cloud and feedback round trip was pending at this point. See the routed candidate results below.
+
+### November 23 routed Hosting candidate
+
+- Passed: 23 unit tests, production build and privacy scan, and both GitHub participant checks and GitGuardian on draft PR #18 at `73f08cd`.
+- Passed on Firebase Hosting preview version `f04b0dc3ccce181d`: `/`, `/card`, `/events`, `/events/new`, `/join`, and `/sw.js` returned HTTP 200 with `Cache-Control: no-cache`. The preview sent `X-Robots-Tag: noindex`. `/evaluation.html` returned HTTP 404. Chrome Incognito rendered the new landing and reached the signed-in event directory after Google sign-in.
+- Passed with two Google accounts, Safari organizer and Chrome Incognito participant. The organizer confirmed the exact cloud input contained one approved fictional request and the event facts. The hosted planner returned a proposal, which the adapter only accepts when the SDK identifies `IN_CLOUD`. The unverified venue fact and request needing more information appeared beside approval. Reopening the agenda editor cleared approval. The participant received the published agenda without the organizer’s venue note or proposal reasoning.
+- Passed revision isolation. Revision 1 showed the participant’s unmet response. Replacing the card made that agenda stale and removed the response controls. The new cloud preview showed the replacement request and excluded the original. Revision 2 started without feedback and later showed only the new unsure response. Withdrawal made revision 2 stale.
+- Partial live-update pass. Chrome received admission and plan changes in the existing tab. Safari required **Check event access** to show the join request and a reload to show the replacement, with sign-in retained. Repeat with both browser windows visible to test whether the organizer updates arrive automatically.
+- Passed operator cleanup. Confirmed the exact fictional workshop `F9vlAx7C8muCYDF5ovTU` in `quietneeds-web` and its six child collections, recursively deleted that fixture, and verified a 404 read and an empty collection list.
+- Pending on this build: physical network disconnect and spoken screen-reader walkthrough. Prior tab-isolated offline, accessibility tree, and storage results are recorded above.
 
 ### Demo cleanup procedure
 
@@ -224,3 +234,42 @@ Chrome opened the production build and verified entering two requests, blocking 
 - Rules tests verified isolated events, anonymous and cross-user denial, pending members, unauthorized membership writes, card owner spoofing, extra card and requirement fields, blank and oversized requests, isolated revision changes, operation replay, concurrent revision contention, valid eight-request replacement, withdrawal, and atomic revocation. The test suite executed real transactions against the Firestore emulator.
 - Passed: 19 automated domain/evaluation tests, the emulator rules suite, production TypeScript/build and privacy checks, and npm audit with zero findings.
 - Pending: live Google sign-in and rules deployment to an isolated hosted project. The emulator browser run used synthetic local sign-in.
+
+## Routed landing and workspace — November 23, 2026
+
+Lighthouse 12.8.2 measured mobile lab performance on a local production build. The event pages were audited signed out. Public indexing is limited to the landing page.
+
+| Route | Performance | Accessibility | Best Practices | SEO | LCP | CLS |
+|---|---:|---:|---:|---:|---:|---:|
+| `/` | 100 | 100 | 100 | 100 | 1.05 s | 0 |
+| `/card` | 99 | 100 | 100 | — | 1.96 s | 0.003 |
+| `/events` | 99 | 100 | 100 | — | 1.98 s | 0.003 |
+| `/events/new` | 99 | 100 | 100 | — | 1.98 s | 0.003 |
+| `/join` | 99 | 100 | 100 | — | 1.98 s | 0.003 |
+
+- Passed: rendered desktop, 768 px tablet, and 412 px mobile spot checks. Two local Chrome demo accounts verified event creation, code and QR display, invalid-code focus, paste, live admission, card preview and approval invalidation, sharing, organizer publication, and participant feedback.
+- Passed: direct loads in the production preview and Firebase Hosting emulator, private-route indexing headers, legacy invitation redirect, service-worker navigation fallback, 22 unit tests, two Firestore rules tests, and the production privacy scan. Dependency audit found zero vulnerabilities.
+- Fixed during verification: disabled Rsbuild's catch-all static fallback so deep links serve the workspace. Deferred the event database bundle until sign-in to bring the event entry screens' LCP below 2.5 seconds.
+- Open: hosted sign-in and responsive screen-reader checks for the redesign, authenticated Lighthouse audits, and real-user INP measurement.
+
+## Workspace motion — November 23, 2026
+
+- Chrome verified Play and Pause on the hero, the saved Reduce motion setting, preview approval and invalidation, request add/reorder/delete focus, invalid-code recovery, route heading focus, event creation, QR display, clipboard confirmation, and toast expiry.
+- Lighthouse mobile on the local production build scored 100/100/100/100 on the landing and 98/100/100 on each workspace route. LCP was 1.21 s on the landing and 2.42 s on the workspace routes. CLS was 0 and 0.003 respectively. The event routes were audited signed out.
+- The initial automatically loaded Lottie runtime caused a long task in Lighthouse. Loading it from Play instead restored the landing performance score to 100. The animation data is 5,843 bytes, with a separate on-demand runtime. The service worker precaches the static poster.
+- Motion-specific verification still open on browsers that use the AnimatePresence route fallback and for real-user INP.
+
+## Dark and light visual system — November 23, 2026
+
+- Passed 24 automated tests, including text, control outline, and hero gradient contrast, plus the production build and privacy scan.
+- Chrome 157 verified no horizontal overflow at 320, 390, 768, 820, 1024, and 1440 px. Keyboard checks covered command search, arrow navigation, Escape focus restoration, the three workspace actions, saved light appearance, and approval invalidation when a request is added. Axe reported zero WCAG-tagged violations in the tested landing, participant workspace, and command dialog states. This run used fictional card input.
+- Chrome verified spotlight position, product tilt flattening on scroll, and the reduced-motion variant. An isolated offline reload restored the shell and loaded Inter from the cache. The first font implementation failed on offline reload. Matching the preinstalled same-origin asset by pathname fixed it.
+- Mobile Lighthouse on the local landing measured 100 performance and 100 accessibility, LCP 1.7 s, and CLS 0.014. The official 48.4 kB Latin Inter web file replaced the 352.2 kB full font after the first run measured 3.0 s LCP.
+- The Taste Skill gate reported an environment error after its subprocesses selected Node 20. Standalone copy lint reported zero failures and one sentence-rhythm warning. The concise task and privacy copy was retained. Separate rendered Chrome checks and the Web Interface Guidelines review covered the changed screens.
+- The standalone Taste Skill consistency check completed with Node 22.14.0 explicitly selected. The quick run reported 40 failures and 25 warnings. Contrast, focus rings, and overlap checks passed. Its rules also flagged the requested tilt and scroll reveals, as well as small mobile tap targets. Route-link warnings came from checking the static build without the application rewrites.
+- Full Taste Skill gate rerun with Node 22.14.0 against the local production preview completed consistency, layout, and copy checks. Verdict `GATE: FAIL 34 (round 1 of 3)` with 15 warnings. Findings include small mobile tap targets, the command button’s missing expanded state, heading scale, and the gate’s rules for full-screen sections, perspective tilt, and scroll reveals. All five application routes returned HTTP 200. No waivers were applied.
+- Pending for this visual candidate: Safari, hosted signed-in organizer screens, and spoken screen-reader evidence.
+
+### Live demo release candidate
+
+- Chrome 157 verified 44 px minimum touch targets for the flagged landing controls at narrow widths, command dialog expanded state and Escape focus restoration, both color palettes, and offline reload. The axe run reported zero WCAG-tagged violations on the tested states. The 24 unit tests and two Firestore emulator rules tests passed. npm audit reported zero vulnerabilities.

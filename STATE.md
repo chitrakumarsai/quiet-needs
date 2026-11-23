@@ -6,7 +6,7 @@ Updated: November 23, 2026 IST
 - Completed phase: **P2 — Approved sharing**, verified in the local Firebase demo.
 - Completed phase: **P3 — Organizer adaptation**, verified with a genuine synthetic cloud proposal and local publication and confirmation.
 - Active implementation phase: **P4 — Reliability and UX**. The offline shell, focused accessibility and recovery, and synthetic cross-role trace are verified.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-063.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-069.
 - P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, automated tests and npm audit pass. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. P4 offline reload covers manual entry in the production app.
@@ -22,10 +22,16 @@ Updated: November 23, 2026 IST
 
 ## Exact next action
 
-Continue the combined P4 acceptance checklist in TEST_PLAN.md. Next verify the hosted sharing, cloud planning, and feedback round trip with two Google identities, including feedback isolation after a card replacement. The controlled cloud-error recovery and hosted signed-in storage checks passed. A physical network disconnect and spoken screen-reader walkthrough remain unverified. QN-014 remains open for automatic extraction promotion.
+Continue the combined P4 acceptance checklist in TEST_PLAN.md using the [routed preview](https://quietneeds-web--p4-trial-plfqr34b.web.app). The hosted two-account cloud and feedback round trip passed. Check why the Safari organizer needed a refresh after enrollment and replacement, then verify a physical network disconnect and spoken screen-reader announcements. QN-014 remains open for automatic extraction promotion.
 
 ## P4 evidence
 
+- Release candidate fixes the mobile controls flagged by the design gate and exposes the command dialog’s expanded state. Chrome passed the 44 px checks, focus restoration, contrast audit, and offline reload. Local unit and Firestore rules tests passed, and npm reported zero vulnerabilities.
+- The full Taste Skill gate completed on Node 22.14.0 against the local production preview. It reported 34 failures and 15 warnings. See TEST_PLAN.md for scope and findings.
+- Dark and light visual system verified locally. Chrome exercised the interactive landing demo, command navigation, card approval invalidation, appearance persistence, reduced motion, and offline Inter loading. Lighthouse mobile reported 100 performance and 100 accessibility for the landing. The standalone design checker now runs under Node 22.14.0 and flagged small mobile tap targets alongside style findings. The hosted preview still serves the prior routed candidate.
+- Hosted routed candidate: deployed `73f08cd` to `p4-trial` as Hosting version `f04b0dc3ccce181d`. All 23 unit tests, the production build and privacy scan, PR #18 CI, and public and workspace route responses passed. Separate Google sessions in Safari and Chrome verified real cloud generation, both published revisions, revision-isolated feedback, and withdrawal. Safari needed a refresh for the join request and a reload for the replacement.
+- Motion: shared UI timings and a saved Reduce motion setting. Chrome verified illustration controls, request focus, invalid-code feedback, and invite copy confirmation. Landing Lighthouse was 100 in all four categories and workspace routes reported CLS below 0.003.
+- Routed workspace redesign: pre-rendered public landing, private card and event routes, and shared account controls. Chrome emulator rehearsal passed through invitation, live admission, approved sharing, manual publication, and revision feedback. Local production Lighthouse passed on all five routes. See TEST_PLAN.md for scores and checks still open.
 - Workspace design comparison: A, B, and C run the same app from the development server. Chrome verified all three widths, exact review, approval status, mobile validation focus, and the two-role emulator flow through published agenda feedback. The user selected C, Balanced Hybrid, for the release.
 - Passed QN-006: Safari reloaded the cached production app with the preview server stopped. The draft was empty on reload. An event link opened the same shell, and a fresh approved download matched the expected synthetic JSON.
 - Passed: 22 automated tests, Firestore rules and connectivity checks, and the production build and privacy scan.

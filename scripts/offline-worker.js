@@ -21,15 +21,16 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
   if (request.method !== 'GET' || url.origin !== self.location.origin) return;
 
-  if (request.mode === 'navigate' && (url.pathname === '/' || url.pathname === '/index.html')) {
+  const workspace = /^\/(?:app\.html|card|events(?:\/new)?|join)\/?$/.test(url.pathname);
+  if (request.mode === 'navigate' && (workspace || url.pathname === '/' || url.pathname === '/index.html')) {
     event.respondWith((async () => {
       try {
         const response = await fetch(request, { cache: 'no-store' });
         if (response.status < 500) return response;
       } catch { /* Reload from the installed shell when the network is unavailable. */ }
-      return (await (await caches.open(cacheName)).match('/index.html')) ?? Response.error();
+      return (await (await caches.open(cacheName)).match(workspace ? '/app.html' : '/index.html')) ?? Response.error();
     })());
   } else if (!url.search && url.pathname !== '/index.html' && assets.includes(url.pathname)) {
-    event.respondWith((async () => (await (await caches.open(cacheName)).match(request)) ?? fetch(request))());
+    event.respondWith((async () => (await (await caches.open(cacheName)).match(url.pathname)) ?? fetch(request))());
   }
 });

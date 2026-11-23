@@ -23,8 +23,8 @@ const failure = (error: unknown) => {
 
 const responseLabel = { met: 'Meets my needs', unmet: 'Does not meet my needs', unknown: 'I’m unsure' };
 
-export function OrganizerPlanner({ event, eventId, uid, cards, refresh }:
-  { event: Event; eventId: string; uid: string; cards: SharedCard[]; refresh: () => void }) {
+export function OrganizerPlanner({ event, eventId, uid, cards, refresh, onNotify }:
+  { event: Event; eventId: string; uid: string; cards: SharedCard[]; refresh: () => void; onNotify: (message: string) => void }) {
   const { db, auth } = getSharing();
   const [agenda, setAgenda] = useState(event.agenda);
   const [facts, setFacts] = useState(event.venueFacts);
@@ -55,7 +55,7 @@ export function OrganizerPlanner({ event, eventId, uid, cards, refresh }:
     if (!navigator.onLine) return;
     setBusy(true);
     setStatus(pending);
-    try { await action(); setStatus(message); }
+    try { await action(); setStatus(message); onNotify(message); }
     catch (error) { setStatus(failure(error)); }
     finally { setBusy(false); }
   }
@@ -222,8 +222,8 @@ export function OrganizerPlanner({ event, eventId, uid, cards, refresh }:
   </section>;
 }
 
-export function ParticipantPlan({ event, eventId, uid, card }:
-  { event: Event; eventId: string; uid: string; card: SharedCard | null }) {
+export function ParticipantPlan({ event, eventId, uid, card, onNotify }:
+  { event: Event; eventId: string; uid: string; card: SharedCard | null; onNotify: (message: string) => void }) {
   const { db } = getSharing();
   const [plan, setPlan] = useState<Awaited<ReturnType<typeof readCurrentPlan>>>(null);
   const [status, setStatus] = useState('');
@@ -248,6 +248,7 @@ export function ParticipantPlan({ event, eventId, uid, card }:
       await confirmPlan(db, eventId, uid, current, card, value);
       setPlan({ ...current, confirmation: value });
       setStatus('Your confirmation was recorded.');
+      onNotify('Your confirmation was recorded.');
     } catch (error) { setStatus(failure(error)); }
     finally { setBusy(false); }
   }
@@ -266,8 +267,9 @@ export function ParticipantPlan({ event, eventId, uid, card }:
         )}</div>
         {current.confirmation && <p>Your recorded response: {current.confirmation}.</p>}
       </>}
-    </> : !status && <p>{event.currentPlanId ? 'Loading the published agenda…' : event.planRevision
-      ? 'An earlier agenda is out of date. The organizer can publish a new one.' : 'The organizer has not published an agenda.'}</p>}
+    </> : !status && (event.currentPlanId
+      ? <OperationStatus busy message="Loading the published agenda…"/>
+      : <p>{event.planRevision ? 'An earlier agenda is out of date. The organizer can publish a new one.' : 'The organizer has not published an agenda.'}</p>)}
     <OperationStatus busy={busy} message={status}/>
   </section>;
 }

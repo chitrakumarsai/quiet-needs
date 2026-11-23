@@ -2,6 +2,7 @@ import { defineConfig, loadEnv } from '@rsbuild/core';
 
 export default defineConfig(({ command, envMode }) => {
   const development = command === 'dev';
+  const historyApiFallback = { rewrites: [{ from: /^\/(?:card|events(?:\/new)?|join)\/?$/, to: '/app.html' }] };
   const { rawPublicVars } = loadEnv({ mode: envMode, prefixes: ['VITE_'] });
   const keys = ['VITE_FIREBASE_API_KEY', 'VITE_FIREBASE_AUTH_DOMAIN', 'VITE_FIREBASE_PROJECT_ID',
     'VITE_FIREBASE_APP_ID', 'VITE_RECAPTCHA_SITE_KEY'];
@@ -13,10 +14,12 @@ export default defineConfig(({ command, envMode }) => {
     server: {
       host: '127.0.0.1',
       port: 5173,
-      publicDir: development ? [{ name: 'evaluation', copyOnBuild: false }] : false,
+      publicDir: [{ name: 'site' }, ...(development ? [{ name: 'evaluation', copyOnBuild: false }] : [])],
+      htmlFallback: false,
+      historyApiFallback,
     },
     source: {
-      entry: { index: './src/main.tsx', ...(development ? { evaluation: './src/evaluation.ts' } : {}) },
+      entry: { index: './src/landing.ts', app: './src/main.tsx', ...(development ? { evaluation: './src/evaluation.ts' } : {}) },
       define: Object.fromEntries(keys.map(key => ['import.meta.env.' + key, JSON.stringify((development || sharingEnabled && key !== 'VITE_SHARING_EMULATORS') ? rawPublicVars[key] ?? '' : '')])),
     },
     html: { template: ({ entryName }) => './' + entryName + '.html' },
