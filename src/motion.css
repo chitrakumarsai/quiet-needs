@@ -1,16 +1,21 @@
 :root {
-  --motion-fast: 150ms;
-  --motion-base: 250ms;
-  --motion-slow: 400ms;
-  --motion-route: 200ms;
-  --motion-stagger: 60ms;
-  --motion-enter: cubic-bezier(.16, 1, .3, 1);
-  --motion-exit: cubic-bezier(.42, 0, 1, 1);
+  --motion-fast: 110ms;
+  --motion-popover: 150ms;
+  --motion-base: 200ms;
+  --motion-slow: 220ms;
+  --motion-route: 250ms;
+  --motion-stagger: 80ms;
+  --motion-enter: cubic-bezier(.25, .1, .25, 1);
+  --motion-exit: cubic-bezier(.25, .1, .25, 1);
   --motion-validation: ease-in-out;
   --motion-stiffness: 300;
   --motion-damping: 30;
   --motion-travel: 12px;
-  --motion-scale: .96;
+  --motion-scale: .98;
+  --motion-blur: 8px;
+  --motion-backdrop-blur: 4px;
+  --motion-hero-rise: 8px;
+  --motion-section-rise: 16px;
   --motion-press: .98;
   --motion-ambient: running;
   --toast-lifetime: 4000ms;
@@ -18,6 +23,10 @@
 
 :root[data-motion="reduce"] {
   --motion-travel: 0px;
+  --motion-blur: 0px;
+  --motion-backdrop-blur: 0px;
+  --motion-hero-rise: 0px;
+  --motion-section-rise: 0px;
   --motion-scale: 1;
   --motion-press: 1;
   --motion-ambient: paused;
@@ -27,6 +36,10 @@
 @media (prefers-reduced-motion: reduce) {
   :root {
     --motion-travel: 0px;
+    --motion-blur: 0px;
+    --motion-backdrop-blur: 0px;
+    --motion-hero-rise: 0px;
+    --motion-section-rise: 0px;
     --motion-scale: 1;
     --motion-press: 1;
     --motion-ambient: paused;
@@ -35,7 +48,8 @@
 }
 
 button, .button, .icon-button {
-  transition: transform var(--motion-fast) var(--motion-enter), opacity var(--motion-fast) var(--motion-enter);
+  transition: transform var(--motion-fast) var(--motion-enter), opacity var(--motion-fast) var(--motion-enter),
+    background-color var(--motion-fast) var(--motion-enter), border-color var(--motion-fast) var(--motion-enter);
 }
 @media (hover: hover) {
   button:not(:disabled):hover, .button:hover { opacity: .95; }
@@ -44,26 +58,26 @@ button:not(:disabled):active, .button:active { transform: scale(var(--motion-pre
 .motion-setting { display: flex; align-items: center; gap: 8px; min-height: 44px; margin: 0; }
 .motion-setting input[type="checkbox"] { width: auto; min-height: 0; margin: 0; }
 .workspace .card-paper[aria-labelledby] { animation: motion-reveal var(--motion-base) var(--motion-enter) both; }
-details[open] > .popover, dialog[open] { animation: motion-popover var(--motion-base) var(--motion-enter) both; }
-dialog[open]::backdrop { animation: motion-fade var(--motion-base) var(--motion-enter) both; }
+details[open] > .popover, dialog[open] { animation: motion-popover var(--motion-popover) var(--motion-enter) both; }
+dialog[open]::backdrop { animation: motion-fade var(--motion-popover) var(--motion-enter) both; }
 
 @supports (transition-behavior: allow-discrete) {
   :is(.account-menu, .card-menu)::details-content {
     opacity: 0;
-    transition: opacity var(--motion-base) var(--motion-exit), content-visibility var(--motion-base) allow-discrete;
+    transition: opacity var(--motion-popover) var(--motion-exit), content-visibility var(--motion-popover) allow-discrete;
   }
   :is(.account-menu, .card-menu)[open]::details-content { opacity: 1; }
   dialog {
     opacity: 0;
     transform: scale(var(--motion-scale));
-    transition: opacity var(--motion-base) var(--motion-exit), transform var(--motion-base) var(--motion-exit),
-      display var(--motion-base) allow-discrete, overlay var(--motion-base) allow-discrete;
+    transition: opacity var(--motion-popover) var(--motion-exit), transform var(--motion-popover) var(--motion-exit),
+      display var(--motion-popover) allow-discrete, overlay var(--motion-popover) allow-discrete;
   }
   dialog[open] { opacity: 1; transform: none; }
   dialog::backdrop {
     opacity: 0;
-    transition: opacity var(--motion-base) var(--motion-exit), display var(--motion-base) allow-discrete,
-      overlay var(--motion-base) allow-discrete;
+    transition: opacity var(--motion-popover) var(--motion-exit), display var(--motion-popover) allow-discrete,
+      overlay var(--motion-popover) allow-discrete;
   }
   dialog[open]::backdrop { opacity: 1; }
 }
@@ -99,16 +113,13 @@ dialog[open]::backdrop { animation: motion-fade var(--motion-base) var(--motion-
 @keyframes motion-fade { from { opacity: .01; } }
 @keyframes motion-shimmer { to { transform: translateX(100%); } }
 
-[data-motion] .hero-copy > * {
-  animation: motion-hero var(--motion-slow) var(--motion-enter) both;
+[data-motion] .hero-copy > *, [data-motion] .product-stage {
+  animation: motion-hero var(--motion-base) var(--motion-enter) both;
 }
 .hero-copy > :nth-child(2) { animation-delay: var(--motion-stagger); }
 .hero-copy > :nth-child(3) { animation-delay: calc(2 * var(--motion-stagger)); }
-.step-reveal {
-  animation: motion-step var(--motion-base) var(--motion-enter) both;
-}
-.step-reveal:nth-child(2) { animation-delay: var(--motion-stagger); }
-.step-reveal:nth-child(3) { animation-delay: calc(2 * var(--motion-stagger)); }
+[data-motion] .product-stage { animation: motion-step var(--motion-base) var(--motion-enter) calc(3 * var(--motion-stagger)) both; }
+.step-reveal { animation: motion-step var(--motion-base) var(--motion-enter) both; }
 
 .hero-art { position: relative; }
 #hero-animation {
@@ -121,13 +132,12 @@ dialog[open]::backdrop { animation: motion-fade var(--motion-base) var(--motion-
 #hero-animation.art-ready { opacity: 1; }
 #hero-pause { position: absolute; right: 12px; bottom: 12px; }
 
-:root[data-motion="reduce"] .step-reveal { animation: none; }
-@media (prefers-reduced-motion: reduce) {
-  .step-reveal { animation: none; }
+@keyframes motion-hero {
+  from { opacity: 0; filter: blur(var(--motion-blur)); transform: translateY(var(--motion-hero-rise)); }
 }
-
-@keyframes motion-hero { from { opacity: .92; transform: translateY(var(--motion-travel)); } }
-@keyframes motion-step { from { opacity: .65; transform: translateY(var(--motion-travel)); } }
+@keyframes motion-step {
+  from { opacity: .45; transform: translateY(var(--motion-section-rise)); }
+}
 
 .request-panel, .route-stack, .preview-line { position: relative; }
 .preview-line > [aria-hidden="true"] { position: absolute; inset: 0; margin: 0; pointer-events: none; }
@@ -149,7 +159,8 @@ dialog[open]::backdrop { animation: motion-fade var(--motion-base) var(--motion-
   inset: -4px;
   border-radius: 50%;
   background: var(--primary);
-  animation: motion-glow var(--motion-slow) var(--motion-enter) both;
+  animation: motion-glow 1.6s var(--motion-enter) both;
+  animation-play-state: var(--motion-ambient);
 }
 .check-start, .check-end { animation: motion-check var(--motion-fast) var(--motion-enter) both; }
 .check-start { transform-origin: 5px 12px; }
@@ -267,3 +278,37 @@ dialog[open]::backdrop { animation: motion-fade var(--motion-base) var(--motion-
 .event-grid > :nth-child(4) { animation-delay: calc(3 * var(--motion-stagger)); }
 .event-grid > :nth-child(5) { animation-delay: calc(4 * var(--motion-stagger)); }
 .event-grid > :nth-child(6) { animation-delay: calc(5 * var(--motion-stagger)); }
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="reduce"]) :is([data-spotlight], .workspace .panel) {
+    transition: border-color var(--motion-fast) var(--motion-enter);
+  }
+  :root:not([data-motion="reduce"]) :is([data-spotlight], .workspace .panel):hover { border-color: var(--border-strong); }
+  :root:not([data-motion="reduce"]) :is([data-spotlight], .workspace .panel)::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(220px at var(--spot-x, 50%) var(--spot-y, 50%), var(--accent-muted), transparent);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--motion-fast) var(--motion-enter);
+  }
+  :root:not([data-motion="reduce"]) :is([data-spotlight], .workspace .panel):hover::after { opacity: .65; }
+  :root:not([data-motion="reduce"]) :is(button, .button).primary {
+    background-image: linear-gradient(112deg, transparent 41%, rgb(127 160 146 / .24) 50%, transparent 59%);
+    background-size: 240% 100%;
+    background-position: 100% 0;
+  }
+  :root:not([data-motion="reduce"]) :is(button, .button).primary:hover:not(:disabled) { animation: motion-shine var(--motion-slow) var(--motion-enter); }
+}
+
+@keyframes motion-shine { to { background-position: 0 0; } }
+
+:root[data-motion="reduce"] .product-shot { transform: none; }
+:root[data-motion="reduce"] .example-approved,
+:root[data-motion="reduce"] .approval-glow { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .product-shot { transform: none; }
+  .example-approved, .approval-glow { animation: none; }
+}

@@ -5,7 +5,7 @@ import { runInNewContext } from 'node:vm';
 
 test('the service worker serves only the installed shell and never stores runtime traffic', async () => {
   const origin = 'https://quietneeds.example';
-  const paths = ['/index.html', '/app.html', '/static/js/index.12345678.js', '/static/css/index.12345678.css'];
+  const paths = ['/index.html', '/app.html', '/static/js/index.12345678.js', '/static/css/index.12345678.css', '/static/font/inter-variable.12345678.woff2'];
   const installed: Request[] = [];
   const deleted: string[] = [];
   const cached = new Response('cached shell');
@@ -26,8 +26,8 @@ test('the service worker serves only the installed shell and never stores runtim
       caches: {
         open: async () => ({
           addAll: async (requests: Request[]) => { installed.push(...requests); },
-          match: async (request: string | Request) => {
-            const path = typeof request === 'string' ? request : new URL(request.url).pathname;
+          match: async (path: string) => {
+            assert.equal(typeof path, 'string');
             return path === '/app.html' ? workspace : paths.includes(path) ? cached : undefined;
           },
         }),
@@ -62,6 +62,7 @@ test('the service worker serves only the installed shell and never stores runtim
   assert.equal(await request(origin + '/events/new', 'navigate'), workspace);
   assert.equal(await request(origin + '/join?event=fictional', 'navigate'), workspace);
   assert.equal(await request(origin + paths[2]), cached);
+  assert.equal(await request(origin + paths[4], 'cors'), cached);
   assert.equal(request(origin + '/event-data'), undefined);
   assert.equal(request(origin + '/evaluation.html', 'navigate'), undefined);
   assert.equal(request(origin + paths[2] + '?private=canary'), undefined);

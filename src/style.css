@@ -1,28 +1,17 @@
+@import "./visual-system.css";
 @import "./motion.css";
 
 :root {
-  --canvas: #f6f5ef;
-  --surface: #fffefa;
-  --paper: #fff;
-  --text: #193a33;
-  --muted: #4c6259;
-  --primary: #20594b;
-  --primary-hover: #164539;
-  --accent: #eaf0e7;
-  --border: #d4ded5;
-  --control-border: #71847a;
-  --warning: #fff4d6;
-  --danger: #962d32;
-  --radius: 10px;
-
-  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --radius: 8px;
+  font-family: Inter, system-ui, sans-serif;
+  font-feature-settings: "cv11", "ss01";
   font-synthesis: none;
   background: var(--canvas);
   color: var(--text);
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; }
+body { margin: 0; font-size: 15px; line-height: 1.6; }
 
 main {
   max-width: 1160px;
@@ -57,9 +46,9 @@ header {
   width: 34px;
   height: 34px;
   border-radius: 9px;
-  color: var(--paper);
+  color: var(--on-accent);
   background: var(--primary);
-  font: 1.375rem/1 Georgia, serif;
+  font: 650 1.125rem/1 Inter, sans-serif;
 }
 
 .workspace-header nav {
@@ -85,20 +74,22 @@ header {
 }
 
 a { color: var(--primary); }
-[id] { scroll-margin-top: 16px; }
+[id] { scroll-margin-top: 110px; }
 .intro { padding: clamp(22px, 4vw, 44px) 0 0; }
 
 h1 {
   margin: 0 0 10px;
-  font: 400 clamp(2.15rem, 5vw, 3.75rem)/1.08 Georgia, serif;
-  letter-spacing: -.055em;
+  font-size: clamp(2.35rem, 5.6vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -.03em;
   text-wrap: balance;
 }
 
 h2, h3, h4, h5 { line-height: 1.25; }
 h2 { font-size: 1.375rem; letter-spacing: -.035em; }
 h3 { font-size: 1.125rem; letter-spacing: -.02em; }
-p, li { line-height: 1.55; }
+p, li { line-height: 1.6; }
 .intro p { max-width: 64ch; margin: 0; color: var(--muted); }
 
 .draft-note {
@@ -116,11 +107,13 @@ p, li { line-height: 1.55; }
 .card-workspace { grid-template-columns: minmax(0, 1.07fr) minmax(0, 1fr); }
 
 .panel {
+  position: relative;
   min-width: 0;
   padding: clamp(18px, 2.8vw, 30px);
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 12px;
+  box-shadow: var(--elevation);
 }
 
 .panel h2,
@@ -128,7 +121,7 @@ p, li { line-height: 1.55; }
 .event-options h3 { margin-top: 0; }
 
 .request-panel {
-  box-shadow: 0 8px 26px #193a3308;
+  box-shadow: var(--elevation);
 }
 
 .request-panel h2,
@@ -142,8 +135,8 @@ p, li { line-height: 1.55; }
 
 .notice {
   padding: 14px 16px;
-  color: var(--text);
   background: var(--warning);
+  color: var(--warning-text);
   border-radius: var(--radius);
   font-size: .93rem;
 }
@@ -177,7 +170,8 @@ textarea {
 
 .request { margin: 18px 0; }
 .request textarea { min-height: 104px; }
-textarea::placeholder { color: var(--muted); }
+textarea::placeholder, input::placeholder { color: var(--text-tertiary); opacity: 1; }
+:is(input, textarea, select):focus-visible { box-shadow: 0 0 0 5px var(--accent-glow); }
 
 .actions {
   display: flex;
@@ -209,18 +203,18 @@ button:not(:disabled):hover { background: var(--accent); border-color: var(--pri
 
 button.primary,
 button[aria-pressed="true"] {
-  border-color: var(--primary);
-  background: var(--primary);
-  color: var(--paper);
+  border-color: var(--solid);
+  background: var(--solid);
+  color: var(--on-solid);
 }
 
 button.primary:not(:disabled):hover,
-button[aria-pressed="true"]:not(:disabled):hover { background: var(--primary-hover); }
+button[aria-pressed="true"]:not(:disabled):hover { background: var(--solid-hover); }
 
 button:disabled {
-  border-color: #b9c7bd;
-  background: #e7ede6;
-  color: #53635a;
+  border-color: var(--border-default);
+  background: var(--disabled);
+  color: var(--disabled-text);
   cursor: not-allowed;
 }
 
@@ -238,8 +232,8 @@ button:disabled {
 }
 
 .review-panel {
-  background: var(--accent);
-  box-shadow: inset 0 1px 0 #fff9;
+  background: var(--surface);
+  box-shadow: var(--elevation);
 }
 .review-status { margin: 0; color: var(--muted); font-size: .9rem; }
 .review-status:not(:empty) { margin: 12px 0; }
@@ -300,7 +294,6 @@ pre {
 
 .approval {
   margin-top: 24px;
-  border-top: 3px solid var(--primary);
   overflow-wrap: anywhere;
 }
 
@@ -330,19 +323,19 @@ dialog {
   max-width: 100%;
   padding: 24px;
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 12px;
   color: var(--text);
   background: var(--surface);
 }
 
-dialog::backdrop { background: #193a3370; }
+dialog::backdrop { background: var(--overlay); backdrop-filter: blur(var(--motion-backdrop-blur)); }
 dialog h2 { margin-top: 0; }
 
 button.destructive,
 button.destructive:not(:disabled):hover {
   border-color: var(--danger);
   background: var(--danger);
-  color: var(--paper);
+  color: var(--on-danger);
 }
 
 .skip-link {

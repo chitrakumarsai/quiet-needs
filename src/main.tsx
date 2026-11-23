@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { flushSync } from 'react-dom';
 import { AnimatePresence, LazyMotion, MotionConfig } from 'motion/react';
 import * as m from 'motion/react-m';
-import { ArrowDown, ArrowUp, Copy, Download, GripVertical, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
+import { ArrowDown, ArrowUp, Copy, Download, GripVertical, MoreHorizontal, Plus, Search, Trash2 } from 'lucide-react';
 import { makeApprovedCard, makeCardPreview } from './domain.ts';
 import type { ApprovedCard, Draft, Category } from './domain.ts';
 import { AccountControl, useAccount } from './Account.tsx';
@@ -14,6 +14,9 @@ import { ApprovalMark, MotionLayer } from './WorkspaceMotion.tsx';
 import { Toast } from './Toast.tsx';
 import { applyMotionPreference, componentTiming, reducedMotion, watchMotionPreference } from './motion-settings.ts';
 import { eventPath, pageTitles, readRoute, workspaceRoutePattern } from './routes.ts';
+import { restoreTheme } from './theme.ts';
+import { commandEvent, commandPaths, mountCommandMenu } from './command-menu.ts';
+import { mountSurfaceEffects } from './surface-effects.ts';
 import './style.css';
 import './site.css';
 
@@ -38,12 +41,6 @@ function subscribeConnection(onChange: () => void) {
 
 function App() {
   const [route, setRoute] = useState(() => readRoute(new URL(location.href)));
-  const [theme, setTheme] = useState<'system' | 'light' | 'dark'>(() => {
-    try {
-      const saved = localStorage.getItem('quietneeds-appearance');
-      return saved === 'dark' || saved === 'light' ? saved : 'system';
-    } catch { return 'system'; }
-  });
   const account = useAccount(sharing);
   const online = useSyncExternalStore(subscribeConnection, () => navigator.onLine);
   const uid = account.user?.uid;
@@ -74,16 +71,16 @@ function App() {
   const cardHref = route.eventId ? '/card?event=' + route.eventId : '/card';
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    try { localStorage.setItem('quietneeds-appearance', theme); } catch { /* Appearance still works in this tab. */ }
-  }, [theme]);
+    mountCommandMenu();
+    mountSurfaceEffects();
+  }, []);
   useEffect(() => { document.title = heading + ' · QuietNeeds'; }, [heading]);
   useEffect(() => {
     if (nextFocus.current === null || !isCard) return;
     const row = rows[nextFocus.current];
     if (row) document.getElementById('request-' + row.key)?.focus();
     nextFocus.current = null;
-  }, [rows, isCard]);
+  }, [rows, isCard, reviewShown]);
 
   const changeRoute = useCallback((url: URL) => {
     const update = () => {
@@ -103,13 +100,14 @@ function App() {
     return () => window.removeEventListener('popstate', back);
   }, [changeRoute]);
 
-  function navigate(href: string) {
+  function navigate(href: string, focusHeading = true) {
     const url = new URL(href, location.origin);
     if (url.href === location.href) return;
     history.pushState(null, '', url);
     if (menu.current) menu.current.open = false;
     changeRoute(url);
     const focus = () => {
+      if (!focusHeading) return;
       document.getElementById('workspace-title')?.focus({ preventScroll: true });
       window.scrollTo(0, 0);
     };
@@ -134,6 +132,33 @@ function App() {
     setStatus('');
     setNotice(null);
   }
+
+  function addRequest() {
+    nextFocus.current = rows.length;
+    edit([...rows, newRow()]);
+  }
+
+  useEffect(() => {
+    function runCommand(event: Event) {
+      const command = (event as CustomEvent<keyof typeof commandPaths>).detail;
+      event.preventDefault();
+      if (command !== 'request') { navigate(commandPaths[command]); return; }
+      setReviewShown(false);
+      const empty = rows.findIndex(row => !row.request.trim());
+      if (empty < 0 && rows.length < 8) addRequest();
+      else {
+        nextFocus.current = empty < 0 ? rows.length - 1 : empty;
+        if (isCard && !reviewShown) {
+          document.getElementById('request-' + rows[nextFocus.current].key)?.focus();
+          nextFocus.current = null;
+        }
+        if (empty < 0) notify('This card already has eight requests.');
+      }
+      navigate(cardHref, false);
+    }
+    window.addEventListener(commandEvent, runCommand);
+    return () => window.removeEventListener(commandEvent, runCommand);
+  });
 
   function update(index: number, values: Partial<Draft['requirements'][number]>) {
     edit(rows.map((item, itemIndex) => itemIndex === index ? { ...item, ...values } : item));
@@ -191,7 +216,10 @@ function App() {
         <a href="/events" aria-current={route.page.startsWith('/events') ? 'page' : undefined}>Events</a>
         <a href="/join" aria-current={route.page === '/join' ? 'page' : undefined}>Join</a>
       </nav>
-      <AccountControl account={account} theme={theme} onTheme={setTheme}/>
+      <div className="nav-tools">
+        <button type="button" className="command-trigger ghost" data-open-command aria-haspopup="dialog" aria-expanded="false" aria-label="Open command menu" aria-keyshortcuts="Meta+K Control+K"><Search aria-hidden="true"/><kbd data-command-shortcut>Ctrl K</kbd></button>
+        <AccountControl account={account}/>
+      </div>
     </div></header>
     <main className="workspace">
       <div className="page-heading">
@@ -259,10 +287,7 @@ function App() {
               </select></label><span id={'count-' + requirement.key}>{requirement.request.length} / 500</span></div>
             </MotionLayer>)}
             </AnimatePresence>
-            <button className="add-tile" disabled={draft.requirements.length >= 8} onClick={() => {
-              nextFocus.current = draft.requirements.length;
-              edit([...rows, newRow()]);
-            }}><Plus size={18} aria-hidden="true"/> Add another request</button>
+            <button className="add-tile" disabled={draft.requirements.length >= 8} onClick={addRequest}><Plus size={18} aria-hidden="true"/> Add another request</button>
             {!hasContent && <div className="examples"><h3>Try an example</h3>{examples.map(example => <button key={example} onClick={() => {
               nextFocus.current = 0;
               update(0, { request: example });
@@ -295,11 +320,12 @@ function App() {
         </div>
       </> : SharingPanel ? <section className="panel approval routed-events" aria-labelledby="sharing-title">
         <h2 id="sharing-title">{route.eventId ? 'Event access and planning' : route.page === '/events' ? 'Event directory' : 'Event details'}</h2>
+        {account.configured && <p className="hint">Use fictional event details and requests in this demo.</p>}
         <div role="status">{!online && <p>Connect to use event sharing. You can still prepare and download a card.</p>}</div>
         {online && account.user === undefined && <OperationStatus busy message="Loading your account…"/>}
         {online && account.user === null && route.page === '/join' && !route.eventId && <JoinForm open={code => navigate(eventPath(code))}/>}
         {online && account.user === null && (route.page !== '/join' || route.eventId) && <p>{account.configured
-          ? (route.eventId ? 'Sign in from the header to open this event.' : 'Sign in from the header to create or join an event.')
+          ? (route.eventId ? 'Use the account controls in the header to open this event.' : 'Use the account controls in the header to create or join an event.')
           : 'Event sharing needs Firebase configuration.'}</p>}
         {online && uid && <Suspense fallback={<div className="sharing-loading"><p role="status">Loading this workspace…</p><div className="loading-skeleton" aria-hidden="true"><span/><span/></div></div>}>
           <SharingPanel key={uid + ':' + route.page + ':' + route.eventId} approved={approved} uid={uid} page={route.page} eventId={route.eventId}
@@ -338,6 +364,7 @@ function App() {
   </div></MotionConfig></LazyMotion>;
 }
 
+restoreTheme();
 applyMotionPreference();
 createRoot(document.getElementById('root')!).render(<App/>);
 

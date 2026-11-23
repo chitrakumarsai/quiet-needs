@@ -5,7 +5,7 @@ const index = await readFile('dist/index.html', 'utf8');
 const app = await readFile('dist/app.html', 'utf8');
 const worker = await readFile(new URL('./offline-worker.js', import.meta.url), 'utf8');
 const assets = ['/index.html', '/app.html', '/card-illustration.svg', '/favicon.svg', ...(await readdir('dist/static', { recursive: true }))
-  .filter(file => /^(?:js|css)\/(?:async\/)?[\w.-]+\.[a-f0-9]{8}\.(?:js|css)$/.test(file))
+  .filter(file => /^(?:js|css|font)\/(?:async\/)?[\w.-]+\.[a-f0-9]{8}\.(?:js|css|woff2)$/.test(file))
   .filter(file => !file.startsWith('js/async/hero-'))
   .sort().map(file => '/static/' + file)];
 

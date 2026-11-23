@@ -1,0 +1,79 @@
+@font-face {
+  font-family: Inter;
+  src: url("./inter-variable.woff2") format("woff2");
+  font-display: swap;
+  font-weight: 100 900;
+}
+
+:root {
+  color-scheme: dark;
+  --bg-base: #08090a;
+  --bg-surface-1: #0f1011;
+  --bg-surface-2: #151618;
+  --bg-surface-3: #1c1d20;
+  --border-subtle: rgb(255 255 255 / .06);
+  --border-default: rgb(255 255 255 / .10);
+  --border-strong: rgb(255 255 255 / .16);
+  --text-primary: #f7f8f8;
+  --text-secondary: #b4b8be;
+  --text-tertiary: #8a8f98;
+  --brand-accent: #3fb68b;
+  --accent-hover: #73d2ac;
+  --accent-muted: color-mix(in srgb, var(--brand-accent) 12%, transparent);
+  --accent-glow: color-mix(in srgb, var(--brand-accent) 25%, transparent);
+  --canvas: var(--bg-base);
+  --surface: var(--bg-surface-1);
+  --paper: var(--bg-surface-2);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --primary: var(--brand-accent);
+  --primary-hover: var(--accent-hover);
+  --accent: var(--accent-muted);
+  --border: var(--border-subtle);
+  --control-border: #666c75;
+  --warning: #292219;
+  --warning-text: #e7c894;
+  --success: #86c8aa;
+  --danger: #f0a1a8;
+  --on-danger: #231015;
+  --disabled: #202125;
+  --disabled-text: #a4a8af;
+  --solid: #f7f8f8;
+  --on-solid: #141619;
+  --solid-hover: #dfe3e5;
+  --on-accent: #07140f;
+  --elevation: inset 0 1px 0 rgb(255 255 255 / .04);
+  --overlay: rgb(0 0 0 / .62);
+  --grid-ink: rgb(163 208 190 / .12);
+}
+
+:root[data-palette="light"] {
+  color-scheme: light;
+  --bg-base: #f7f8f7;
+  --bg-surface-1: #ffffff;
+  --bg-surface-2: #f0f2f1;
+  --bg-surface-3: #e8ecea;
+  --border-subtle: rgb(20 32 27 / .09);
+  --border-default: rgb(20 32 27 / .15);
+  --border-strong: rgb(20 32 27 / .25);
+  --text-primary: #151b19;
+  --text-secondary: #46524e;
+  --text-tertiary: #505e58;
+  --brand-accent: #14674d;
+  --accent-hover: #0d533d;
+  --control-border: #727d78;
+  --warning: #fff3dc;
+  --warning-text: #644313;
+  --success: #176647;
+  --danger: #962d43;
+  --on-danger: #ffffff;
+  --disabled: #e6eae8;
+  --disabled-text: #505b55;
+  --solid: #17221e;
+  --on-solid: #ffffff;
+  --solid-hover: #30443b;
+  --on-accent: #ffffff;
+  --elevation: inset 0 1px 0 rgb(255 255 255 / .65);
+  --overlay: rgb(22 33 28 / .32);
+  --grid-ink: rgb(15 88 61 / .16);
+}

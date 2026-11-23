@@ -31,6 +31,6 @@ self.addEventListener('fetch', event => {
       return (await (await caches.open(cacheName)).match(workspace ? '/app.html' : '/index.html')) ?? Response.error();
     })());
   } else if (!url.search && url.pathname !== '/index.html' && assets.includes(url.pathname)) {
-    event.respondWith((async () => (await (await caches.open(cacheName)).match(request)) ?? fetch(request))());
+    event.respondWith((async () => (await (await caches.open(cacheName)).match(url.pathname)) ?? fetch(request))());
   }
 });

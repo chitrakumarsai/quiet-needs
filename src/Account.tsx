@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useSyncExternalStore } from 'react';
 import type { User } from 'firebase/auth';
-import { LogIn, LogOut, Settings, UserRound } from 'lucide-react';
+import { LogOut, Settings, UserRound } from 'lucide-react';
 import { ReducedMotionSetting } from './ReducedMotionSetting.tsx';
+import { currentTheme, setTheme, subscribeTheme } from './theme.ts';
+import type { Theme } from './theme.ts';
 
 type IdentityModule = typeof import('./identity.ts');
-type Theme = 'system' | 'light' | 'dark';
+
 
 export function useAccount(sharing: boolean) {
   const [identity, setIdentity] = useState<IdentityModule>();
@@ -45,16 +47,20 @@ export function useAccount(sharing: boolean) {
     signInLabel: identity?.sharingEmulator ? 'Start demo session' : 'Sign in' };
 }
 
-export function AccountControl({ account, theme, onTheme }: {
-  account: ReturnType<typeof useAccount>;
-  theme: Theme;
-  onTheme: (theme: Theme) => void;
-}) {
+export function AccountControl({ account }: { account: ReturnType<typeof useAccount> }) {
   const { user, changeSession, configured, status, busy, signInLabel } = account;
+  const theme = useSyncExternalStore(subscribeTheme, currentTheme);
+  const authIntent = new URLSearchParams(location.search).get('auth');
+  const startSession = () => void changeSession();
+  const signInDisabled = busy || user === undefined;
   return <div className="account-controls">
-    {!user && configured && <button className="primary" disabled={busy || user === undefined} onClick={() => void changeSession()}>
-      <LogIn size={17} aria-hidden="true"/> {signInLabel}
-    </button>}
+    {!user && configured && <div className="account-links">
+      {signInLabel !== 'Sign in' ? <button className="primary" disabled={signInDisabled} onClick={startSession}>{signInLabel}</button>
+        : authIntent === 'login' || authIntent === 'signup'
+          ? <button className="primary" disabled={signInDisabled} onClick={startSession}>Continue with Google</button>
+          : <><button className="ghost" disabled={signInDisabled} onClick={startSession}>Log in</button>
+            <button className="primary" disabled={signInDisabled} onClick={startSession}>Sign up</button></>}
+    </div>}
     <details className="account-menu">
       <summary aria-label={user ? 'Account and settings' : 'Appearance settings'} className="icon-button">
         {user ? <span className="account-avatar">{user.displayName?.trim()[0]?.toUpperCase() || <UserRound size={18} aria-hidden="true"/>}</span>
@@ -63,7 +69,7 @@ export function AccountControl({ account, theme, onTheme }: {
       <div className="popover">
         {user && <p className="account-name">{user.displayName || 'QuietNeeds account'}</p>}
         <label htmlFor="appearance">Appearance</label>
-        <select id="appearance" value={theme} onChange={event => onTheme(event.target.value as Theme)}>
+        <select id="appearance" value={theme} onChange={event => setTheme(event.target.value as Theme)}>
           <option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option>
         </select>
         <ReducedMotionSetting/>
