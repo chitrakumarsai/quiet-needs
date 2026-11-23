@@ -10,6 +10,7 @@ import {
   runTransaction, serverTimestamp, setDoc, terminate, updateDoc, writeBatch,
 } from 'firebase/firestore';
 import { createEvent, eventIdPattern, watchJoinRequests } from '../src/sharing.ts';
+import { loadPlanFeedback, publishPlan, readCurrentPlan, readOrganizerPublication, respondToOutcome } from '../src/planRepository.ts';
 
 const projectId = 'demo-quietneeds';
 const eventId = 'abcdefghijklmnopqrst';
@@ -207,6 +208,11 @@ test('event isolation, enrollment, approved revisions, publication, confirmation
     await assertFails(setDoc(nested(member, 'confirmations'), { ...confirmation, comment: 'Private comment' }));
     await setDoc(nested(member, 'confirmations'), confirmation);
     assert.equal((await getDocFromServer(nested(admin, 'confirmations'))).data().status, 'met');
+    const legacyEvent = (await getDocFromServer(event(member))).data();
+    const legacyCard = (await getDocFromServer(nested(member, 'cards'))).data();
+    const legacyPlan = await readCurrentPlan(member, eventId, legacyEvent, participant, legacyCard);
+    assert.equal(legacyPlan.confirmation, 'met');
+    assert.equal(legacyPlan.publishedOutcomes, undefined);
     await publish(second, plan(2, originals));
     await assertFails(getDocFromServer(nested(member, 'publishedPlans', first)));
     await assertFails(getDocFromServer(nested(member, 'confirmations')));
@@ -249,5 +255,87 @@ test('event creation rejects when Firestore cannot acknowledge the write', { tim
     await terminate(db);
     await deleteApp(app);
     await new Promise(resolve => server.close(resolve));
+  }
+});
+
+test('published request outcomes are private, bounded, and tied to the agenda and card', async () => {
+  const environment = await initializeTestEnvironment({
+    projectId, firestore: { rules: readFileSync(new URL('../firestore.rules', import.meta.url), 'utf8') },
+  });
+  try {
+    await environment.clearFirestore();
+    const admin = environment.authenticatedContext(owner).firestore();
+    const member = environment.authenticatedContext(participant).firestore();
+    const other = environment.authenticatedContext(outsider).firestore();
+    const agenda = [{ id: 'S01', start: '10:00', end: '10:30', title: 'Seated photo exercise', alternate: '', factId: '' }];
+    const original = { ...newEvent(owner), agenda, agendaRevision: 2, inputRevision: 1 };
+    const cards = [participant, outsider, ...Array.from({length: 23}, (_, index) => 'guest-' + index)].map(ownerUid => ({
+      ...newCard(1), ownerUid,
+      requirements: Array.from({length: 8}, () => newCard(1).requirements[0]),
+    }));
+    await environment.withSecurityRulesDisabled(async context => {
+      const db = context.firestore();
+      const batch = writeBatch(db);
+      batch.set(event(db), original);
+      for (const card of cards) {
+        batch.set(nested(db, 'cards', card.ownerUid), card);
+        batch.set(nested(db, 'members', card.ownerUid), { active: true, joinedAt: serverTimestamp() });
+      }
+      await batch.commit();
+    });
+    const expected = (await getDocFromServer(event(admin))).data();
+    const choices = [{ slotId: 'S01', option: 'original' }];
+    const decisions = new Map([[participant, [0, 0, 'unavailable']]]);
+    const outcomes = (db, planId, uid = participant) =>
+      doc(nested(db, 'publishedPlans', planId), 'requestOutcomes', uid);
+
+    await assertFails(setDoc(outcomes(admin, 'A'.repeat(20)), { cardRevision: 1, outcomes: [0], responses: [''] }));
+    const forgedId = 'B'.repeat(20);
+    const forged = writeBatch(admin);
+    const [{ alternate, factId, ...publicSlot }] = agenda;
+    forged.set(nested(admin, 'publishedPlans', forgedId), {
+      agenda: [publicSlot], planRevision: 1, inputRevision: 1, publishedAt: serverTimestamp(),
+    });
+    forged.set(outcomes(admin, forgedId), {
+      cardRevision: 1, outcomes: [1], responses: [''], privateNote: 'Fictional hidden detail',
+    });
+    forged.update(event(admin), { currentPlanId: forgedId, planRevision: 1 });
+    await assertFails(forged.commit());
+    assert.equal((await getDocFromServer(event(admin))).data().currentPlanId, null);
+    await publishPlan(admin, eventId, expected, choices, cards, decisions);
+    const first = (await getDocFromServer(event(admin))).data();
+    const firstPlan = await readCurrentPlan(member, eventId, first, participant, cards[0]);
+    assert.deepEqual(firstPlan.publishedOutcomes.outcomes.slice(0, 4), [0, 0, 'unavailable', 'checking']);
+    const restored = await readOrganizerPublication(admin, eventId, first.currentPlanId, cards);
+    assert.deepEqual(restored.decisions.get(participant), firstPlan.publishedOutcomes.outcomes);
+    assert.deepEqual(Object.keys(firstPlan.publishedOutcomes).sort(), ['cardRevision','outcomes','responses']);
+    assert.deepEqual(Object.keys((await getDocFromServer(nested(member, 'publishedPlans', first.currentPlanId))).data()).sort(),
+      ['agenda','inputRevision','planRevision','publishedAt']);
+    await assertFails(getDocFromServer(outcomes(other, first.currentPlanId)));
+    await assertFails(getDocsFromServer(collection(nested(member, 'publishedPlans', first.currentPlanId), 'requestOutcomes')));
+    await assertFails(updateDoc(outcomes(member, first.currentPlanId), { outcomes: [0] }));
+    await assertFails(updateDoc(outcomes(member, first.currentPlanId), { responses: ['', '', 'met', '', '', '', '', ''] }));
+    await assertFails(updateDoc(outcomes(admin, first.currentPlanId), { responses: ['met', '', '', '', '', '', '', ''] }));
+    await Promise.all([
+      respondToOutcome(member, eventId, participant, first.currentPlanId, 0, 'met'),
+      respondToOutcome(member, eventId, participant, first.currentPlanId, 1, 'unmet'),
+    ]);
+    const feedback = await loadPlanFeedback(admin, eventId, first, cards);
+    assert.equal(feedback.length, 1);
+    assert.deepEqual(feedback[0].responses.slice(0, 3), ['met', 'unmet', '']);
+
+    await publishPlan(admin, eventId, first, choices, cards, decisions);
+    const second = (await getDocFromServer(event(admin))).data();
+    assert.deepEqual(await loadPlanFeedback(admin, eventId, second, cards), []);
+    await assertFails(getDocFromServer(outcomes(member, first.currentPlanId)));
+    await assert.rejects(respondToOutcome(member, eventId, participant, first.currentPlanId, 0, 'unmet'));
+    const replace = writeBatch(member);
+    bump(replace, member, second.inputRevision + 1);
+    replace.set(nested(member, 'cards'), newCard(2));
+    await replace.commit();
+    await assertFails(getDocFromServer(outcomes(member, second.currentPlanId)));
+    await assert.rejects(respondToOutcome(member, eventId, participant, second.currentPlanId, 0, 'met'));
+  } finally {
+    await environment.cleanup();
   }
 });

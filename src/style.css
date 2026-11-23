@@ -379,3 +379,6 @@ button.destructive:not(:disabled):hover {
   background: var(--accent);
 }
 .loading-skeleton span:last-child { width: 64%; }
+
+.request-outcomes > .panel + .panel { margin-top: 12px; }
+.request-outcomes h5 { margin: 0; font-size: .94rem; line-height: 1.5; }

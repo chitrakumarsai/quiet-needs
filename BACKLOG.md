@@ -27,6 +27,7 @@
 | QN-020 | Browser privacy regression | P4 | Hosted synthetic storage verified | Signed-in hosted review returned zero private marker matches. Keep scope limited to the tested browser, build, and fictional data | P4 retention and user trials |
 | QN-021 | Organizer publication review | P4 | Hosted round trip verified | Both hosted agenda revisions, isolated feedback, and invalidation after replacement and withdrawal passed with fictional requests | P4 acceptance |
 | QN-022 | Event enrollment usability | P4 | Safari live update needs follow-up | Earlier hosted trial passed. The routed Safari organizer needed a refresh for the join request and a reload for the replacement. Recheck Safari with both windows visible. | P4 acceptance |
+| QN-023 | Request outcomes | P4 | Locally verified | Review and test the request-outcomes candidate on a hosted test deployment with its updated rules. | P4 acceptance |
 
 ## Issue template
 
