@@ -488,3 +488,20 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - QN-023/P4, owner implementation. Add organizer decisions and participant responses to the current event workspace. Publish per-card outcomes atomically alongside the agenda, enforce authorization in Firestore, and preserve whole-card feedback for previously published agendas.
 - Local Chrome verified desktop organizer and mobile participant flows. Firestore emulator verified request isolation, stale response denial, concurrent responses and publication at the 25-card boundary.
 - Exact return: verify the two-role request outcome flow, then resume the Safari organizer live-update and spoken screen-reader checks.
+- November 24: preview version `3232b662f156c8c8` and its rules are deployed and verified. Chrome reached the signed-in event directory. Resume once Safari is signed in with a separate Google account. Live Hosting is still on the earlier frontend.
+- November 24: distinct Google sessions reached the fictional event. Chrome submitted a join request and Safari confirmed admission. The Chrome reload left a blank original tab, and a fresh tab showed the signed-out header. Exact return: recover the Chrome participant view at the existing fictional event, before approving a card.
+- November 24: PR #19 merged at `5480763`. The user requested production promotion after manual testing. Firebase released version `3232b662f156c8c8` to live, and production smoke checks passed. Exact return: the remaining authenticated outcome and replacement checks in TEST_PLAN.md.
+- November 24: live Chrome participant and Safari organizer passed approved sharing, a planned and a still-checking request, per-request feedback, and replacement followed by a clean republish. Organizer checks used the explicit refresh controls. Exact return: the physical network disconnect, spoken screen reader, and Safari live-update checks already open in TEST_PLAN.md.
+
+## CP-071 — Isolate the Safari live-update follow-up
+
+- QN-022/P4, owner implementation. Separate the automatic join-request and card-replacement checks from the manual participant-feedback refresh. Safari opened the live event directory signed out and returned “Sign-in could not be completed. Try again.” The hosted two-role reproduction stopped before any event changes.
+- Passed locally: 24 tests, three Firestore emulator tests, and the production privacy build. The rules suite observed a join request through the app's subscription and checked approved-card replacement and response revision isolation.
+- Exact return: restore the two hosted test sessions, leave both windows visible, and time a fresh join request and a card replacement before touching the refresh controls. Continue the OS-level disconnect and spoken VoiceOver checks separately.
+
+## CP-072 — Close P4 and start P5
+
+- The user approved P4 closure and made the three remaining browser and Mac checks non-blocking. Preserve the recorded limits and use the implemented request-outcomes workflow for the submission.
+- QN-024/P5, owner implementation. Add Switch account to the shared landing and workspace account menu. Show the current Google email where available. Use the Google account chooser while keeping the existing session active until authentication succeeds. Event access and card approval follow the authenticated user ID.
+- Passed local tests, production privacy build, emulator identity switching, and a simulated closed-popup check. The signed-in browser walkthrough and real Google chooser are pending.
+- Exact return: verify the Google chooser with two identities on a hosted candidate, then run the P5 judge walkthrough and submission checklist.

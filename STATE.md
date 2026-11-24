@@ -1,12 +1,13 @@
 # Current state
 
-Updated: November 23, 2026 IST
+Updated: November 24, 2026 IST
 
 - Completed phase: **P1 — Private vertical slice**, in the approved manual-entry scope.
 - Completed phase: **P2 — Approved sharing**, verified in the local Firebase demo.
 - Completed phase: **P3 — Organizer adaptation**, verified with a genuine synthetic cloud proposal and local publication and confirmation.
-- Active implementation phase: **P4 — Reliability and UX**. The offline shell, focused accessibility and recovery, and synthetic cross-role trace are verified.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-070.
+- Completed phase: **P4 — Reliability and UX**. The user approved closure with the remaining Safari live-update, OS-level disconnect, and spoken VoiceOver checks as non-blocking follow-ups.
+- Active implementation phase: **P5 — Submission**.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-072.
 - P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, automated tests and npm audit pass. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. P4 offline reload covers manual entry in the production app.
@@ -22,12 +23,13 @@ Updated: November 23, 2026 IST
 
 ## Exact next action
 
-Review the request-outcomes candidate and verify it on a hosted test deployment with the updated Firestore rules. The current live demo remains on the prior release. Then resume the remaining P4 checks below.
+Use the shipped request-outcomes workflow from `ideas-v2.md` for the P5 judge walkthrough. PR #19 (`5480763`) is live as Hosting version `3232b662f156c8c8`. The two-account fictional run verified per-request outcomes and revision-scoped feedback. The pilot has yet to measure request coverage and follow-up rates. [Live QuietNeeds demo](https://quietneeds-web.web.app)
 
-Continue the combined P4 acceptance checklist in TEST_PLAN.md using the [routed preview](https://quietneeds-web--p4-trial-plfqr34b.web.app). The hosted two-account cloud and feedback round trip passed. Check why the Safari organizer needed a refresh after enrollment and replacement, then verify a physical network disconnect and spoken screen-reader announcements. QN-014 remains open for automatic extraction promotion.
+Verify the account-switch candidate with two Google identities before promoting it. Then run the fresh-session judge walkthrough and assemble the P5 submission package. QN-014 remains open for automatic extraction promotion.
 
 ## P4 evidence
 
+- CP-071 local rerun passed 24 tests, three Firestore emulator tests, and the production privacy build. The emulator observed a join request through the app's listener and verified approved-card replacement and request-outcome revision isolation.
 - The approved visual system is live on Firebase Hosting as a fictional-data demo. PR #18 merged at `c9c35a3` after CI and GitGuardian passed. The live Chrome smoke verified Google sign-in startup, command-dialog state, and exact approved card download. Hosting routes and evaluator exclusion passed. See TEST_PLAN.md for remaining verification.
 - Release candidate fixes the mobile controls flagged by the design gate and exposes the command dialog’s expanded state. Chrome passed the 44 px checks, focus restoration, contrast audit, and offline reload. Local unit and Firestore rules tests passed, and npm reported zero vulnerabilities.
 - The full Taste Skill gate completed on Node 22.14.0 against the local production preview. It reported 34 failures and 15 warnings. See TEST_PLAN.md for scope and findings.

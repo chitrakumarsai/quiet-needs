@@ -170,4 +170,6 @@ Keep the existing event workspace. In the organizer view, put requests requiring
 | Seated alternative for the photo walk | Planned for the 10:00 activity | Seated photo exercise at 10:00. Actions: Works for me or Still need help. |
 | Step-free entrance | Checking with the venue | Step-free entrance is still unconfirmed. |
 
-The request-outcomes branch implements this workflow. Older published agendas retain whole-card feedback. The live demo is still on the prior release.
+PR #19 shipped this workflow to the live demo. Older published agendas retain whole-card feedback.
+
+The signed-in account menu shows the current Google identity and offers **Switch account** alongside **Sign out**. Switching opens Google's account chooser. Canceling keeps the current session. A new identity loads its own event access and requires fresh card approval.

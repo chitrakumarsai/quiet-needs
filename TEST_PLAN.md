@@ -282,3 +282,36 @@ Lighthouse 12.8.2 measured mobile lab performance on a local production build. T
 - Chrome passed a fictional two-role flow with a desktop organizer and a 390 px participant viewport. Changing a request decision revoked publish approval. The participant saw the linked activity and the still-checking request, submitted a keyboard response, and lost the old outcomes after replacing the card. The participant layout fit without horizontal overflow.
 - The Firestore emulator checked the 25-card and eight-request boundaries, private read access, concurrent responses to separate requests, legacy whole-card feedback, and rejection of old or malformed writes. All 24 unit tests, three rules tests, and the production privacy build passed locally.
 - Hosted confirmation, Safari, and spoken screen-reader checks remain open.
+
+#### Hosted request-outcomes candidate — November 24, 2026
+
+- PR #19 at `8bdd819` passed both GitHub participant checks and GitGuardian. The demo-configured production build passed the privacy scan with App Check debug mode off.
+- Firebase Hosting preview version `3232b662f156c8c8` serves the candidate. The worker matches the local build byte for byte. All five routes and the worker return 200 with `no-cache`. Workspace routes prohibit indexing and the evaluator returns 404.
+- The deployed Firestore rules match the repository candidate exactly. The previous shared rules matched the last live release before deployment, and a signed-out event list still returns 403. The live Hosting frontend continues to serve its previous version.
+- Passed: Chrome submitted the fictional event join request. Safari displayed the request after refresh and confirmed admission.
+- Observed: the original Chrome tab continued to display the pre-admission view, then stopped rendering the workspace after reload. A fresh Chrome tab rendered the signed-out header. Native computer-use window access was intermittent, so the cause of the Chrome behavior is unverified.
+- Production promotion: at the user's request after manual testing, cloned exact preview version `3232b662f156c8c8` to live. All five app routes and the byte-matched worker returned 200 with `no-cache`. Workspace routes returned `noindex, nofollow`, the evaluator returned 404, and the signed-out Firestore read returned 403. Mobile Chrome verified opening Google sign-in, opening and dismissing the command menu, and downloading the approved fictional card.
+
+#### Authenticated production request outcomes — November 24, 2026
+
+- Passed with separate Google sessions and the existing fictional workshop. Chrome used its previously admitted participant membership to approve and share a two-request card. Safari saved a fictional venue fact and agenda slot, linked the first request to the slot, left the second as Still checking, and published revision 1.
+- Chrome displayed both private outcomes and recorded Works for me on the planned request. Safari showed that response on the first request only after refreshing feedback.
+- Chrome edited the second request, approved the new snapshot, and shared card revision 2. The previous outcome panel disappeared and the agenda showed as out of date. Safari reviewed current inputs and published agenda revision 2. Chrome saw both current requests as Still checking, and Safari reported no responses for revision 2 after refreshing feedback.
+- The organizer used Check event access and Refresh participant feedback. Automatic Safari updates, physical disconnect, and spoken screen-reader checks are separate from this result. The fictional fixture was retained.
+
+#### Non-blocking follow-ups after P4 closure
+
+| Check | Procedure and expected result |
+| --- | --- |
+| Automatic Safari updates | Keep the signed-in Safari organizer and Chrome participant windows visible on the same fictional event. Submit a fresh join request and verify Safari shows it without Check event access. Admit the participant. Share and then replace an approved fictional card after publishing an agenda. Verify Safari lists only the replacement and marks the agenda out of date without a reload. Record whether each update arrives and how long it takes. Refresh participant feedback explicitly when checking responses. |
+| OS-level disconnect | Warm the hosted card and event routes in Chrome and enter a fictional draft. Disconnect the Mac from the network, reload the card route, and verify the editor starts blank. Approve and download a fresh fictional card, then verify the event route displays the connection message and offers no event writes. Reconnect and confirm event controls return. |
+| Spoken VoiceOver | With VoiceOver running, submit an invalid event code and listen for its error. On the fictional event, listen for the pending and admitted states in the participant window. During the disconnect check, listen for the event connection message. Record which messages VoiceOver actually announces and where focus lands. |
+
+Retest blocked before the first hosted event action. Safari loaded the production event directory signed out and returned “Sign-in could not be completed. Try again.” Source review confirmed server-acknowledged listeners for join requests and event revisions. The organizer fetches participant responses with Refresh participant feedback.
+
+Passed on the local rerun: 24 tests, three Firestore emulator tests, and the production privacy build. The emulator exercised the join-request subscription, approved-card replacement, and response revision isolation. Safari delivery remains unverified.
+
+### P5 account switching
+
+- Passed: 24 unit tests and the production privacy build. A local Auth Emulator check verified that switching changes the active UID and that sign-out still clears it. A simulated closed Google popup verified that the switch requests `select_account` and leaves the current Firebase session active.
+- Pending on hosted candidate: sign in as the fictional event organizer, open **Account and settings → Switch account**, and cancel the chooser. Verify that the organizer email and event access remain. Reopen the chooser and select the second account. Verify the email changes, organizer controls disappear, and any earlier card approval is cleared. Switch back and confirm organizer access returns. Repeat chooser entry from the landing page, and verify keyboard access and visible status at a narrow width.

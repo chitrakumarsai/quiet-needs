@@ -1,5 +1,19 @@
 # Change log
 
+## 2026-11-24 — P4 closure and account switching
+
+- Closed P4 with the user's approval. The Safari live-update, OS-level disconnect, and spoken VoiceOver checks remain documented as non-blocking follow-ups.
+- Confirmed that the v2 request-outcomes workflow is already live. Carry it forward as the P5 judge walkthrough, with the pilot measurements still open.
+- Added Switch account to the shared account menu. Google users can see the active email and choose another account from the existing session.
+
+## 2026-11-24 — Hosted request-outcomes candidate
+
+- Published the request-outcomes build to the Firebase test channel and verified its matching rules, private route headers, and production bundle. The two-account walkthrough reached organizer admission. Participant verification stalled after a Chrome reload.
+- Merged request outcomes in PR #19 at `5480763` after the user reported manual testing and approved the merge. Both participant checks and GitGuardian passed.
+- Promoted Firebase Hosting version `3232b662f156c8c8` to live at the user's request. Production route, mobile Chrome, worker, evaluator exclusion, and signed-out database checks passed.
+- Verified the live two-account workflow with Safari as organizer and Chrome as participant. The first response appeared only on its request, and a replacement followed by republication started with no feedback.
+- Started the Safari live-update retest. Safari's Google sign-in failed at the live event directory. Confirmed the join-request and event-revision listeners in source and documented the remaining hosted and Mac checks.
+
 ## 2026-11-23 — Request outcomes and feedback
 
 - Added organizer decisions beside approved requests and private participant outcomes alongside the published agenda. Participants can respond to individual linked activities, and their responses are tied to the card and agenda revision.
