@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useSyncExternalStore } from 'react';
 import type { User } from 'firebase/auth';
-import { LogOut, Settings, UserRound } from 'lucide-react';
+import { LogOut, Settings, UserRound, UsersRound } from 'lucide-react';
 import { ReducedMotionSetting } from './ReducedMotionSetting.tsx';
 import { currentTheme, setTheme, subscribeTheme } from './theme.ts';
 import type { Theme } from './theme.ts';
@@ -31,15 +31,30 @@ export function useAccount(sharing: boolean) {
     return () => { active = false; unsubscribe?.(); };
   }, [sharing]);
 
-  async function changeSession() {
+  async function changeSession(action: 'sign-in' | 'sign-out' | 'switch') {
     if (!identity || busy) return;
-    if (!user && !navigator.onLine) { setStatus('Connect to sign in.'); return; }
+    if (action !== 'sign-out' && !navigator.onLine) {
+      setStatus(action === 'switch' ? 'Connect to switch accounts.' : 'Connect to sign in.');
+      return;
+    }
     setBusy(true);
-    setStatus(user ? 'Signing out…' : 'Signing in…');
+    setStatus(action === 'switch' ? 'Switching accounts…' : action === 'sign-out' ? 'Signing out…' : 'Signing in…');
     try {
-      await (user ? identity.endSession() : identity.signIn());
-      setStatus('');
-    } catch { setStatus('Sign-in could not be completed. Try again.'); }
+      if (action === 'sign-out') {
+        await identity.endSession();
+        setStatus('');
+      } else {
+        const { user: signedIn } = await identity.signIn(action === 'switch');
+        setStatus(action === 'switch' && signedIn.uid !== user?.uid ? 'Account switched.' : '');
+      }
+    } catch (error) {
+      if (action === 'switch') {
+        const closed = error instanceof Error && 'code' in error && error.code === 'auth/popup-closed-by-user';
+        setStatus(closed ? 'Account switch canceled.' : 'Could not switch accounts. Try again.');
+      } else {
+        setStatus(action === 'sign-out' ? 'Could not sign out. Try again.' : 'Sign-in could not be completed. Try again.');
+      }
+    }
     finally { setBusy(false); }
   }
 
@@ -51,7 +66,7 @@ export function AccountControl({ account }: { account: ReturnType<typeof useAcco
   const { user, changeSession, configured, status, busy, signInLabel } = account;
   const theme = useSyncExternalStore(subscribeTheme, currentTheme);
   const authIntent = new URLSearchParams(location.search).get('auth');
-  const startSession = () => void changeSession();
+  const startSession = () => void changeSession('sign-in');
   const signInDisabled = busy || user === undefined;
   return <div className="account-controls">
     {!user && configured && <div className="account-links">
@@ -67,15 +82,22 @@ export function AccountControl({ account }: { account: ReturnType<typeof useAcco
           : <Settings size={19} aria-hidden="true"/>}
       </summary>
       <div className="popover">
-        {user && <p className="account-name">{user.displayName || 'QuietNeeds account'}</p>}
+        {user && <p className="account-name">{user.displayName || user.email || 'QuietNeeds account'}
+          {user.displayName && user.email && <><br/>{user.email}</>}</p>}
         <label htmlFor="appearance">Appearance</label>
         <select id="appearance" value={theme} onChange={event => setTheme(event.target.value as Theme)}>
           <option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option>
         </select>
         <ReducedMotionSetting/>
-        {user && <button disabled={busy} onClick={() => void changeSession()}><LogOut size={16} aria-hidden="true"/> Sign out</button>}
+        {user && <>
+          <div className="account-actions">
+            <button disabled={busy} onClick={() => void changeSession('switch')}><UsersRound size={16} aria-hidden="true"/> Switch account</button>
+            <button disabled={busy} onClick={() => void changeSession('sign-out')}><LogOut size={16} aria-hidden="true"/> Sign out</button>
+          </div>
+          <div role="status" className="account-menu-status">{status}</div>
+        </>}
       </div>
     </details>
-    <span className="account-status" role="status">{status}</span>
+    {!user && <span className="account-status" role="status">{status}</span>}
   </div>;
 }

@@ -32,9 +32,15 @@ export function getIdentity() {
   return services ??= createServices();
 }
 
-export function signIn() {
+export async function signIn(chooseAccount = false) {
   const { auth } = getIdentity();
-  return sharingEmulator ? signInAnonymously(auth) : signInWithPopup(auth, new GoogleAuthProvider(), browserPopupRedirectResolver);
+  if (sharingEmulator) {
+    if (chooseAccount) await signOut(auth);
+    return signInAnonymously(auth);
+  }
+  const provider = new GoogleAuthProvider();
+  if (chooseAccount) provider.setCustomParameters({ prompt: 'select_account' });
+  return signInWithPopup(auth, provider, browserPopupRedirectResolver);
 }
 
 export function endSession() {
