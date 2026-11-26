@@ -1,6 +1,6 @@
 # Current state
 
-Updated: November 26, 2026 IST
+Updated: November 27, 2026 IST
 
 - Completed phase: **P1 — Private vertical slice**, in the approved manual-entry scope.
 - Completed phase: **P2 — Approved sharing**, verified in the local Firebase demo.
@@ -25,9 +25,9 @@ Updated: November 26, 2026 IST
 
 GitHub detects the root MIT license on the public `main` branch after PR #21 merged at `27eb704`. [Project license](https://github.com/chitrakumarsai/quiet-needs/blob/main/LICENSE)
 
-The [Devpost submission kit](devpost-media/README.md) contains copy-ready form fields, the gallery, judge instructions, and a video outline. The public video and fresh-session judge walkthrough remain pending.
+The [Devpost submission kit](devpost-media/README.md) contains copy-ready form fields, the gallery, judge instructions, and the final video timeline. The 2:45 MP4 is saved locally. The user will upload it to YouTube and add the public link to Devpost.
 
-Run the fresh-session judge walkthrough on live Hosting version `0b19fd8fb7d0d21c` and complete the video and final checks in the submission kit. The release includes the request-outcomes workflow from `ideas-v2.md` and the account switch from PR #20, merged at `979454d`. The user verified account switching on the identical preview build. The live smoke passed for routes, bundle, worker, evaluator exclusion, and signed-out Firestore denial. The pilot still needs to measure request coverage and follow-up rates. QN-014 remains open for automatic extraction promotion. [Live QuietNeeds demo](https://quietneeds-web.web.app)
+Complete the signed-in two-account judge walkthrough on live Hosting version `0b19fd8fb7d0d21c` and the remaining submission checks. A fresh signed-out Chrome walkthrough passed, and the two-role recording used the local Firebase emulators. The release includes the request-outcomes workflow from `ideas-v2.md` and the account switch from PR #20, merged at `979454d`. The user verified account switching on the identical preview build. The live smoke passed for routes, bundle, worker, evaluator exclusion, and signed-out Firestore denial. The pilot still needs to measure request coverage and follow-up rates. QN-014 remains open for automatic extraction promotion. [Live QuietNeeds demo](https://quietneeds-web.web.app)
 
 ## P4 evidence
 

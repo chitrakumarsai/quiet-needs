@@ -1,5 +1,10 @@
 # Change log
 
+## 2026-11-27 — Judge guide and demo recording
+
+- Updated the public README to reflect the hosted participant and organizer workflows and link to the testing guide.
+- Verified the signed-out hosted card flow in a fresh Chrome context. Recorded the 2:45 submission video with a fresh `IN_CLOUD` organizer proposal, a fresh `ON_DEVICE` fictional draft, and English captions.
+
 ## 2026-11-26 — Project license
 
 - Published the complete MIT license in PR #21 and verified GitHub detects it on the public default branch.
