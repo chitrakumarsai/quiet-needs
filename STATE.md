@@ -1,6 +1,6 @@
 # Current state
 
-Updated: November 24, 2026 IST
+Updated: November 26, 2026 IST
 
 - Completed phase: **P1 — Private vertical slice**, in the approved manual-entry scope.
 - Completed phase: **P2 — Approved sharing**, verified in the local Firebase demo.
@@ -25,7 +25,7 @@ Updated: November 24, 2026 IST
 
 Use the shipped request-outcomes workflow from `ideas-v2.md` for the P5 judge walkthrough. PR #19 (`5480763`) is live as Hosting version `3232b662f156c8c8`. The two-account fictional run verified per-request outcomes and revision-scoped feedback. The pilot has yet to measure request coverage and follow-up rates. [Live QuietNeeds demo](https://quietneeds-web.web.app)
 
-Verify the account-switch candidate with two Google identities before promoting it. Then run the fresh-session judge walkthrough and assemble the P5 submission package. QN-014 remains open for automatic extraction promotion.
+The user reported that the hosted account-switch walkthrough worked as expected. Preview version `0b19fd8fb7d0d21c` serves commit `5ac0d9f` and expires December 1, 2026. The hosted app shell, scripts, and service worker match the local build. Review PR #20 for release, then run the fresh-session judge walkthrough and assemble the P5 submission package. QN-014 remains open for automatic extraction promotion. [Account-switch preview](https://quietneeds-web--p4-trial-plfqr34b.web.app/events)
 
 ## P4 evidence
 

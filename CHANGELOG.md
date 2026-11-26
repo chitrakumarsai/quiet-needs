@@ -1,10 +1,15 @@
 # Change log
 
+## 2026-11-26 — Account-switch preview verified
+
+- The user reported that the two-account Google walkthrough worked as expected on the Firebase Hosting preview.
+
 ## 2026-11-24 — P4 closure and account switching
 
 - Closed P4 with the user's approval. The Safari live-update, OS-level disconnect, and spoken VoiceOver checks remain documented as non-blocking follow-ups.
 - Confirmed that the v2 request-outcomes workflow is already live. Carry it forward as the P5 judge walkthrough, with the pilot measurements still open.
 - Added Switch account to the shared account menu. Google users can see the active email and choose another account from the existing session.
+- Published commit `5ac0d9f` to the temporary Hosting preview as version `0b19fd8fb7d0d21c`. Verified the hosted app shell, JavaScript, and worker against the build.
 
 ## 2026-11-24 — Hosted request-outcomes candidate
 

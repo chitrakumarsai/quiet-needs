@@ -314,4 +314,5 @@ Passed on the local rerun: 24 tests, three Firestore emulator tests, and the pro
 ### P5 account switching
 
 - Passed: 24 unit tests and the production privacy build. A local Auth Emulator check verified that switching changes the active UID and that sign-out still clears it. A simulated closed Google popup verified that the switch requests `select_account` and leaves the current Firebase session active.
-- Pending on hosted candidate: sign in as the fictional event organizer, open **Account and settings → Switch account**, and cancel the chooser. Verify that the organizer email and event access remain. Reopen the chooser and select the second account. Verify the email changes, organizer controls disappear, and any earlier card approval is cleared. Switch back and confirm organizer access returns. Repeat chooser entry from the landing page, and verify keyboard access and visible status at a narrow width.
+- User-reported pass on November 26 for the hosted walkthrough on `0b19fd8fb7d0d21c`. The steps covered canceling the Google chooser, switching to a second account, checking organizer access on the same fictional event, switching back, and reloading the original session.
+- Additional checks remain unrecorded for the hosted build: card approval after switching, chooser entry from the landing page, and keyboard access and visible status at a narrow width.

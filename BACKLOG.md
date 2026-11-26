@@ -28,7 +28,7 @@
 | QN-021 | Organizer publication review | P4 | Hosted round trip verified | Both hosted agenda revisions, isolated feedback, and invalidation after replacement and withdrawal passed with fictional requests | P4 acceptance |
 | QN-022 | Event enrollment usability | P4 | Non-blocking follow-up | Restore both test sessions and recheck automatic join-request and replacement updates with Safari and Chrome both visible. | Post-P4 follow-up |
 | QN-023 | Request outcomes | P4 | Verified on live demo | Production two-account outcome, response, and replacement checks passed with fictional data. | P4 acceptance |
-| QN-024 | Account switching | P5 | Implemented locally | Verify the Google chooser, cancellation, and event access with two accounts on a hosted candidate. | P5 judge walkthrough |
+| QN-024 | Account switching | P5 | User verified on preview | Review PR #20 for release. | P5 judge walkthrough |
 
 ## Issue template
 

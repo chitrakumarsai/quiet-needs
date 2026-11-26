@@ -505,3 +505,4 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - QN-024/P5, owner implementation. Add Switch account to the shared landing and workspace account menu. Show the current Google email where available. Use the Google account chooser while keeping the existing session active until authentication succeeds. Event access and card approval follow the authenticated user ID.
 - Passed local tests, production privacy build, emulator identity switching, and a simulated closed-popup check. The signed-in browser walkthrough and real Google chooser are pending.
 - Exact return: verify the Google chooser with two identities on a hosted candidate, then run the P5 judge walkthrough and submission checklist.
+- November 26: the user reported the hosted two-account walkthrough passed on preview version `0b19fd8fb7d0d21c`. Exact return: review PR #20 for release and run the P5 judge walkthrough.
