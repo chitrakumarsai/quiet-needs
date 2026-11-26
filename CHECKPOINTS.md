@@ -506,3 +506,4 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - Passed local tests, production privacy build, emulator identity switching, and a simulated closed-popup check. The signed-in browser walkthrough and real Google chooser are pending.
 - Exact return: verify the Google chooser with two identities on a hosted candidate, then run the P5 judge walkthrough and submission checklist.
 - November 26: the user reported the hosted two-account walkthrough passed on preview version `0b19fd8fb7d0d21c`. Exact return: review PR #20 for release and run the P5 judge walkthrough.
+- November 26: PR #20 merged at `979454d` after both participant checks and GitGuardian passed. Promoted the tested Hosting version `0b19fd8fb7d0d21c` to live and verified the version and production smoke. Exact return: run the fresh-session judge walkthrough and assemble the P5 submission package.
