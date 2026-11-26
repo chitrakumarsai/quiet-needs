@@ -23,9 +23,11 @@ Updated: November 26, 2026 IST
 
 ## Exact next action
 
-Use the shipped request-outcomes workflow from `ideas-v2.md` for the P5 judge walkthrough. PR #19 (`5480763`) is live as Hosting version `3232b662f156c8c8`. The two-account fictional run verified per-request outcomes and revision-scoped feedback. The pilot has yet to measure request coverage and follow-up rates. [Live QuietNeeds demo](https://quietneeds-web.web.app)
+GitHub detects the root MIT license on the public `main` branch after PR #21 merged at `27eb704`. [Project license](https://github.com/chitrakumarsai/quiet-needs/blob/main/LICENSE)
 
-The user reported that the hosted account-switch walkthrough worked as expected. Preview version `0b19fd8fb7d0d21c` serves commit `5ac0d9f` and expires December 1, 2026. The hosted app shell, scripts, and service worker match the local build. Review PR #20 for release, then run the fresh-session judge walkthrough and assemble the P5 submission package. QN-014 remains open for automatic extraction promotion. [Account-switch preview](https://quietneeds-web--p4-trial-plfqr34b.web.app/events)
+The [Devpost submission kit](devpost-media/README.md) contains copy-ready form fields, the gallery, judge instructions, and a video outline. The public video and fresh-session judge walkthrough remain pending.
+
+Run the fresh-session judge walkthrough on live Hosting version `0b19fd8fb7d0d21c` and complete the video and final checks in the submission kit. The release includes the request-outcomes workflow from `ideas-v2.md` and the account switch from PR #20, merged at `979454d`. The user verified account switching on the identical preview build. The live smoke passed for routes, bundle, worker, evaluator exclusion, and signed-out Firestore denial. The pilot still needs to measure request coverage and follow-up rates. QN-014 remains open for automatic extraction promotion. [Live QuietNeeds demo](https://quietneeds-web.web.app)
 
 ## P4 evidence
 

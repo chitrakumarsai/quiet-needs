@@ -1,8 +1,14 @@
 # Change log
 
+## 2026-11-26 — Project license
+
+- Published the complete MIT license in PR #21 and verified GitHub detects it on the public default branch.
+- Consolidated the Devpost form copy, verified links, gallery, judge instructions, and video outline in the submission kit.
+
 ## 2026-11-26 — Account-switch preview verified
 
 - The user reported that the two-account Google walkthrough worked as expected on the Firebase Hosting preview.
+- Merged PR #20 at `979454d` after both participant checks and GitGuardian passed. Promoted the tested Hosting version `0b19fd8fb7d0d21c` to production at the user's request. The five app routes, bundle, service worker, development evaluator exclusion, and signed-out Firestore denial passed on production.
 
 ## 2026-11-24 — P4 closure and account switching
 
