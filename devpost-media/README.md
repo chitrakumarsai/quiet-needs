@@ -1,6 +1,6 @@
 # QuietNeeds Devpost submission kit
 
-Updated November 26, 2026 IST. The hosted demo is live and the public repository has a GitHub-detected MIT license. The Devpost copy and four gallery images are ready. The public YouTube video and fresh-session judge walkthrough remain open.
+Updated November 27, 2026 IST. The hosted demo is live and the public repository has a GitHub-detected MIT license. The Devpost copy, four gallery images, and local 2:45 MP4 are ready. The public YouTube URL and the signed-in production walkthrough remain open.
 
 The submission deadline is **December 1, 2026 at 3:30 a.m. IST** (**November 30 at 2:00 p.m. PST**). Judging ends December 16 at 2:00 p.m. PST. Use the permanent live URL for judging. [Official rules](https://firebasehybridaihackathon.devpost.com/rules)
 
@@ -78,7 +78,7 @@ Open the live demo in Chrome. You can create, approve, and download a participat
 
 1. **Organizer.** Sign in and choose **Events → Create an event**. Create a fictional photo workshop and copy its invite link.
 2. **Participant.** Open the link in the second Chrome profile, sign in, and select **Request to join**. In the organizer profile, choose **Admit participant**. If an update is slow to appear, use **Check event access**.
-3. **Participant.** Choose **Prepare and approve your card** and add two requests: “Please provide a seated alternative to the photo walk” and “Please confirm whether the entrance is step-free.” Choose **Preview → Approve card → Open event to share your card → Share with organizer**.
+3. **Participant.** Choose **Prepare and approve your card** and add two requests, “Please provide a seated alternative to the photo walk” and “Please confirm whether the entrance is step-free.” Review **Card preview** beside the editor on desktop or select **Preview** on a narrow screen. Choose **Approve card → Open event to share your card → Share with organizer**.
 4. **Organizer.** Under **Plan the agenda**, add a **Seated photo exercise** slot from **10:00 to 10:30** and save. To try AI planning, choose **Preview cloud planning inputs**, review **Exact input sent to the model**, then choose **Generate cloud proposal**. Under **Needs a decision**, link the seating request to the slot and leave step-free entry as **Still checking**. Approve the exact agenda and outcomes, then choose **Publish agenda**.
 5. **Participant.** Under **What changed for you**, verify the planned seated activity and the pending entrance request. Choose **Works for me** on the seating request. The organizer can select **Refresh participant feedback** to see the response.
 
@@ -95,18 +95,20 @@ Each PNG is 1350 × 900 (3:2) and below 5 MB. The images use the app with fictio
 
 ## Video and final checks
 
-Record a public YouTube demo in English, up to three minutes. Capture the working app and use fictional content throughout. [Official video requirements](https://firebasehybridaihackathon.devpost.com/rules)
+The 2:45 English demo with captions is ready to upload as `quietneeds-demo-2m45s-ai-footage.mp4`. It shows the app using fictional content, a fresh cloud agenda proposal, and a fresh on-device draft from the development evaluator. Upload the MP4 publicly on YouTube and paste its URL into Devpost. [Official video requirements](https://firebasehybridaihackathon.devpost.com/rules)
 
 | Time | Show |
 | --- | --- |
-| 0:00–0:20 | Explain the problem using the seated photo walk request. |
-| 0:20–0:55 | Enter, preview, approve, and share two fictional requests. |
-| 0:55–1:35 | Show the exact cloud input and organizer review. Publish seating as planned and the entrance as still checking. |
-| 1:35–2:05 | Show **What changed for you**, respond to the seating outcome, and refresh organizer feedback. |
-| 2:05–2:45 | Show an actual `ON_DEVICE` evaluator result in Chrome and explain that the live participant flow uses manual entry. |
+| 0:00–0:19 | Welcome viewers and explain the seated photo walk request. |
+| 0:19–0:54 | Enter, preview, approve, and share two fictional requests. |
+| 0:54–1:32 | Preview exact cloud inputs, generate a proposal, and publish a planned seating outcome and a pending entrance request. |
+| 1:32–2:12 | Respond to the seating outcome, refresh organizer feedback, and replace the shared card. |
+| 2:12–2:45 | Run a fictional evaluator case in Chrome, show `ON_DEVICE` in the exported result, and give the hosted demo URL. |
 
-- [ ] Run the complete two-account walkthrough from fresh Chrome profiles on the live domain. The previous authenticated walkthrough ran on the identical preview build.
+- [x] Verify the hosted card and sign-in entry point from a fresh signed-out Chrome context. The approved download matched the fictional request, and reload cleared the draft.
+- [ ] Run the complete signed-in walkthrough with two Google accounts on the live domain. The previous hosted walkthrough ran on the identical preview build. The recorded two-role workflow used local Firebase emulators.
 - [ ] Rehearse the local Chrome evaluator from a clean checkout and confirm `ON_DEVICE` on a supported device.
 - [ ] Verify Firebase AI Logic and App Check remain available through judging. Keep live keys, debug tokens, and real participant data out of submission materials.
-- [ ] Record the video, upload publicly to YouTube, and paste its URL into Devpost.
+- [x] Record the 2:45 video with the working app, two verified AI calls, and English captions.
+- [ ] Upload publicly to YouTube, verify playback while signed out, and paste the URL into Devpost.
 - [ ] Review the final Devpost preview and submit before the deadline.

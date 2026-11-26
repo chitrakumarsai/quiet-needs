@@ -317,3 +317,10 @@ Passed on the local rerun: 24 tests, three Firestore emulator tests, and the pro
 - User-reported pass on November 26 for the hosted walkthrough on `0b19fd8fb7d0d21c`. The steps covered canceling the Google chooser, switching to a second account, checking organizer access on the same fictional event, switching back, and reloading the original session.
 - Additional checks remain unrecorded for the hosted build: card approval after switching, chooser entry from the landing page, and keyboard access and visible status at a narrow width.
 - November 26 production promotion passed. Firebase reported the same Hosting version on live. All five routes, their JavaScript, and the service worker matched the configured build. Workspace routes prohibited indexing, the development evaluator returned 404, and a signed-out Firestore event list returned 403. The authenticated two-account walkthrough was performed on the preview.
+
+### P5 judge rehearsal and video
+
+- November 27 passed in a fresh signed-out desktop Chrome context on the production domain. The card editor approved a fictional request, the downloaded JSON contained that exact text, reload cleared the draft, and the event directory showed the sign-in entry point.
+- Recorded the two-role workflow with fictional accounts on local Firebase emulators. An isolated development recording of the real organizer controls used the configured Firebase AI Logic project to generate an `IN_CLOUD` proposal using only fictional requests and event facts. The local Chrome evaluator exported an `ON_DEVICE` draft for fictional case QN-E22 after the device model finished downloading.
+- Verified the final local MP4 runs 165 seconds and contains 1920 × 1080 H.264 video and AAC narration. The main application release retains manual participant entry.
+- Pending: authenticated fresh-session walkthrough on the production domain and public YouTube playback verification.
