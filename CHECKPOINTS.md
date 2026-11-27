@@ -513,3 +513,9 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - P5, owner implementation. Released Hosting version `3d3a1909425fae2e`, enabled Google sign-in, and deployed Firestore rules to the new project. The user confirmed that the deployment works. [New QuietNeeds deployment](https://fb-ailogic26vrt-3234.web.app/)
 - Passed 24 unit tests and the production privacy build. Chrome verified Google sign-in startup and fictional card export. The signed-out Firestore read returned 403. App Check and Gemini both returned HTTP 200 in a synthetic browser check. The SDK reported `IN_CLOUD` for the validated proposal.
 - Exact return: complete the signed-in two-account walkthrough on the new deployment before a submission cutover.
+
+## CP-074 — Pass the live two-account walkthrough
+
+- P5, owner implementation. Two distinct Google accounts signed in through normal Chrome and Incognito on version `3d3a1909425fae2e`. The participant requested access, the organizer admitted the participant, and the participant approved and shared a fictional card.
+- The organizer reviewed the cloud inputs, generated a proposal, and published a planned seating activity with the entrance request still pending. The organizer saw the participant's saved response. Replacing the card made the first agenda stale. After republishing, the new agenda showed no responses and the participant's response controls reset.
+- Exact return: verify public video playback and finalize submission links.

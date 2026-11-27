@@ -1,6 +1,6 @@
 # QuietNeeds Devpost submission kit
 
-Updated November 27, 2026 IST. The hosted demo is live and the public repository has a GitHub-detected MIT license. The Devpost copy, four gallery images, and local 2:45 MP4 are ready. The public YouTube URL and the signed-in production walkthrough remain open.
+Updated November 27, 2026 IST. The hosted demo is live and the public repository has a GitHub-detected MIT license. The Devpost copy, four gallery images, and local 2:45 MP4 are ready. The two-account walkthrough passed on the Sprint 3 deployment. Use the original judge URL for judging. Public YouTube playback still needs verification.
 
 The submission deadline is **December 1, 2026 at 3:30 a.m. IST** (**November 30 at 2:00 p.m. PST**). Judging ends December 16 at 2:00 p.m. PST. Use the permanent live URL for judging. [Official rules](https://firebasehybridaihackathon.devpost.com/rules)
 
@@ -106,9 +106,9 @@ The 2:45 English demo with captions is ready to upload as `quietneeds-demo-2m45s
 | 2:12–2:45 | Run a fictional evaluator case in Chrome, show `ON_DEVICE` in the exported result, and give the hosted demo URL. |
 
 - [x] Verify the hosted card and sign-in entry point from a fresh signed-out Chrome context. The approved download matched the fictional request, and reload cleared the draft.
-- [ ] Run the complete signed-in walkthrough with two Google accounts on the live domain. The previous hosted walkthrough ran on the identical preview build. The recorded two-role workflow used local Firebase emulators.
-- [ ] Rehearse the local Chrome evaluator from a clean checkout and confirm `ON_DEVICE` on a supported device.
-- [ ] Verify Firebase AI Logic and App Check remain available through judging. Keep live keys, debug tokens, and real participant data out of submission materials.
+- [x] Run the complete signed-in walkthrough with two Google accounts on a live deployment. Passed on the Sprint 3 deployment. The original judge URL passed a signed-out smoke and a separate cloud planning check. [Test evidence](../TEST_PLAN.md#p5-judge-rehearsal-and-video)
+- [x] Verify `ON_DEVICE` on supported desktop Chrome. Both targeted cases returned valid drafts with SDK source `ON_DEVICE` in the reversed-order retry. QN-E22 failed twice in the default order, and no cloud inference requests were observed. [Test evidence](../TEST_PLAN.md#p5-judge-rehearsal-and-video)
+- [x] Verify Firebase AI Logic and App Check on the original judge URL before submission. A fresh synthetic request succeeded in visible Chrome on November 27. Use the original URL for the December 10–16 judging period. The temporary Sprint 3 project expires before judging. [Judging schedule](https://firebasehybridaihackathon.devpost.com/details/dates)
 - [x] Record the 2:45 video with the working app, two verified AI calls, and English captions.
 - [ ] Upload publicly to YouTube, verify playback while signed out, and paste the URL into Devpost.
 - [ ] Review the final Devpost preview and submit before the deadline.

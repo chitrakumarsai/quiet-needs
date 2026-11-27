@@ -5,6 +5,9 @@
 - Deployed QuietNeeds to the new Firebase project, configured Google sign-in, and published Firestore security rules.
 - Verified live card export, Google sign-in startup, denied signed-out database access, and a synthetic Gemini proposal with App Check enforced.
 - The user confirmed that the new deployment works.
+- Passed the live two-account Chrome walkthrough through Google sign-in, admission, card sharing, Gemini planning, publication, participant feedback, and card replacement.
+- Verified cloud planning on the original judge URL in visible Chrome. The temporary Sprint 3 deployment expires before judging.
+- Repeated the two targeted Chrome evaluator cases from a clean source copy. Both returned `ON_DEVICE` after reversing the case order.
 
 ## 2026-11-27 — Judge guide and demo recording
 
