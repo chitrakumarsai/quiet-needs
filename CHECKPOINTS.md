@@ -507,3 +507,9 @@ Review follow-up: ARCHITECTURE.md v1.1 records the completed scenario review. Ad
 - Exact return: verify the Google chooser with two identities on a hosted candidate, then run the P5 judge walkthrough and submission checklist.
 - November 26: the user reported the hosted two-account walkthrough passed on preview version `0b19fd8fb7d0d21c`. Exact return: review PR #20 for release and run the P5 judge walkthrough.
 - November 26: PR #20 merged at `979454d` after both participant checks and GitGuardian passed. Promoted the tested Hosting version `0b19fd8fb7d0d21c` to live and verified the version and production smoke. Exact return: run the fresh-session judge walkthrough and assemble the P5 submission package.
+
+## CP-073 — Verify the new Firebase deployment
+
+- P5, owner implementation. Released Hosting version `3d3a1909425fae2e`, enabled Google sign-in, and deployed Firestore rules to the new project. The user confirmed that the deployment works. [New QuietNeeds deployment](https://fb-ailogic26vrt-3234.web.app/)
+- Passed 24 unit tests and the production privacy build. Chrome verified Google sign-in startup and fictional card export. The signed-out Firestore read returned 403. App Check and Gemini both returned HTTP 200 in a synthetic browser check. The SDK reported `IN_CLOUD` for the validated proposal.
+- Exact return: complete the signed-in two-account walkthrough on the new deployment before a submission cutover.

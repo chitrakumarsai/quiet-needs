@@ -7,7 +7,7 @@ Updated: November 27, 2026 IST
 - Completed phase: **P3 — Organizer adaptation**, verified with a genuine synthetic cloud proposal and local publication and confirmation.
 - Completed phase: **P4 — Reliability and UX**. The user approved closure with the remaining Safari live-update, OS-level disconnect, and spoken VoiceOver checks as non-blocking follow-ups.
 - Active implementation phase: **P5 — Submission**.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-072.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-073.
 - P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, automated tests and npm audit pass. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. P4 offline reload covers manual entry in the production app.
@@ -22,6 +22,8 @@ Updated: November 27, 2026 IST
 - GitHub PRs #1–#5 merged into `main` after CI and their recorded phase or task checks.
 
 ## Exact next action
+
+The user confirmed that the new Firebase deployment works. The full signed-in two-account walkthrough is pending on Hosting version `3d3a1909425fae2e` before a submission cutover. See CP-073 for release verification. [New QuietNeeds deployment](https://fb-ailogic26vrt-3234.web.app/)
 
 GitHub detects the root MIT license on the public `main` branch after PR #21 merged at `27eb704`. [Project license](https://github.com/chitrakumarsai/quiet-needs/blob/main/LICENSE)
 
