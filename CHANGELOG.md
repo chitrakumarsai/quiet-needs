@@ -1,5 +1,11 @@
 # Change log
 
+## 2026-11-27 — New Firebase deployment
+
+- Deployed QuietNeeds to the new Firebase project, configured Google sign-in, and published Firestore security rules.
+- Verified live card export, Google sign-in startup, denied signed-out database access, and a synthetic Gemini proposal with App Check enforced.
+- The user confirmed that the new deployment works.
+
 ## 2026-11-27 — Judge guide and demo recording
 
 - Updated the public README to reflect the hosted participant and organizer workflows and link to the testing guide.
