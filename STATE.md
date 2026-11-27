@@ -7,7 +7,7 @@ Updated: November 27, 2026 IST
 - Completed phase: **P3 — Organizer adaptation**, verified with a genuine synthetic cloud proposal and local publication and confirmation.
 - Completed phase: **P4 — Reliability and UX**. The user approved closure with the remaining Safari live-update, OS-level disconnect, and spoken VoiceOver checks as non-blocking follow-ups.
 - Active implementation phase: **P5 — Submission**.
-- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-073.
+- Baseline: execution-plan v1.2; architecture v1.1; latest checkpoint CP-074.
 - P1-T01/T02: dependencies locked; Rsbuild 1.7.6 replaces Vite. Node 22.14.0 build/typecheck, production exclusions, automated tests and npm audit pass. QN-016 resolved.
 - P1-T03/QN-002 resolved: explicit development debug token supported and saved; actual fresh App Check exchange HTTP 200. .env.local ignored, values not recorded.
 - P1-T04/T05: actual SDK ON_DEVICE response and DevTools Offline inference verified on Chrome desktop 157 / Firebase 12.19.0. No cloud fallback. P4 offline reload covers manual entry in the production app.
@@ -23,13 +23,19 @@ Updated: November 27, 2026 IST
 
 ## Exact next action
 
-The user confirmed that the new Firebase deployment works. The full signed-in two-account walkthrough is pending on Hosting version `3d3a1909425fae2e` before a submission cutover. See CP-073 for release verification. [New QuietNeeds deployment](https://fb-ailogic26vrt-3234.web.app/)
+The full signed-in two-account walkthrough passed on Hosting version `3d3a1909425fae2e`. CP-074 records the role and revision checks. Verify public YouTube playback and finalize the submission links. [New QuietNeeds deployment](https://fb-ailogic26vrt-3234.web.app/)
+
+The clean-source Chrome evaluator rerun verified both targeted `ON_DEVICE` cases after reversing their order. QN-E22 failed twice in the default order. See TEST_PLAN.md for the observed failure and retry.
+
+QN-025 records the agreed organizer refinement. Show Gemini's validated agenda suggestions and supporting facts under **Needs a decision**, with an explicit action per request and the existing publication review. Start after the submission work.
+
+Use the original judge URL for submission. The Sprint 3 project is temporary, and Devpost says its provisioning account lasts about four days before its project is deleted. The original project is active on the no-cost plan, with Firebase AI Logic and the Gemini Developer API enabled and App Check enforced. A fresh visible-Chrome test on the original origin returned a validated `IN_CLOUD` proposal. Judging runs December 10–16 Pacific time. [Original judge URL](https://quietneeds-web.web.app/) · [Judging schedule](https://firebasehybridaihackathon.devpost.com/details/dates)
 
 GitHub detects the root MIT license on the public `main` branch after PR #21 merged at `27eb704`. [Project license](https://github.com/chitrakumarsai/quiet-needs/blob/main/LICENSE)
 
 The [Devpost submission kit](devpost-media/README.md) contains copy-ready form fields, the gallery, judge instructions, and the final video timeline. The 2:45 MP4 is saved locally. The user will upload it to YouTube and add the public link to Devpost.
 
-Complete the signed-in two-account judge walkthrough on live Hosting version `0b19fd8fb7d0d21c` and the remaining submission checks. A fresh signed-out Chrome walkthrough passed, and the two-role recording used the local Firebase emulators. The release includes the request-outcomes workflow from `ideas-v2.md` and the account switch from PR #20, merged at `979454d`. The user verified account switching on the identical preview build. The live smoke passed for routes, bundle, worker, evaluator exclusion, and signed-out Firestore denial. The pilot still needs to measure request coverage and follow-up rates. QN-014 remains open for automatic extraction promotion. [Live QuietNeeds demo](https://quietneeds-web.web.app)
+The original Hosting version `0b19fd8fb7d0d21c` passed the signed-out live smoke. The user verified account switching on its identical preview build, and the two-role recording used local Firebase emulators. The release includes the request-outcomes workflow from `ideas-v2.md` and the account switch from PR #20, merged at `979454d`. The pilot still needs to measure request coverage and follow-up rates. QN-014 remains open for automatic extraction promotion. [Original QuietNeeds demo](https://quietneeds-web.web.app)
 
 ## P4 evidence
 

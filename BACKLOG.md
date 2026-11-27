@@ -29,6 +29,7 @@
 | QN-022 | Event enrollment usability | P4 | Non-blocking follow-up | Restore both test sessions and recheck automatic join-request and replacement updates with Safari and Chrome both visible. | Post-P4 follow-up |
 | QN-023 | Request outcomes | P4 | Verified on live demo | Production two-account outcome, response, and replacement checks passed with fictional data. | P4 acceptance |
 | QN-024 | Account switching | P5 | Released | User verified the two-account preview walkthrough. The identical Hosting version passed the production smoke. | P5 judge walkthrough |
+| QN-025 | Organizer AI suggestions | P3 follow-up | Planned | Show validated agenda suggestions and supporting venue facts beside each approved request. Let organizers apply each suggestion explicitly. Show flagged conflicts and keep unsupported requests pending. Reuse the existing cloud proposal and require review before publishing. | After P5 submission work |
 
 ## Issue template
 
